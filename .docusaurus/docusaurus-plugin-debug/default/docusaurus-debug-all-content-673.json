@@ -15,9 +15,9 @@
           "editUrlLocalized": "https://github.com/GlueOps/glueops-dev/i18n/en/docusaurus-plugin-content-docs/current",
           "isLast": true,
           "routePriority": -1,
-          "sidebarFilePath": "/workspace/glueops-dev-1/sidebars.js",
-          "contentPath": "/workspace/glueops-dev-1/docs",
-          "contentPathLocalized": "/workspace/glueops-dev-1/i18n/en/docusaurus-plugin-content-docs/current",
+          "sidebarFilePath": "/workspace/glueops-dev/sidebars.js",
+          "contentPath": "/workspace/glueops-dev/docs",
+          "contentPathLocalized": "/workspace/glueops-dev/i18n/en/docusaurus-plugin-content-docs/current",
           "docs": [
             {
               "unversionedId": "deploy-applications/deploy-docusarus-website-to-glueops",

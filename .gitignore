@@ -22,3 +22,6 @@ public/
 # Generated files
 .docusaurus
 .cache-loader
+
+# Yarn specific files
+yarn-error.log
