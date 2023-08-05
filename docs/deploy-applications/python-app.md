@@ -87,16 +87,16 @@ To enable GitHub Actions to notify our Argo CD of code changes, we need to confi
 
 - To get your token secret, go to [https://github.com/settings/tokens](https://github.com/settings/tokens) and click on **Generate new token(classic).**
 
-<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
+<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
 
 - Use the onscreen information to generate your token. The only scope required is the **repo** scope. 
 
 - Click on **Generate token** and copy your token.
 
-<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev/assets/39309699/a7bca229-ed48-4679-ba45-6a863977820c"/>
+<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/a7bca229-ed48-4679-ba45-6a863977820c"/>
 
 - Go to your repository and navigate to **Settings > Security > Secrets and Variables > Actions**.
-<img width="422" alt="Screenshot 2023-07-28 at 02 47 16" src="https://github.com/GlueOps/glueops-dev/assets/39309699/f3468172-98cb-4b4f-a2fe-42e1006d772c"/>
+<img width="422" alt="Screenshot 2023-07-28 at 02 47 16" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/f3468172-98cb-4b4f-a2fe-42e1006d772c"/>
 
 - Click on **New repository secret** to create a new token.
 

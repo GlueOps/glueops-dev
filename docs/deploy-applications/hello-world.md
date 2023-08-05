@@ -65,16 +65,16 @@ To enable GitHub Actions to notify our Argo CD of code changes, we need to confi
 
 - To get your token secret, go to [https://github.com/settings/tokens](https://github.com/settings/tokens) and click on **Generate new token(classic).**
 
-<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
+<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
 
 - Use the onscreen information to generate your token. The only scope required is the **repo** scope. 
 
 - Click on **Generate token** and copy your token.
 
-<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev/assets/39309699/a7bca229-ed48-4679-ba45-6a863977820c"/>
+<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/a7bca229-ed48-4679-ba45-6a863977820c"/>
 
 - Go to your repository and navigate to **Settings > Security > Secrets and Variables > Actions**.
-<img width="422" alt="Screenshot 2023-07-28 at 02 47 16" src="https://github.com/GlueOps/glueops-dev/assets/39309699/f3468172-98cb-4b4f-a2fe-42e1006d772c"/>
+<img width="422" alt="Screenshot 2023-07-28 at 02 47 16" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/f3468172-98cb-4b4f-a2fe-42e1006d772c"/>
 
 - Click on **New repository secret** to create a new token.
 
@@ -345,7 +345,7 @@ Create a pull request (PR) to trigger the GitHub Action you set up for publishin
 
 To view the app click on the preview URL. You can check the status of the deployment on Argos CD, which will show metrics, logs, and more. The QR code will also lead you to the preview URL.
 
-<img width="420" alt="Screenshot 2023-07-28 at 12 53 14" src="https://github.com/GlueOps/glueops-dev/assets/39309699/9661e169-6eee-4bec-a5ee-145751e40b6f"/>
+<img width="420" alt="Screenshot 2023-07-28 at 12 53 14" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/9661e169-6eee-4bec-a5ee-145751e40b6f"/>
 
 
 ## Deploying to Environments
@@ -364,7 +364,7 @@ The staging enviroment is automatically deployed, to check your application:
 
 2. Upon creating the release, GitHub will automatically generate pull requests into the deployment-configurations repository. These pull requests will contain the necessary changes for the prod and UAT environments, located in the `envs/prod` and `envs/uat` directories, respectively.
 
-<img width="362" alt="Screenshot 2023-07-28 at 13 19 12" src="https://github.com/GlueOps/glueops-dev/assets/39309699/5bc936a8-adcd-40f4-bdc8-ff8b3290ce0d"/>
+<img width="362" alt="Screenshot 2023-07-28 at 13 19 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/5bc936a8-adcd-40f4-bdc8-ff8b3290ce0d"/>
 
 3. Review and merge the pull requests in the deployment-configurations repository. This will trigger the deployment process to both the `prod` and `uat` environments.
 

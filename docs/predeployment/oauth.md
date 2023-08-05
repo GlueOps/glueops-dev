@@ -25,11 +25,11 @@ To create the OAuth App, follow these steps:
 
 1. On your Github Organization page, go to the **Settings > Developers settings** and click on **Oauth Apps**.
 
-<img width="370" alt="Screenshot 2023-07-26 at 13 51 37" src="https://github.com/GlueOps/glueops-dev/assets/39309699/282e5bfc-16b9-4715-b6ce-99a23f4887d2"/>
+<img width="370" alt="Screenshot 2023-07-26 at 13 51 37" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/282e5bfc-16b9-4715-b6ce-99a23f4887d2"/>
 
 2. Click on **New Org OAuth App** button to create a new OAuth application.
 
-<img width="995" alt="Screenshot 2023-07-26 at 20 28 27" src="https://github.com/GlueOps/glueops-dev/assets/39309699/b8348e31-1695-4b61-bd22-fd1513411034"/>
+<img width="995" alt="Screenshot 2023-07-26 at 20 28 27" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/b8348e31-1695-4b61-bd22-fd1513411034"/>
 
 3. **Application name**: Enter a name for your OAuth app. It should match the cluster name which GlueOps 
 will provide for you. Assuming your cluster domain is `order-api.nonprod.antoniostacos.onglueops.com`, your application name should match your cluster name `order-api`. 
@@ -50,7 +50,7 @@ For the example cluster, the home page URL is `https://dex.order-api-nonprod.ant
 
 6. Once you have filled in the details, click on **Register application** to create the GitHub OAuth app.
 
-<img width="75%" alt="Screenshot 2023-07-27 at 13 43 00" src="https://github.com/GlueOps/glueops-dev/assets/39309699/6b048789-26cb-4f50-b980-1ecee69bcd63"/>
+<img width="75%" alt="Screenshot 2023-07-27 at 13 43 00" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/6b048789-26cb-4f50-b980-1ecee69bcd63"/>
 
 
 Once your app is registered you'll receive your **OAuth App Client ID**
@@ -62,7 +62,7 @@ The client secret is a confidential value that is used for secure communication.
 - Scroll down to the **Client Secrets** section
 - Click on **Generate a new client secret**.
 
-<img width="541" alt="register_oauth" src="https://github.com/GlueOps/glueops-dev/assets/39309699/6de6a13d-2a85-4dcf-b89d-e9c42ddda396"/>
+<img width="541" alt="register_oauth" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/6de6a13d-2a85-4dcf-b89d-e9c42ddda396"/>
 
 Once the client secret is generated, make sure to copy and securely store it.
 
