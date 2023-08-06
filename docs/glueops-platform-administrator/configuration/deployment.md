@@ -8,12 +8,12 @@ title: Deployment Configurations
 In the [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository you can centrally manage configurations for deployments on the GlueOps Platform. This guide will walk you through the steps to set up your repository, providing a detailed explanation of its structure and how to customize it to suit your organization's needs. 
 
 :::info
- Here is the [deployment-configurations](https://github.com/GlueOps/deployment-configurations) template you use to ease setup overhead.
+ Here is the [deployment-configurations](https://github.com/new?template_name=deployment-configurations&template_owner=GlueOps) template you use to ease setup overhead.
 :::
 
 ## Directory Structure
 
-The [deployment-configurations](https://github.com/GlueOps/deployment-configurations)repository is organized into three core directories:
+The [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository is organized into three core directories:
 
 ```sh
 deployment-configurations
@@ -101,7 +101,7 @@ To set up your `deployment-configurations` repository:
 
 1. Create a new repository using the provided [template](https://github.com/new?template_name=deployment-configurations&template_owner=GlueOps) in your GitHub organization.
 
-2. In the `app` directory, duplicate one of the example demo apps and rename it to your repository name. For example, if you repository name is _neptune_ then replace your application name to _neptune_.
+2. In the `app` directory, duplicate one of the example demo apps and rename it to your **repository name**. For example, if you repository name is **_neptune_** then replace your application name to **_neptune_**.
 
 ```
 ├── neptune
