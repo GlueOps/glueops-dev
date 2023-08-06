@@ -13,7 +13,7 @@ In the [deployment-configurations](https://github.com/GlueOps/deployment-configu
 
 ## Directory Structure
 
-The [deployment-configurations](https://github.com/GlueOps/deployment-configurations)repository is organized into three core directories:
+The [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository is organized into three core directories:
 
 ```sh
 deployment-configurations
