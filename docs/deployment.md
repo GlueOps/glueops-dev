@@ -101,7 +101,7 @@ To set up your `deployment-configurations` repository:
 
 1. Create a new repository using the provided [template](https://github.com/new?template_name=deployment-configurations&template_owner=GlueOps) in your GitHub organization.
 
-2. In the `app` directory, duplicate one of the example demo apps and rename it to your repository name. For example, if you repository name is _neptune_ then replace your application name to _neptune_.
+2. In the `app` directory, duplicate one of the example demo apps and rename it to your **repository name**. For example, if you repository name is **_neptune_** then replace your application name to **_neptune_**.
 
 ```
 ├── neptune
