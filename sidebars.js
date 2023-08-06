@@ -20,13 +20,27 @@ const sidebars = {
   main: [
     "introduction",
     "glueops-cluster-domain",
+
     {
       type: "category",
-      label: "Pre-Deployment Setup",
+      label: "Platform Administrators",
       collapsible: true,
       items: [
-        "predeployment/create-github-oauth-for-glueops",
-        "predeployment/create-github-app-for-glueops",
+        {
+          type: "category",
+          label: "Pre-Deployment Setup",
+          collapsible: true,
+          items: [
+            "glueops-platform-administrator/predeployment/create-github-oauth-for-glueops",
+            "glueops-platform-administrator/predeployment/create-github-app-for-glueops",
+          ],
+          link: {
+            type: "generated-index",
+            title: "Pre-Deployment Setup",
+            description: "Before deploying your cluster, you need to create your GitHub OAuth App and GitHub App. These apps will provide the necessary values for secure access, authentication, and automated deployments on GlueOps.",
+            slug: "/predeployment",
+          },
+        }
       ],
       link: {
         type: "generated-index",
@@ -34,7 +48,9 @@ const sidebars = {
         description: "Before deploying your cluster, you need to create your GitHub OAuth App and GitHub App. These apps will provide the necessary values for secure access, authentication, and automated deployments on GlueOps.",
         slug: "/predeployment",
       },
-    },
+    }
+    
+    ,
     "glueops-deployment-configuration",
     {
       type: "category",
