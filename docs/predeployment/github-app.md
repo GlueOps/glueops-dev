@@ -85,7 +85,7 @@ To generate the private key for your GitHub App, follow these steps:
 Save the Private Key so you can provide it to GlueOps
 :::
 
-## Add Display logo(Optional)
+## Add Display logo (Optional)
 Adding logo to your GitHub App ensures that when our bot comments it'll use the image for easy identification. To add the logo:
 
 - Save and download the [GlueOps logo image](https://github.com/GlueOps/glueops-dev-old/assets/39309699/e786b648-a9b1-4beb-ba43-97be1dea4ed1)
@@ -126,8 +126,8 @@ From the URL `https://github.com/organizations/antoniostacos/settings/installati
 
 By completing the above steps, you should have obtained the following values from the GitHub App:
 
-- [Create the GitHub App ID](#create-the-github-app-id)
-- [Generate the private key](#generate-the-private-key)
-- [Get Installation ID](#get-installation-id)
+- [GitHub App ID](#create-the-github-app-id)
+- [Private key](#generate-the-private-key)
+- [Installation ID](#get-installation-id)
 
 These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing passsword service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.
