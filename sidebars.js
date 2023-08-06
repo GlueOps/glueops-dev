@@ -33,25 +33,49 @@ const sidebars = {
           items: [
             "glueops-platform-administrator/predeployment/create-github-oauth-for-glueops",
             "glueops-platform-administrator/predeployment/create-github-app-for-glueops",
+            {
+              type: "category",
+              label: "Cloud Setup",
+              collapsible: true,
+              items: [
+                "glueops-platform-administrator/predeployment/clouds/aws/cloud-setup-aws",
+              ],
+              link: {
+                type: "generated-index",
+                title: "Setup and Configuration",
+                description: "You can only use one cloud for each cluster deployment. Please contact GlueOps team if you have any questions about which cloud to use.",
+                slug: "/administrator-configuration-cloud-setup",
+              },
+            }
           ],
           link: {
             type: "generated-index",
             title: "Pre-Deployment Setup",
-            description: "Before deploying your cluster, you need to create your GitHub OAuth App and GitHub App. These apps will provide the necessary values for secure access, authentication, and automated deployments on GlueOps.",
+            description: "Before deploying your cluster, you need to create your GitHub OAuth App and GitHub App. These apps will be used to deploy your cluster and will need to be provided to the GlueOps team before they can proceed.",
             slug: "/predeployment",
           },
-        }
+        },
+        {
+          type: "category",
+          label: "Setup and Configuration",
+          collapsible: true,
+          items: [
+            "glueops-platform-administrator/configuration/glueops-deployment-configuration",
+          ],
+          link: {
+            type: "generated-index",
+            title: "Setup and Configuration",
+            description: "Once your cluster is deployed by the GlueOps team you will need to configure your GitOps repository. We call this your deployment-configurations and you will be able to control all your application deployments from this repository.",
+            slug: "/administrator-configuration-deployment-configuration",
+          },
+        },
+
+
       ],
-      link: {
-        type: "generated-index",
-        title: "Pre-Deployment Setup",
-        description: "Before deploying your cluster, you need to create your GitHub OAuth App and GitHub App. These apps will provide the necessary values for secure access, authentication, and automated deployments on GlueOps.",
-        slug: "/predeployment",
-      },
+
     }
     
     ,
-    "glueops-deployment-configuration",
     {
       type: "category",
       label: "Deploy Applications",
