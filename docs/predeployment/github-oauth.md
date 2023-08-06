@@ -6,7 +6,7 @@ type: tutorial
 
 # Creating your GitHub OAuth App
 
-GlueOps uses GitHub as an IDP to verify your access to all GlueOps Control Plane services.
+GlueOps uses a combination of GitHub and [Dex IdP](https://dexidp.io/) to verify your access to all GlueOps Control Plane services.
 
 In order to deploy your cluster, the GlueOps team will need you to provide the following values:
 
