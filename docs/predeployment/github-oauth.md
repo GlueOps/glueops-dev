@@ -6,9 +6,9 @@ type: tutorial
 
 # Creating your GitHub OAuth App
 
-GlueOps authenticate services deployed on the Platform using the GitHub OAuth app. The OAuth app is installed within your GitHub Organization to provide secure access to your applications.
+GlueOps uses GitHub as an IDP to verify your access to all GlueOps Control Plane services.
 
-To enable GlueOps authentication for your application, you need to provide the following values:
+In order to deploy your cluster, the GlueOps team will need you to provide the following values:
 
 - [Client ID](#create-the-oauth-app): This is the Client ID of your GitHub OAuth app.
 - [Client Secret](#generate-client-secret): This is the Client Secret generated for your GitHub OAuth app.
