@@ -19,8 +19,23 @@ const sidebars = {
   // But you can create a sidebar manually
   main: [
     "introduction",
-    "glueops-cluster-domain",
-
+    "glueops-captain-domain",
+    {
+      type: "category",
+      label: "Developers",
+      collapsible: true,
+      items: [
+        "deploy-applications/deploy-hello-world-to-glueops",
+        "deploy-applications/deploy-docusarus-website-to-glueops",
+        "deploy-applications/deploy-python-app-to-glueops"
+      ],
+      link: {
+        type: "generated-index",
+        title: "Deploy your Applications to GlueOps",
+        description: "You can deploy any application to GlueOps",
+        slug: "/deploy-applications",
+      },
+    },
     {
       type: "category",
       label: "Platform Administrators",
@@ -73,25 +88,8 @@ const sidebars = {
 
       ],
 
-    }
-    
-    ,
-    {
-      type: "category",
-      label: "Deploy Applications",
-      collapsible: true,
-      items: [
-        "deploy-applications/deploy-hello-world-to-glueops",
-        "deploy-applications/deploy-docusarus-website-to-glueops",
-        "deploy-applications/deploy-python-app-to-glueops"
-      ],
-      link: {
-        type: "generated-index",
-        title: "Deploy your Applications to GlueOps",
-        description: "You can deploy any application to GlueOps",
-        slug: "/deploy-applications",
-      },
     },
+
   ],
 };
 
