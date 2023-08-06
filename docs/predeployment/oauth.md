@@ -10,7 +10,7 @@ Glueops authenticate services deployed on the Platform using the GitHub OAuth ap
 
 To enable GlueOps authentication for your application, you need to provide the following values:
 
-- [Client ID](#create-the-oauth-app-id): This is the Client ID of your GitHub OAuth app.
+- [Client ID](#create-the-oauth-app): This is the Client ID of your GitHub OAuth app.
 - [Client Secret](#generate-client-secret): This is the Client Secret generated for your GitHub OAuth app.
 
 Follow the step-by-step guide below to obtain these values:
@@ -70,7 +70,7 @@ Once the client secret is generated, make sure to copy and securely store it. In
 
 By completing the above steps, you should have obtained the following values from the GitHub OAuth App:
 
-- [Client ID](#create-the-oauth-app-id): This is the Client ID of your GitHub OAuth app.
+- [Client ID](#create-the-oauth-app): This is the Client ID of your GitHub OAuth app.
 - [Client Secret](#generate-client-secret): This is the Client Secret generated for your GitHub OAuth app.
 
-These values will be used when deploying your application with GlueOps and will need to be sent to the GlueOps team.
+These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing passsword service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/).
