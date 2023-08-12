@@ -22,7 +22,7 @@ export default function HeroGlueops(): JSX.Element {
             </p>
             <div className="padding-vert--md row">
               <div className="col col--5">
-                <a href="/docs/getting-started" className="button button--lg button--block button--primary">
+                <a href="/docs/introduction" className="button button--lg button--block button--primary">
                   Get Started
                 </a>
               </div>

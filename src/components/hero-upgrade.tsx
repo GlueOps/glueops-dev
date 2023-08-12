@@ -27,7 +27,7 @@ export default function HeroUpgrade(): JSX.Element {
             Reach out to us! We help buisness to make sure they get most out of their Glueops setup.
             </p>
             <div className={styles.reaching_out__link_container}>
-                  <a href="hello@glueops.dev" target="_blank">
+                  <a href="mailto:hello@glueops.dev" target="_blank">
                     <svg
                       style={{ height: "2rem", width: "2rem" }}
                       fill="currentColor"

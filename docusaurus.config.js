@@ -35,7 +35,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/GlueOps/glueops-dev",
+          editUrl: "https://github.com/GlueOps/glueops-dev/blob/main",
           sidebarCollapsed: false,
         },
         theme: {
@@ -150,7 +150,7 @@ const config = {
           },
           
         ],
-        copyright: `Copyright Glueops.`,
+        copyright: `©2023 GlueOps, LLC.`,
       },
       prism: {
         theme: lightCodeTheme,
