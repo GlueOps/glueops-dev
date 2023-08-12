@@ -150,7 +150,7 @@ const config = {
           },
           
         ],
-        copyright: `Copyright Glueops.`,
+        copyright: `©2023 GlueOps, LLC.`,
       },
       prism: {
         theme: lightCodeTheme,
