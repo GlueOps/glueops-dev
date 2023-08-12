@@ -12,7 +12,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title="Documentation"
-      description="GlueOps simplifies and optimizes your business’s DevOps and DataOps operations, allowing for efficient management and operation."
+      description="GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation."
     >
       <main>
         <HeroGlueops />
