@@ -89,7 +89,7 @@ const sidebars = {
               link: {
                 type: "generated-index",
                 title: "Creating a GitHub token using it.",
-                description: "To enable GitHub Actions to notify our platform of code changes, we need to configure a GitHub Token as a repository secret. This guide will walk you through setting it up.",
+                description: "To enable GitHub Actions to notify our platform of code changes, we need to configure a GitHub Token as an Organization secret. These guides will walk you through setting it up:",
                 slug: "/github-token-setup",
               },
             }
