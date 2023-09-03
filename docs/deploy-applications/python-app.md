@@ -126,7 +126,7 @@ In the `.github/workflows` directory of your application repository, we will add
 Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml` action to notify Argo CD about the new image tags and initiate the deployment process.
 
 
-###  `prod-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `prod` Environment:
 
 In the `prod-ci.yaml` file add the following content:
 
@@ -155,7 +155,7 @@ jobs:
       CREATE_PR: true
 ```
 
-###  `stage-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `stage` Environment:
 
 In the `stage-ci.yaml` file add the following content:
 
@@ -184,7 +184,7 @@ jobs:
       CREATE_PR: false
 ```
 
-###  `uat-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `uat` Environment:
 
 In the `uat-ci.yaml` file add the following content: 
 
@@ -212,7 +212,7 @@ Replace `GH_TOKEN` with your secret name.
 :::
 
 
-## Deploy the App and Register Environments
+## Deploy the Application and Register Deployment Environments
 
 Next, deploy the app and register the specified environments (prod, stage, uat) inside the GlueOps Argo CD. Here's what you need to do:
 
@@ -344,7 +344,7 @@ Replace the placeholders as follows:
 6. Save and commit your changes to the deployment repository.
 
 
-## Trigger the GitHub Action for Docker Image Publishing
+## Trigger GitHub Actions to Publish the Docker Image
 
 Create a pull request (PR) to trigger the GitHub Action you set up for publishing the Docker image based on the latest code changes. The platform will automatically spin up a new environment and deploy the application.
 
