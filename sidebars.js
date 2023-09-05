@@ -76,6 +76,24 @@ const sidebars = {
           collapsible: true,
           items: [
             "glueops-platform-administrator/configuration/glueops-deployment-configuration",
+            {
+              type: "category",
+              label: "GitHub token setup",
+              collapsible: true,
+              items: [
+                
+                  "glueops-platform-administrator/configuration/creating-github-token",
+                  "glueops-platform-administrator/configuration/adding-github-token-to-organization-secrets"
+                
+              ],
+              link: {
+                type: "generated-index",
+                title: "Creating a GitHub token using it.",
+                description: "To enable GitHub Actions to notify our platform of code changes, we need to configure a GitHub Token as an Organization secret. These guides will walk you through setting it up:",
+                slug: "/github-token-setup",
+              },
+            }
+
           ],
           link: {
             type: "generated-index",

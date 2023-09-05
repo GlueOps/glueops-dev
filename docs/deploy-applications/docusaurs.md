@@ -49,31 +49,6 @@ COPY index.html /usr/local/apache2/htdocs/index.html
 Change `index.html` to the correct path of your index file.
 :::
 
-## Configure GitHub Token as a Repository Secret
-
-To enable GitHub Actions to notify our Argo CD of code changes, we need to configure a GitHub token as a repository secret. Here's how you can set it up:
-
-- To get your token secret, go to [https://github.com/settings/tokens](https://github.com/settings/tokens) and click on **Generate new token(classic).**
-
-<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
-
-- Use the onscreen information to generate your token. The only scope required is the **repo** scope. 
-
-- Click on **Generate token** and copy your token.
-
-<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/a7bca229-ed48-4679-ba45-6a863977820c"/>
-
-- Go to your repository and navigate to **Settings > Security > Secrets and Variables > Actions**.
-<img width="422" alt="Screenshot 2023-07-28 at 02 47 16" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/f3468172-98cb-4b4f-a2fe-42e1006d772c"/>
-
-- Click on **New repository secret** to create a new token.
-
-<img width="798" alt="Screenshot 2023-08-03 at 01 34 34" src="https://github.com/venkata-tenant-test-1/python-app/assets/39309699/393ab91d-e0fb-4fe9-9e88-792de3ec43b0"/>
-
-- Add your **secret name** and place your copied token in the secret input field and click **Add secret**. Below is the repository secret used for this example
-
-<img width="795" alt="Screenshot 2023-08-03 at 01 37 10" src="https://github.com/venkata-tenant-test-1/python-app/assets/39309699/f2c1b85e-5431-452f-a238-14a35ef2e74b"/>
-
 ## Configure GitHub Workflows for Each Environment
 
 In the `.github/workflows` directory of your application repository, we will add GitHub Actions workflow files for our environment: `prod-ci.yaml`, `stage-ci.yaml`, and `uat-ci.yaml`.
@@ -93,7 +68,7 @@ In the `.github/workflows` directory of your application repository, we will add
 
 Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml` action to notify Argo CD about the new image tags and initiate the deployment process.
 
-###  `prod-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `prod` Environment:
 
 In the `prod-ci.yaml` file add the following content:
 
@@ -121,7 +96,7 @@ jobs:
 Replace `GH_TOKEN` with your secret name.
 :::
 
-###  `stage-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `stage` Environment:
 
 In the `stage-ci.yaml` file add the following content:
 
@@ -150,7 +125,7 @@ Replace `GH_TOKEN` with your secret name.
 :::
 
 
-###  `uat-ci.yaml` Environment Sample Configuration:
+###  Sample Configuration for `uat` Environment:
 
 In the `uat-ci.yaml` file add the following content: 
 
@@ -177,7 +152,7 @@ jobs:
 Replace `GH_TOKEN` with your secret name.
 :::
 
-## Deploy the App and Register Environments
+## Deploy the Application and Register Deployment Environments
 
 Next, deploy the app and register the specified environments (prod, stage, uat) inside the GlueOps Argo CD. Here's what you need to do:
 
@@ -309,7 +284,7 @@ Replace the placeholders as follows:
 6. Save and commit your changes to the deployment repository.
 
 
-## Trigger the GitHub Action for Docker Image Publishing
+## Trigger GitHub Actions to Publish the Docker Image
 
 Create a pull request (PR) to trigger the GitHub Action you set up for publishing the Docker image based on the latest code changes. The platform will automatically spin up a new environment and deploy the application.
 
