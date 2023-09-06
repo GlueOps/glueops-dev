@@ -235,21 +235,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-prod.yolo.venkatamutyala.com
+    - secretName: python-app-prod.nonprod.antoniostacos.com
       hosts:
-        - python-app-prod.yolo.venkatamutyala.com
+        - python-app-prod.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: python-app-prod.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: python-app-prod.yolo.venkatamutyala.com
+        - hostname: python-app-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-prod.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ###  `stage` Environment Sample Configuration:
@@ -267,21 +267,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-stage.yolo.venkatamutyala.com
+    - secretName: python-app-stage.nonprod.antoniostacos.com
       hosts:
-        - python-app-stage.yolo.venkatamutyala.com
+        - python-app-stage.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: python-app-stage.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: python-app-stage.yolo.venkatamutyala.com
+        - hostname: python-app-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-stage.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ### `uat` Environment Sample Configuration:
@@ -299,21 +299,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-uat.yolo.venkatamutyala.com
+    - secretName: python-app-uat.nonprod.antoniostacos.com
       hosts:
-        - python-app-uat.yolo.venkatamutyala.com
+        - python-app-uat.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: python-app-uat.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: python-app-uat.yolo.venkatamutyala.com
+        - hostname: python-app-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-uat.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 6. Save and commit your changes to the deployment repository.
