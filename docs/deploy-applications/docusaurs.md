@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build, Tag and Push Docker Image to GHCR
-        uses: GlueOps/github-actions-build-push-containers@v0.1.2
+        uses: GlueOps/github-actions-build-push-containers@main
 ```
 
 :::info
@@ -200,21 +200,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-prod.yolo.venkatamutyala.com
+    - secretName: docusarus-website-prod.nonprod.antoniostacos.com
       hosts:
-        - docusarus-website-prod.yolo.venkatamutyala.com
+        - docusarus-website-prod.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-prod.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: docusarus-website-prod.yolo.venkatamutyala.com
+        - hostname: docusarus-website-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-prod.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ###  `stage` Environment Sample Configuration:
@@ -232,21 +232,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-stage.yolo.venkatamutyala.com
+    - secretName: docusarus-website-stage.nonprod.antoniostacos.com
       hosts:
-        - docusarus-website-stage.yolo.venkatamutyala.com
+        - docusarus-website-stage.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-stage.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: docusarus-website-stage.yolo.venkatamutyala.com
+        - hostname: docusarus-website-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-stage.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ### `uat` Environment Sample Configuration:
@@ -264,21 +264,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-uat.yolo.venkatamutyala.com
+    - secretName: docusarus-website-uat.nonprod.antoniostacos.com
       hosts:
-        - docusarus-website-uat.yolo.venkatamutyala.com
+        - docusarus-website-uat.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-uat.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: docusarus-website-uat.yolo.venkatamutyala.com
+        - hostname: docusarus-website-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-uat.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 6. Save and commit your changes to the deployment repository.

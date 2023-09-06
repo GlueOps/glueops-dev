@@ -8,7 +8,7 @@ import Head from "@docusaurus/Head";
 export default function Upgrade(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout title="Upgrade" description="GlueOps simplifies and optimizes your business’s DevOps and DataOps operations, allowing for efficient management and operation.">
+    <Layout title="Upgrade" description="GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.">
       <Head>
         <meta property="og:image" content="https://glueops.dev/images/glueops.png" />
       </Head>

@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build, Tag and Push Docker Image to GHCR
-        uses: GlueOps/github-actions-build-push-containers@v0.1.2
+        uses: GlueOps/github-actions-build-push-containers@main
 ```
 
 :::info
@@ -216,21 +216,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-prod.yolo.venkatamutyala.com
+    - secretName: demo-app-1-prod.nonprod.antoniostacos.com
       hosts:
-        - demo-app-1-prod.yolo.venkatamutyala.com
+        - demo-app-1-prod.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-prod.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: demo-app-1-prod.yolo.venkatamutyala.com
+        - hostname: demo-app-1-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: demo-app-1-prod.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ###  `stage` Environment Sample Configuration:
@@ -249,21 +249,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-stage.yolo.venkatamutyala.com
+    - secretName: demo-app-1-stage.nonprod.antoniostacos.com
       hosts:
-        - demo-app-1-stage.yolo.venkatamutyala.com
+        - demo-app-1-stage.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-stage.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: demo-app-1-stage.yolo.venkatamutyala.com
+        - hostname: demo-app-1-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: demo-app-1-stage.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 ### `uat` Environment Sample Configuration:
@@ -282,21 +282,21 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-uat.yolo.venkatamutyala.com
+    - secretName: demo-app-1-uat.nonprod.antoniostacos.com
       hosts:
-        - demo-app-1-uat.yolo.venkatamutyala.com
+        - demo-app-1-uat.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-uat.apps.test-80-np.venkata.onglueops.rocks
-        - hostname: demo-app-1-uat.yolo.venkatamutyala.com
+        - hostname: demo-app-1-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: demo-app-1-uat.nonprod.antoniostacos.com
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
 - Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `test-80-np.venkata.onglueops.rocks` with the name of your GlueOps cluster provided by GlueOps.
+- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
 6. Save and commit your changes to the deployment repository.
