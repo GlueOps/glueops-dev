@@ -33,7 +33,7 @@ Now, let's configure GitHub Actions to automatically publish a Docker image of y
 2. Create a new file named `ghcr.yaml` in the `workflows` folder.
 3. Copy and paste the following code into `ghcr.yaml`:
 
-```yaml
+```yaml title=".github/workflows/ghcr.yaml"
 name: GlueOps Action
  
 on: [push]
@@ -53,7 +53,7 @@ GlueOps only supports container images published to the supported registry.
 ### Create Dockerfile
 Create a `Dockerfile` using the template below
 
-```
+```Dockerfile title="Dockerfile"
 FROM httpd:2.4.57
 
 COPY index.html /usr/local/apache2/htdocs/index.html
@@ -89,8 +89,7 @@ In the `prod-ci.yaml` file add the following content:
 Replace `GH_TOKEN` with your secret name.
 :::
 
-```yaml
-# .github/workflows/prod-ci.yaml
+```yaml title=".github/workflows/prod-ci.yaml"
 
 name: ArgoCD - Prod Tags CI
 
@@ -116,8 +115,7 @@ Replace `GH_TOKEN` with your secret name.
 
 In the `stage-ci.yaml` file add the following content:
 
-```yaml
-# .github/workflows/stage-ci.yaml
+```yaml title=".github/workflows/stage-ci.yaml"
 
 name: ArgoCD - Staging Tags CI
 
@@ -144,10 +142,9 @@ Replace `GH_TOKEN` with your secret name.
 
 In the `uat-ci.yaml` file add the following content: 
 
-```yaml
-# .github/workflows/uat-ci.yaml
+```yaml title=".github/workflows/uat-ci.yaml"
 
-name: ArgoCD - QA Tags CI
+name: ArgoCD - UAT Tags CI
 
 on:
   release:
@@ -204,8 +201,7 @@ Replace `venkata-tenant-test-1/demo-app-1` with your organization and repository
 
 Create a file named `values.yaml` in the `envs/prod` folder and add the following content:
 
-```yaml
-# envs/prod/values.yaml
+```yaml title="envs/prod/values.yaml"
 
 image:
   tag: 'v0.2.0'
@@ -237,8 +233,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/stage` folder and add the following content:
 
-```yaml
-# envs/stage/values.yaml
+```yaml title="envs/stage/values.yaml"
 
 image:
   tag: 'latest'
@@ -270,8 +265,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/uat` folder and add the following content:
 
-```yaml
-# envs/uat/values.yaml
+```yaml title="envs/uat/values.yaml"
 
 image:
   tag: 'v0.1.0'
