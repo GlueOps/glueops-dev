@@ -9,20 +9,25 @@ type: tutorial
 
 # Deploy a "Hello World" Application
 
-In this guide, we will walk you through the process of deploying a "Hello World" application onto the GlueOps platform. We'll start from scratch and cover each step in detail to ensure you have a smooth deployment experience.
+In this guide, we will walk you through the process of deploying a "Hello World" application onto the GlueOps platform. We'll start from scratch and cover each step in detail to ensure you have a smooth deployment experience. You may see references to `antoniostacos`, this name is for demo purposes only and can be replaced with your own company name.
 
 ## Create a New Repository and set up your application folder
 
-1. Create a new repository for your application within your organization. 
+1. Create a new repository called your application called `app-antoniostacos` within [your organization](https://github.com/new)
 
-2. Set up the necessary folders and files for your application. You can use the following folder structure:
+The following is what you can expect your repository to look like by the end of the tutorial:
 
 ```
 app-antoniostacos
+├── Dockerfile
 ├── .github
 │   └── workflows
+│       ├── ghcr.yaml
+│       ├── prod-cd.yaml
+│       ├── qa-cd.yaml
+│       └── stage-cd.yaml
+├── index.html
 ├── README.md
-└── index.html
 ```
 
 ## Set Up GitHub Actions for Docker Image Publishing
@@ -46,17 +51,16 @@ jobs:
         uses: GlueOps/github-actions-build-push-containers@main
 ```
 
-:::info
-GlueOps only supports container images published to the supported registry.
-:::
-
 ### Create Dockerfile
 Create a `Dockerfile` using the template below
 
 ```Dockerfile title="Dockerfile"
 FROM httpd:2.4.57
 
-COPY index.html /usr/local/apache2/htdocs/index.html
+COPY ./index.html /usr/local/apache2/htdocs/
+
+CMD [ "bash", "-c", "httpd-foreground" ]
+
 ```
 :::info
 Change `index.html` to the correct path of your index file.
@@ -64,15 +68,15 @@ Change `index.html` to the correct path of your index file.
 
 ## Configure GitHub Workflows for Each Environment
 
-In the `.github/workflows` directory of your application repository, we will add GitHub Actions workflow files for our environment: `prod-ci.yaml`, `stage-ci.yaml`, and `uat-ci.yaml`.
+In the `.github/workflows` directory of your application repository, we will add GitHub Actions workflow files for our environment: `prod-cd.yaml`, `stage-cd.yaml`, and `qa-cd.yaml`.
 ```
 .
 ├── .github
 │   └── workflows
 │       ├── ghcr.yaml
-│       ├── prod-ci.yaml
-│       ├── stage-ci.yaml
-│       └── uat-ci.yaml
+│       ├── prod-cd.yaml
+│       ├── stage-cd.yaml
+│       └── qa-cd.yaml
 ├── Dockerfile
 ├── README.md
 └── index.html
@@ -83,13 +87,12 @@ Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-t
 
 ###  Sample Configuration for `prod` Environment:
 
-In the `prod-ci.yaml` file add the following content:
+In the `prod-cd.yaml` file add the following content:
 
 
 
-```yaml title=".github/workflows/prod-ci.yaml"
-
-name: ArgoCD - Prod Tags CI
+```yaml title=".github/workflows/prod-cd.yaml"
+name: prod CD
 
 on:
   release:
@@ -97,48 +100,21 @@ on:
       - created
 jobs:
   update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@feat/adding-glueops-github-token-variable-name
+    secrets: inherit
     with:
-      STACK_REPO: 'deployment-configurations'
       ENV: 'prod'
       CREATE_PR: true
+
 ```
 
 
 ###  Sample Configuration for `stage` Environment:
 
-In the `stage-ci.yaml` file add the following content:
+In the `stage-cd.yaml` file add the following content:
 
-```yaml title=".github/workflows/stage-ci.yaml"
-
-name: ArgoCD - Staging Tags CI
-
-on:
-  pull_request:
-    types:
-      - closed
-jobs:
-  update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    if: github.event.pull_request.merged == true
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      STACK_REPO: 'deployment-configurations'
-      ENV: 'stage'
-      CREATE_PR: false
-```
-
-
-###  Sample Configuration for `uat` Environment:
-
-In the `uat-ci.yaml` file add the following content: 
-
-```yaml title=".github/workflows/uat-ci.yaml"
-
-name: ArgoCD - UAT Tags CI
+```yaml title=".github/workflows/stage-cd.yaml"
+name: stage CD
 
 on:
   release:
@@ -146,20 +122,44 @@ on:
       - created
 jobs:
   update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@feat/adding-glueops-github-token-variable-name
+    secrets: inherit
     with:
-      STACK_REPO: 'deployment-configurations'
-      ENV: 'uat'
+      ENV: 'stage'
       CREATE_PR: true
+
+```
+
+
+###  Sample Configuration for `qa` Environment:
+
+In the `qa-cd.yaml` file add the following content: 
+
+```yaml title=".github/workflows/qa-cd.yaml"
+
+name: qa CD
+
+on:
+  pull_request:
+    types:
+      - closed
+      
+jobs:
+  update-tags:
+    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@feat/adding-glueops-github-token-variable-name
+    if: github.event.pull_request.merged == true
+    secrets: inherit
+    with:
+      ENV: 'qa'
+      CREATE_PR: false
+
 ```
 
 
 
 ## Deploy the Application and Register Deployment Environments
 
-Next, deploy the app and register the specified environments (prod, stage, uat) inside the GlueOps Argo CD. Here's what you need to do:
+Next, deploy the app and register the specified environments (prod, stage, qa) inside the GlueOps Argo CD. Here's what you need to do:
 
 1. Go to the [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository.
 2. Inside the `app` directory, duplicate one of the example demo apps and rename it to your application's name.
@@ -173,7 +173,7 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 │   ├── previews
 │   ├── prod
 │   ├── stage
-│   └── uat
+│   └── qa
 ```
 
 4. In the `base-values.yaml` file inside the `base` directory, update the information to fit your application. For example, the `base-values.yaml` might look like this:
@@ -187,7 +187,7 @@ image:
 
 Replace `antoniostacos/app-antoniostacos` with your organization and repository name.
 
-5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
+5. Update the `values.yaml` file in the `prod`, `stage`, and `qa` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
 ###  `prod` Environment Sample Configuration:
 
@@ -253,11 +253,11 @@ Replace the placeholders as follows:
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
-### `uat` Environment Sample Configuration:
+### `qa` Environment Sample Configuration:
 
-Create a file named `values.yaml` in the `envs/uat` folder and add the following content:
+Create a file named `values.yaml` in the `envs/qa` folder and add the following content:
 
-```yaml title="envs/uat/values.yaml"
+```yaml title="envs/qa/values.yaml"
 
 image:
   tag: 'v0.1.0'
@@ -268,14 +268,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: app-antoniostacos-uat.nonprod.antoniostacos.net
+    - secretName: app-antoniostacos-qa.nonprod.antoniostacos.net
       hosts:
-        - app-antoniostacos-uat.nonprod.antoniostacos.net
+        - app-antoniostacos-qa.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
-        - hostname: app-antoniostacos-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: app-antoniostacos-uat.nonprod.antoniostacos.net
+        - hostname: app-antoniostacos-qa.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: app-antoniostacos-qa.nonprod.antoniostacos.net
 ```
 
 :::important
@@ -322,17 +322,17 @@ The staging enviroment is automatically deployed, to check your application:
 
 2. In the `values.yaml` file located in the `stage` folder, you will find the configuration for the staging environment. Check the `hostname` entry to check your application deployed to the staging environment.
 
-### Deploying to `prod` and `uat` Environments
+### Deploying to `prod` and `qa` Environments
 
-1. To deploy your application to the prod and UAT environments, you need to create a release in your application's repository (e.g., v0.1.0, v1.0.0, etc.). This release will mark the specific version of your application that you want to deploy to these environments.
+1. To deploy your application to the prod and qa environments, you need to create a release in your application's repository (e.g., v0.1.0, v1.0.0, etc.). This release will mark the specific version of your application that you want to deploy to these environments.
 
-2. Upon creating the release, GitHub will automatically generate pull requests into the deployment-configurations repository. These pull requests will contain the necessary changes for the prod and UAT environments, located in the `envs/prod` and `envs/uat` directories, respectively.
+2. Upon creating the release, GitHub will automatically generate pull requests into the deployment-configurations repository. These pull requests will contain the necessary changes for the prod and qa environments, located in the `envs/prod` and `envs/qa` directories, respectively.
 
 <img width="362" alt="Screenshot 2023-07-28 at 13 19 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/5bc936a8-adcd-40f4-bdc8-ff8b3290ce0d"/>
 
-3. Review and merge the pull requests in the deployment-configurations repository. This will trigger the deployment process to both the `prod` and `uat` environments.
+3. Review and merge the pull requests in the deployment-configurations repository. This will trigger the deployment process to both the `prod` and `qa` environments.
 
-5. Once the deployment process is completed, your application will be accessible in both the `prod` and `uat` environments hostnames 
+5. Once the deployment process is completed, your application will be accessible in both the `prod` and `qa` environments hostnames 
 
 ## Conclusion
 
