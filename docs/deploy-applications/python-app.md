@@ -231,20 +231,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-prod.nonprod.antoniostacos.com
+    - secretName: python-app-prod.nonprod.antoniostacos.net
       hosts:
-        - python-app-prod.nonprod.antoniostacos.com
+        - python-app-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-prod.nonprod.antoniostacos.com
+        - hostname: python-app-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -262,20 +262,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-stage.nonprod.antoniostacos.com
+    - secretName: python-app-stage.nonprod.antoniostacos.net
       hosts:
-        - python-app-stage.nonprod.antoniostacos.com
+        - python-app-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-stage.nonprod.antoniostacos.com
+        - hostname: python-app-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -293,20 +293,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-uat.nonprod.antoniostacos.com
+    - secretName: python-app-uat.nonprod.antoniostacos.net
       hosts:
-        - python-app-uat.nonprod.antoniostacos.com
+        - python-app-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-uat.nonprod.antoniostacos.com
+        - hostname: python-app-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 

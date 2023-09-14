@@ -212,20 +212,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-prod.nonprod.antoniostacos.com
+    - secretName: demo-app-1-prod.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-prod.nonprod.antoniostacos.com
+        - demo-app-1-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: demo-app-1-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-prod.nonprod.antoniostacos.com
+        - hostname: demo-app-1-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -244,20 +244,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-stage.nonprod.antoniostacos.com
+    - secretName: demo-app-1-stage.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-stage.nonprod.antoniostacos.com
+        - demo-app-1-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: demo-app-1-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-stage.nonprod.antoniostacos.com
+        - hostname: demo-app-1-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -276,20 +276,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-uat.nonprod.antoniostacos.com
+    - secretName: demo-app-1-uat.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-uat.nonprod.antoniostacos.com
+        - demo-app-1-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: demo-app-1-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-uat.nonprod.antoniostacos.com
+        - hostname: demo-app-1-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 

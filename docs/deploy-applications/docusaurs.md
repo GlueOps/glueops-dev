@@ -197,20 +197,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-prod.nonprod.antoniostacos.com
+    - secretName: docusarus-website-prod.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-prod.nonprod.antoniostacos.com
+        - docusarus-website-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-prod.nonprod.antoniostacos.com
+        - hostname: docusarus-website-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -228,20 +228,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-stage.nonprod.antoniostacos.com
+    - secretName: docusarus-website-stage.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-stage.nonprod.antoniostacos.com
+        - docusarus-website-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-stage.nonprod.antoniostacos.com
+        - hostname: docusarus-website-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -259,20 +259,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-uat.nonprod.antoniostacos.com
+    - secretName: docusarus-website-uat.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-uat.nonprod.antoniostacos.com
+        - docusarus-website-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-uat.nonprod.antoniostacos.com
+        - hostname: docusarus-website-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
