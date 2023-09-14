@@ -202,11 +202,11 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 ```yaml
 image:
   registry: ghcr.io
-  repository: venkata-tenant-test-1/python-app
+  repository: antoniostacos/python-app
   port: 80
 ```
 
-Replace `venkata-tenant-test-1/python-app` with your organization and repository name.
+Replace `antoniostacos/python-app` with your organization and repository name.
 
 5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
@@ -311,7 +311,7 @@ Replace the placeholders as follows:
 
 Create a pull request (PR) to trigger the GitHub Action you set up for publishing the Docker image based on the latest code changes. The platform will automatically spin up a new environment and deploy the application.
 
-<img width="953" alt="Screenshot 2023-08-01 at 17 05 26" src="https://github.com/venkata-tenant-test-1/python-app/assets/39309699/bf80dae2-5605-419d-9a2d-f4ccdc88e539"/>
+<img width="953" alt="Screenshot 2023-08-01 at 17 05 26" src="https://github.com/antoniostacos/python-app/assets/39309699/bf80dae2-5605-419d-9a2d-f4ccdc88e539"/>
 
 To view the app click on the preview URL. You can check the status of the deployment on Argos CD, which will show metrics, logs, and more. The QR code will also lead you to the preview URL.
 

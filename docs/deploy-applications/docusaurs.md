@@ -169,11 +169,11 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 ```yaml
 image:
   registry: ghcr.io
-  repository: venkata-tenant-test-1/docusaurus-website
+  repository: antoniostacos/docusaurus-website
   port: 80
 ```
 
-Replace `venkata-tenant-test-1/docusaurus-website` with your organization and repository name.
+Replace `antoniostacos/docusaurus-website` with your organization and repository name.
 
 5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
