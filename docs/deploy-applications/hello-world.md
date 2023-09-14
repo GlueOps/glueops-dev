@@ -18,7 +18,7 @@ In this guide, we will walk you through the process of deploying a "Hello World"
 2. Set up the necessary folders and files for your application. You can use the following folder structure:
 
 ```
-demo-app-1
+app-antoniostacos
 ├── .github
 │   └── workflows
 ├── README.md
@@ -166,7 +166,7 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 3. Your application directory should have the following structure:
 
 ```
-├── demo-app-1
+├── app-antoniostacos
 ├── base
 │   └── base-values.yaml
 ├── envs
@@ -181,11 +181,11 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 ```yaml
 image:
   registry: ghcr.io
-  repository: venkata-tenant-test-1/demo-app-1
+  repository: venkata-tenant-test-1/app-antoniostacos
   port: 80
 ```
 
-Replace `venkata-tenant-test-1/demo-app-1` with your organization and repository name.
+Replace `venkata-tenant-test-1/app-antoniostacos` with your organization and repository name.
 
 5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
@@ -204,19 +204,19 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-prod.nonprod.antoniostacos.net
+    - secretName: app-antoniostacos-prod.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-prod.nonprod.antoniostacos.net
+        - app-antoniostacos-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-prod.nonprod.antoniostacos.net
+        - hostname: app-antoniostacos-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: app-antoniostacos-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
+- Replace `app-antoniostacos` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
@@ -236,19 +236,19 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-stage.nonprod.antoniostacos.net
+    - secretName: app-antoniostacos-stage.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-stage.nonprod.antoniostacos.net
+        - app-antoniostacos-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-stage.nonprod.antoniostacos.net
+        - hostname: app-antoniostacos-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: app-antoniostacos-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
+- Replace `app-antoniostacos` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
@@ -268,19 +268,19 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: demo-app-1-uat.nonprod.antoniostacos.net
+    - secretName: app-antoniostacos-uat.nonprod.antoniostacos.net
       hosts:
-        - demo-app-1-uat.nonprod.antoniostacos.net
+        - app-antoniostacos-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-uat.nonprod.antoniostacos.net
+        - hostname: app-antoniostacos-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: app-antoniostacos-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
+- Replace `app-antoniostacos` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
@@ -296,7 +296,7 @@ Go back to your application repository and edit the `index.html` file. Add a sim
  <head>
  </head>
  <body>
-   <h1>Hello World from demo-app-1<h1>
+   <h1>Hello World from app-antoniostacos<h1>
  </body>
 </html>
 ```
