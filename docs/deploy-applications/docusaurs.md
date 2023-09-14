@@ -91,9 +91,7 @@ jobs:
       ENV: 'prod'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ###  Sample Configuration for `stage` Environment:
 
@@ -119,9 +117,7 @@ jobs:
       ENV: 'stage'
       CREATE_PR: false
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 
 ###  Sample Configuration for `uat` Environment:
@@ -147,9 +143,7 @@ jobs:
       ENV: 'uat'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ## Deploy the Application and Register Deployment Environments
 

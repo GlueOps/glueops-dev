@@ -85,9 +85,7 @@ Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-t
 
 In the `prod-ci.yaml` file add the following content:
 
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ```yaml title=".github/workflows/prod-ci.yaml"
 
@@ -107,9 +105,7 @@ jobs:
       ENV: 'prod'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ###  Sample Configuration for `stage` Environment:
 
@@ -134,9 +130,7 @@ jobs:
       ENV: 'stage'
       CREATE_PR: false
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ###  Sample Configuration for `uat` Environment:
 
@@ -161,9 +155,7 @@ jobs:
       CREATE_PR: true
 ```
 
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ## Deploy the Application and Register Deployment Environments
 
