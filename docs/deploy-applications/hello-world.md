@@ -290,7 +290,7 @@ jobs:
 
 Save the file and commit your changes and push up your changess.
 
-:::note
+:::tip
 
 Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<MY_ORG>/<MY_REPO>/actions. If you see nothing but "Green" circles then everything completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact(s) published to: https://github.com/<MY_ORG>/<MY_REPO>/packages.
 :::
