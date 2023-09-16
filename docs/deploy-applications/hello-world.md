@@ -315,7 +315,6 @@ We are almost at the end, let's get your app deployed so your QA team can check 
 
 
 ```yaml title="apps/app-antoniostacos/envs/qa/values.yaml"
-# configurations unique to the production deployment of this application
 image:
   repository: 'antoniostacos/app-antoniostacos'
   registry: ghcr.io
