@@ -310,8 +310,9 @@ Below is an example of the structure we will be adding to your deployment config
 
 :::
 
-We are almost at the end, let's get your app deployed so your QA team can check it out! Just create this file below:
+We are almost at the end, let's get your app deployed so your QA team can check it out!
 
+Within your deployment configs repo just create this file:
 
 ```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
 image:
