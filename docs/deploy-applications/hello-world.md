@@ -288,7 +288,7 @@ jobs:
         uses: GlueOps/github-actions-build-push-containers@main
 ```
 
-Save the file and commit your changes and push up your changess.
+Save the file and commit your changes and push up your changes.
 
 :::tip
 
