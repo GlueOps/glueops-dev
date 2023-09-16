@@ -298,7 +298,7 @@ Once you push up your changes visit your github repository actions page to view 
 ## Let's deploy your app!
 
 :::info
-Below is an example of the structure we will be adding to your deployment configurations repository. The exact location of this repository will be provided to your by a Platform Administrator.
+Below is an example of the structure we will be adding to your "deployment configurations" repository. The exact name and location of this repository will be provided to your by a Platform Administrator.
 
 ```
 ├── apps
@@ -312,7 +312,7 @@ Below is an example of the structure we will be adding to your deployment config
 
 We are almost at the end, let's get your app deployed so your QA team can check it out!
 
-Within your deployment configs repo just create this file:
+Within your "deployment configurations" repository just create this file:
 
 ```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
 image:
