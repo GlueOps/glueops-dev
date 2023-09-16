@@ -122,7 +122,7 @@ Within your repo create the file that contains your code:
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```js title="app-antoniostacos/app.js"
+```js title="<MY_REPO>/app.js"
 const express = require('express');
 const app = express();
 
@@ -139,7 +139,7 @@ app.listen(8080, () => {
 </TabItem>
 <TabItem value="py" label="Python">
 
-```py title="app-antoniostacos/app.py"
+```py title="<MY_REPO>/app.py"
 import os
 from flask import Flask
 app = Flask(__name__)
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 </TabItem>
 <TabItem value="ruby" label="Ruby">
 
-```ruby title="app-antoniostacos/app.rb"
+```ruby title="<MY_REPO>/app.rb"
 require 'sinatra'
 
 set :bind, '0.0.0.0'  # This binds the server to all network interfaces.
@@ -179,7 +179,7 @@ Next, create a `Dockerfile` using the template below within your application rep
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```docker title="app-antoniostacos/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM node:18-alpine
 
 WORKDIR /app
@@ -193,7 +193,7 @@ CMD ["node", "app.js"]
 </TabItem>
 <TabItem value="py" label="Python">
 
-```docker title="app-antoniostacos/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM python:3-alpine
 
 WORKDIR /app
@@ -207,7 +207,7 @@ CMD ["python", "app.py"]
 </TabItem>
 <TabItem value="ruby" label="Ruby">
 
-```docker title="app-antoniostacos/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM ruby:3-alpine
 
 WORKDIR /app
@@ -275,7 +275,7 @@ Creating this `YAML` will add a GitHub Action that will automatically publish a 
 
 To use it, Simply create the file below
 
-```yaml title="app-antoniostacos/.github/workflows/ghcr.yaml"
+```yaml title="<MY_REPO>/.github/workflows/ghcr.yaml"
 name: Publish to GHCR.io
  
 on: [push]
@@ -292,8 +292,7 @@ Save the file and commit your changes and push up your changess.
 
 :::note
 
-Once you push up your changes visit your github repository actions page. You can find it at: https://github.com/<ORG_NAME>/<REPO_NAME>/actions. You should see the status of `Publish to GHCR.io` within this page. And if you see nothing but "Green" circles then everything completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact(s) published to: https://github.com/<ORG_NAME>/<REPO_NAME>/packages
-
+Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<MY_ORG>/<MY_REPO>/actions. If you see nothing but "Green" circles then everything completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact(s) published to: https://github.com/<MY_ORG>/<MY_REPO>/packages.
 :::
 
 ## Let's deploy your app!
@@ -314,9 +313,9 @@ Below is an example of the structure we will be adding to your deployment config
 We are almost at the end, let's get your app deployed so your QA team can check it out! Just create this file below:
 
 
-```yaml title="apps/app-antoniostacos/envs/qa/values.yaml"
+```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
 image:
-  repository: 'antoniostacos/app-antoniostacos'
+  repository: '<MY_ORG>/<MY_REPO>'
   registry: ghcr.io
   pullPolicy: Always
   port: 8080
@@ -339,20 +338,14 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: 'app-antoniostacos-qa.apps.nonprod.antoniostacos.onglueops.com'
+        - hostname: '<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>'
 ```
 
-:::danger
+:::tip
 You must replace the placeholders as follows:
-- Replace `antoniostacos/app-antoniostacos` with your actual container repository owner/name. In this case, we are using GitHub container registry so `antoniostacos` is the github organization and `app-antoniostacos` is the name of the repository.
-- Replace `nonprod.antoniostacos.onglueops.com` with the captain domain provided by GlueOps
+- Replace `<MY_ORG>` and `<MY_REPO>` with your github organization name and your repository name.
+- Replace `<MY_APP_NAME>` with your own friendly app name.
+- Replace `<MY_CAPTAIN_DOMAIN>` with your captain domain. This is environment specific and provided by your Platform Administrators.
 :::
 
-Save and commit your changes to the deployment configurations repository and push up the changes. Within a minute you should be able to view your site at: https://app-antoniostacos-qa.apps.nonprod.antoniostacos.onglueops.com
-
-:::note
-
-The URL above will require modifications to actually resolve to your app.
-
-Ex. https://`<app-name>`-`<environment-name>`.apps.`<captain-domain>`
-:::
+Save and commit your changes to the deployment configurations repository and push up the changes.
