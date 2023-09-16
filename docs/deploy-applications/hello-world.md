@@ -349,4 +349,4 @@ You must replace the placeholders as follows:
 - Replace `<MY_CAPTAIN_DOMAIN>` with your captain domain. This is environment specific and provided by your Platform Administrators.
 :::
 
-Save and commit your changes to the deployment configurations repository and push up the changes.
+Save and commit your changes to the deployment configurations repository and push up the changes. Within a minute you should see your app at: https://<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>
