@@ -298,7 +298,7 @@ Once you push up your changes visit your github repository actions page to view 
 ## Let's deploy your app!
 
 :::info
-Below is an example of the structure we will be adding to your deployment configurations repository
+Below is an example of the structure we will be adding to your deployment configurations repository. The exact location of this repository will be provided to your by a Platform Administrator.
 
 ```
 ├── apps
