@@ -344,7 +344,7 @@ ingress:
 
 :::tip
 You must replace the placeholders as follows:
-- Replace `<MY_ORG>` and `<MY_REPO>` with your github organization name and your repository name.
+- Replace `<MY_ORG>` and `<MY_REPO>` with your github organization name and your application repository name.
 - Replace `<MY_APP_NAME>` with your own friendly app name.
 - Replace `<MY_CAPTAIN_DOMAIN>` with your captain domain. This is environment specific and provided by your Platform Administrators.
 :::
