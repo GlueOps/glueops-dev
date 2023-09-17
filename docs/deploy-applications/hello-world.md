@@ -17,7 +17,7 @@ import TabItem from '@theme/TabItem';
 
 :::note
 
-In the file structures shown below, we've used the `<`` symbol next to files or folders to indicate those you'll be working on or creating during this tutorial.
+In the file structures shown below, we've used the `<` symbol next to files or folders to indicate those you'll be working on or creating during this tutorial.
 
 <Tabs>
 <TabItem value="js" label="JavaScript">
