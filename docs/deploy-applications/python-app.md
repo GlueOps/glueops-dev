@@ -50,7 +50,7 @@ GlueOps relies on Docker images to deploy applications. We'll set up GitHub Acti
 - Copy and paste the following code into `ghcr.yaml`:
 
 
-```yaml
+```yaml title=".github/workflows/ghcr.yaml"
 name: GlueOps Action
  
 on: [push]
@@ -71,7 +71,7 @@ GlueOps only supports container images published to the supported registry.
 ### Create Dockerfile
 Create a `Dockerfile` using the template below
 
-```
+```Dockerfile title="Dockerfile"
 FROM httpd:2.4.57
 
 COPY template/index.html /usr/local/apache2/htdocs/template/index.html
@@ -105,13 +105,10 @@ Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-t
 
 In the `prod-ci.yaml` file add the following content:
 
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
 
 
-```yaml
-# .github/workflows/prod-ci.yaml
+
+```yaml title=".github/workflows/prod-ci.yaml"
 
 name: ArgoCD - Prod Tags CI
 
@@ -134,12 +131,9 @@ jobs:
 
 In the `stage-ci.yaml` file add the following content:
 
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
 
-```yaml
-# .github/workflows/stage-ci.yaml
+
+```yaml title=".github/workflows/stage-ci.yaml"
 
 name: ArgoCD - Staging Tags CI
 
@@ -163,10 +157,9 @@ jobs:
 
 In the `uat-ci.yaml` file add the following content: 
 
-```yaml
-# .github/workflows/uat-ci.yaml
+```yaml title=".github/workflows/uat-ci.yaml"
 
-name: ArgoCD - QA Tags CI
+name: ArgoCD - UAT Tags CI
 
 on:
   release:
@@ -182,9 +175,7 @@ jobs:
       ENV: 'uat'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 
 ## Deploy the Application and Register Deployment Environments
@@ -211,11 +202,11 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 ```yaml
 image:
   registry: ghcr.io
-  repository: venkata-tenant-test-1/python-app
+  repository: antoniostacos/python-app
   port: 80
 ```
 
-Replace `venkata-tenant-test-1/python-app` with your organization and repository name.
+Replace `antoniostacos/python-app` with your organization and repository name.
 
 5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
@@ -223,8 +214,7 @@ Replace `venkata-tenant-test-1/python-app` with your organization and repository
 
 Create a file named `values.yaml` in the `envs/prod` folder and add the following content:
 
-```yaml
-# envs/prod/values.yaml
+```yaml title="envs/prod/values.yaml"
 
 image:
   tag: 'v0.2.0'
@@ -235,20 +225,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-prod.nonprod.antoniostacos.com
+    - secretName: python-app-prod.nonprod.antoniostacos.net
       hosts:
-        - python-app-prod.nonprod.antoniostacos.com
+        - python-app-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-prod.nonprod.antoniostacos.com
+        - hostname: python-app-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -256,8 +246,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/stage` folder and add the following content:
 
-```yaml
-# envs/stage/values.yaml
+```yaml title="envs/stage/values.yaml"
 
 image:
   tag: 'latest'
@@ -267,20 +256,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-stage.nonprod.antoniostacos.com
+    - secretName: python-app-stage.nonprod.antoniostacos.net
       hosts:
-        - python-app-stage.nonprod.antoniostacos.com
+        - python-app-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-stage.nonprod.antoniostacos.com
+        - hostname: python-app-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -288,8 +277,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/uat` folder and add the following content:
 
-```yaml
-# envs/uat/values.yaml
+```yaml title="envs/uat/values.yaml"
 
 image:
   tag: 'v0.1.0'
@@ -299,20 +287,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: python-app-uat.nonprod.antoniostacos.com
+    - secretName: python-app-uat.nonprod.antoniostacos.net
       hosts:
-        - python-app-uat.nonprod.antoniostacos.com
+        - python-app-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: python-app-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: python-app-uat.nonprod.antoniostacos.com
+        - hostname: python-app-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -323,7 +311,7 @@ Replace the placeholders as follows:
 
 Create a pull request (PR) to trigger the GitHub Action you set up for publishing the Docker image based on the latest code changes. The platform will automatically spin up a new environment and deploy the application.
 
-<img width="953" alt="Screenshot 2023-08-01 at 17 05 26" src="https://github.com/venkata-tenant-test-1/python-app/assets/39309699/bf80dae2-5605-419d-9a2d-f4ccdc88e539"/>
+<img width="953" alt="Screenshot 2023-08-01 at 17 05 26" src="https://github.com/antoniostacos/python-app/assets/39309699/bf80dae2-5605-419d-9a2d-f4ccdc88e539"/>
 
 To view the app click on the preview URL. You can check the status of the deployment on Argos CD, which will show metrics, logs, and more. The QR code will also lead you to the preview URL.
 

@@ -19,7 +19,7 @@ GlueOps relies on Docker images to deploy applications. We'll set up GitHub Acti
 - Copy and paste the following code into `ghcr.yaml`:
 
 
-```yaml
+```yaml title=".github/workflows/ghcr.yaml"
 name: GlueOps Action
  
 on: [push]
@@ -39,7 +39,7 @@ GlueOps only supports container images published to the supported registry.
 ### Create Dockerfile
 Create a `Dockerfile` using the template below
 
-```
+```Dockerfile title="Dockerfile"
 FROM httpd:2.4.57
 
 COPY index.html /usr/local/apache2/htdocs/index.html
@@ -73,8 +73,7 @@ Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-t
 In the `prod-ci.yaml` file add the following content:
 
 
-```yaml
-# .github/workflows/prod-ci.yaml
+```yaml title=".github/workflows/prod-ci.yaml"
 
 name: ArgoCD - Prod Tags CI
 
@@ -92,16 +91,14 @@ jobs:
       ENV: 'prod'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ###  Sample Configuration for `stage` Environment:
 
 In the `stage-ci.yaml` file add the following content:
 
-```yaml
-# .github/workflows/stage-ci.yaml
+```yaml title=".github/workflows/stage-ci.yaml"
+
 
 name: ArgoCD - Staging Tags CI
 
@@ -120,19 +117,17 @@ jobs:
       ENV: 'stage'
       CREATE_PR: false
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 
 ###  Sample Configuration for `uat` Environment:
 
 In the `uat-ci.yaml` file add the following content: 
 
-```yaml
-# .github/workflows/uat-ci.yaml
+```yaml title=".github/workflows/uat-ci.yaml"
 
-name: ArgoCD - QA Tags CI
+
+name: ArgoCD - UAT Tags CI
 
 on:
   release:
@@ -148,9 +143,7 @@ jobs:
       ENV: 'uat'
       CREATE_PR: true
 ```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
+
 
 ## Deploy the Application and Register Deployment Environments
 
@@ -176,11 +169,11 @@ Next, deploy the app and register the specified environments (prod, stage, uat) 
 ```yaml
 image:
   registry: ghcr.io
-  repository: venkata-tenant-test-1/docusaurus-website
+  repository: antoniostacos/docusaurus-website
   port: 80
 ```
 
-Replace `venkata-tenant-test-1/docusaurus-website` with your organization and repository name.
+Replace `antoniostacos/docusaurus-website` with your organization and repository name.
 
 5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
 
@@ -188,9 +181,7 @@ Replace `venkata-tenant-test-1/docusaurus-website` with your organization and re
 
 Create a file named `values.yaml` in the `envs/prod` folder and add the following content:
 
-```yaml
-# envs/prod/values.yaml
-
+```yaml title="envs/prod/values.yaml"
 image:
   tag: 'v0.2.0'
 
@@ -200,20 +191,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-prod.nonprod.antoniostacos.com
+    - secretName: docusarus-website-prod.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-prod.nonprod.antoniostacos.com
+        - docusarus-website-prod.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-prod.nonprod.antoniostacos.com
+        - hostname: docusarus-website-prod.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -221,8 +212,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/stage` folder and add the following content:
 
-```yaml
-# envs/stage/values.yaml
+```yaml title="envs/stage/values.yaml"
 
 image:
   tag: 'latest'
@@ -232,20 +222,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-stage.nonprod.antoniostacos.com
+    - secretName: docusarus-website-stage.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-stage.nonprod.antoniostacos.com
+        - docusarus-website-stage.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-stage.nonprod.antoniostacos.com
+        - hostname: docusarus-website-stage.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 
@@ -253,8 +243,7 @@ Replace the placeholders as follows:
 
 Create a file named `values.yaml` in the `envs/uat` folder and add the following content:
 
-```yaml
-# envs/uat/values.yaml
+```yaml title="envs/uat/values.yaml"
 
 image:
   tag: 'v0.1.0'
@@ -264,20 +253,20 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   tls:
-    - secretName: docusarus-website-uat.nonprod.antoniostacos.com
+    - secretName: docusarus-website-uat.nonprod.antoniostacos.net
       hosts:
-        - docusarus-website-uat.nonprod.antoniostacos.com
+        - docusarus-website-uat.nonprod.antoniostacos.net
   entries:
     - name: public
       hosts:
         - hostname: docusarus-website-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: docusarus-website-uat.nonprod.antoniostacos.com
+        - hostname: docusarus-website-uat.nonprod.antoniostacos.net
 ```
 
 :::important
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
+- Replace `antoniostacos.net` with your actual hosting name.
 - Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
 :::
 

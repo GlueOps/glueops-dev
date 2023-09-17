@@ -4,37 +4,279 @@ title: Deploy a "Hello World" Application
 type: tutorial
 ---
 
-
-
-
 # Deploy a "Hello World" Application
 
-In this guide, we will walk you through the process of deploying a "Hello World" application onto the GlueOps platform. We'll start from scratch and cover each step in detail to ensure you have a smooth deployment experience.
+In this guide, we will walk you through the process of deploying a "Hello World" application onto the GlueOps platform. We'll start from scratch and cover each step in detail to ensure you have a smooth deployment experience. You may see references to `antoniostacos`, this name is for demo purposes only and can be replaced with your actual project or company name where appropriate.
 
-## Create a New Repository and set up your application folder
+By the end of this guide, you will have deployed your antoniostacos application in a QA environment on the GlueOps platform.
 
-1. Create a new repository for your application within your organization. 
+## Create a New Repository
 
-2. Set up the necessary folders and files for your application. You can use the following folder structure:
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+
+In the file structures shown below, we've used the `<` symbol next to files or folders to indicate those you'll be working on or creating during this tutorial.
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
 
 ```
-demo-app-1
+app-antoniostacos <
+├── Dockerfile
 ├── .github
 │   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.js
 ├── README.md
-└── index.html
 ```
 
-## Set Up GitHub Actions for Docker Image Publishing
+</TabItem>
+<TabItem value="py" label="Python">
 
-Now, let's configure GitHub Actions to automatically publish a Docker image of your application. This will allow the GlueOps platform to use the latest version of your app. As a happy path, we have provided this [Custom Action to push Docker images to GitHub Container Registry](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr). Here's how you can set it up:
+```
+app-antoniostacos <
+├── Dockerfile
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.py
+├── README.md
+```
+</TabItem>
+<TabItem value="ruby" label="Ruby">
 
-1. In your newly created repository, navigate to the `.github/workflows` folder.
-2. Create a new file named `ghcr.yaml` in the `workflows` folder.
-3. Copy and paste the following code into `ghcr.yaml`:
+```
+app-antoniostacos <
+├── Dockerfile
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.rb
+├── README.md
+```
+</TabItem>
+</Tabs>
 
-```yaml
-name: GlueOps Action
+:::
+
+Go to GitHub and create a [new repository](https://github.com/new). When naming your repository, you can use a format like `app-yourprojectname`, for example: `app-antoniostacos`.
+
+## Add your application code and Dockerfile
+
+:::info
+Marked below are the files we will be adding:
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```
+app-antoniostacos
+├── Dockerfile <
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.js <
+├── README.md
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```
+app-antoniostacos
+├── Dockerfile <
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.py <
+├── README.md
+```
+</TabItem>
+<TabItem value="ruby" label="Ruby">
+
+```
+app-antoniostacos
+├── Dockerfile <
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml
+│       └── qa-cd.yaml
+├── app.rb <
+├── README.md
+```
+</TabItem>
+</Tabs>
+:::
+
+### Application Code
+
+Within your repo create the file that contains your code:
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```js title="<MY_REPO>/app.js"
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+    const greeting = process.env.GREETING_MESSAGE || 'Hello, World!';
+    res.send(greeting);
+});
+
+app.listen(8080, () => {
+    console.log('Server running on http://localhost:8080');
+});
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py title="<MY_REPO>/app.py"
+import os
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    greeting = os.environ.get('GREETING_MESSAGE', 'Hello, World!')
+    return greeting
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+```
+</TabItem>
+<TabItem value="ruby" label="Ruby">
+
+```ruby title="<MY_REPO>/app.rb"
+require 'sinatra'
+
+set :bind, '0.0.0.0'  # This binds the server to all network interfaces.
+set :port, 8080       # This sets the default port to 8080.
+
+get '/' do
+  greeting = ENV['GREETING_MESSAGE'] || 'Hello, World!'
+  greeting
+end
+```
+</TabItem>
+</Tabs>
+
+
+Save the file and commit your changes.
+
+### Dockerfile
+
+Next, within your application repository, create a new file named `Dockerfile`. Populate this file using the template provided below based on your chosen programming language.
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```docker title="<MY_REPO>/Dockerfile"
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY . /app
+
+RUN npm install express
+
+CMD ["node", "app.js"]
+```
+</TabItem>
+<TabItem value="py" label="Python">
+
+```docker title="<MY_REPO>/Dockerfile"
+FROM python:3-alpine
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install --no-cache-dir Flask
+
+CMD ["python", "app.py"]
+```
+</TabItem>
+<TabItem value="ruby" label="Ruby">
+
+```docker title="<MY_REPO>/Dockerfile"
+FROM ruby:3-alpine
+
+WORKDIR /app
+
+COPY . /app
+
+RUN gem install sinatra webrick
+
+CMD ["ruby", "app.rb"]
+```
+</TabItem>
+</Tabs>
+
+Save the file and commit your changes.
+
+## Add CI to publish a Docker image to GitHub Container Registry
+:::info
+Marked below are the files we will be adding:
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```
+app-antoniostacos
+├── Dockerfile
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml <
+│       └── qa-cd.yaml
+├── app.js
+├── README.md
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```
+app-antoniostacos
+├── Dockerfile
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml <
+│       └── qa-cd.yaml
+├── app.py
+├── README.md
+```
+</TabItem>
+<TabItem value="ruby" label="Ruby">
+
+```
+app-antoniostacos
+├── Dockerfile
+├── .github
+│   └── workflows
+│       ├── ghcr.yaml <
+│       └── qa-cd.yaml
+├── app.rb
+├── README.md
+```
+</TabItem>
+</Tabs>
+:::
+
+By creating and saving the following YAML configuration, you're setting up a GitHub Action that will automatically publish a Docker image of your application to the GitHub Container Registry (GHCR.io). This will allow the GlueOps platform to use the latest version of your app in it's deployments. As a happy path, we have provided this [custom action to push Docker images to your GitHub Container Registry (GHCR.io)](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr). 
+
+To use it, Simply create the file below
+
+```yaml title="<MY_REPO>/.github/workflows/ghcr.yaml"
+name: Publish to GHCR.io
  
 on: [push]
 
@@ -46,308 +288,69 @@ jobs:
         uses: GlueOps/github-actions-build-push-containers@main
 ```
 
-:::info
-GlueOps only supports container images published to the supported registry.
+Save the file and commit your changes and push up your changes.
+
+:::tip
+
+Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<MY_ORG>/<MY_REPO>/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact published to: https://github.com/<MY_ORG>/<MY_REPO>/packages.
 :::
 
-### Create Dockerfile
-Create a `Dockerfile` using the template below
-
-```
-FROM httpd:2.4.57
-
-COPY index.html /usr/local/apache2/htdocs/index.html
-```
-:::info
-Change `index.html` to the correct path of your index file.
-:::
-
-## Configure GitHub Workflows for Each Environment
-
-In the `.github/workflows` directory of your application repository, we will add GitHub Actions workflow files for our environment: `prod-ci.yaml`, `stage-ci.yaml`, and `uat-ci.yaml`.
-```
-.
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       ├── prod-ci.yaml
-│       ├── stage-ci.yaml
-│       └── uat-ci.yaml
-├── Dockerfile
-├── README.md
-└── index.html
-```
-
-Each workflow file uses the `GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml` action to notify Argo CD about the new image tags and initiate the deployment process.
-
-
-###  Sample Configuration for `prod` Environment:
-
-In the `prod-ci.yaml` file add the following content:
+## Let's deploy your app!
 
 :::info
-Replace `GH_TOKEN` with your secret name.
+**Deployment Configuration Repository:**
+
+Think of this repository as your application's deployment instruction manual. It contains all the essential rules and settings that determine how and where your application should be launched. You don't need to delve into the nitty-gritty of these configurations. Just follow the steps below, and our system will handle the deployment seamlessly.
+::::danger important
+ The exact name and location of this "deployment configurations" repository will be provided by your Platform Administrators.
+::::
+```
+deployment-configurations
+├── apps
+│   └── app-antoniostacos
+│       └── envs
+│           └── qa
+│               └── values.yaml <
+```
+
 :::
 
-```yaml
-# .github/workflows/prod-ci.yaml
+Now, within your "deployment configurations" repository, create the following file:
 
-name: ArgoCD - Prod Tags CI
-
-on:
-  release:
-    types:
-      - created
-jobs:
-  update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      STACK_REPO: 'deployment-configurations'
-      ENV: 'prod'
-      CREATE_PR: true
-```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
-
-###  Sample Configuration for `stage` Environment:
-
-In the `stage-ci.yaml` file add the following content:
-
-```yaml
-# .github/workflows/stage-ci.yaml
-
-name: ArgoCD - Staging Tags CI
-
-on:
-  pull_request:
-    types:
-      - closed
-jobs:
-  update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    if: github.event.pull_request.merged == true
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      STACK_REPO: 'deployment-configurations'
-      ENV: 'stage'
-      CREATE_PR: false
-```
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
-
-###  Sample Configuration for `uat` Environment:
-
-In the `uat-ci.yaml` file add the following content: 
-
-```yaml
-# .github/workflows/uat-ci.yaml
-
-name: ArgoCD - QA Tags CI
-
-on:
-  release:
-    types:
-      - created
-jobs:
-  update-tags:
-    uses: GlueOps/github-workflows/.github/workflows/argocd-tags-ci.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      STACK_REPO: 'deployment-configurations'
-      ENV: 'uat'
-      CREATE_PR: true
-```
-
-:::info
-Replace `GH_TOKEN` with your secret name.
-:::
-
-## Deploy the Application and Register Deployment Environments
-
-Next, deploy the app and register the specified environments (prod, stage, uat) inside the GlueOps Argo CD. Here's what you need to do:
-
-1. Go to the [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository.
-2. Inside the `app` directory, duplicate one of the example demo apps and rename it to your application's name.
-3. Your application directory should have the following structure:
-
-```
-├── demo-app-1
-├── base
-│   └── base-values.yaml
-├── envs
-│   ├── previews
-│   ├── prod
-│   ├── stage
-│   └── uat
-```
-
-4. In the `base-values.yaml` file inside the `base` directory, update the information to fit your application. For example, the `base-values.yaml` might look like this:
-
-```yaml
+```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
 image:
+  repository: '<MY_ORG>/<MY_REPO>'
   registry: ghcr.io
-  repository: venkata-tenant-test-1/demo-app-1
-  port: 80
-```
-
-Replace `venkata-tenant-test-1/demo-app-1` with your organization and repository name.
-
-5. Update the `values.yaml` file in the `prod`, `stage`, and `uat` folders accordingly. Change the image tag, hostnames, and other necessary details to match your application and GlueOps configuration.
-
-###  `prod` Environment Sample Configuration:
-
-Create a file named `values.yaml` in the `envs/prod` folder and add the following content:
-
-```yaml
-# envs/prod/values.yaml
-
-image:
-  tag: 'v0.2.0'
+  pullPolicy: Always
+  port: 8080
+  tag: main
+service:
+  enabled: true
+deployment:
+  replicas: 1
+  enabled: true
+  imagePullPolicy: Always
+  imagePullSecrets: regcred
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
 ingress:
   enabled: true
   ingressClassName: public
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  tls:
-    - secretName: demo-app-1-prod.nonprod.antoniostacos.com
-      hosts:
-        - demo-app-1-prod.nonprod.antoniostacos.com
   entries:
     - name: public
       hosts:
-        - hostname: demo-app-1-prod.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-prod.nonprod.antoniostacos.com
+        - hostname: '<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>'
 ```
 
-:::important
-Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+:::tip
+Ensure you replace the placeholders appropriately:
+
+- `<MY_ORG>` and `<MY_REPO>` with your GitHub organization and application repository names.
+- Replace `<MY_APP_NAME>`  with your chosen app name.
+- Replace `<MY_CAPTAIN_DOMAIN>` with your assigned captain domain, provided by the Platform Administrators.
 :::
 
-###  `stage` Environment Sample Configuration:
-
-Create a file named `values.yaml` in the `envs/stage` folder and add the following content:
-
-```yaml
-# envs/stage/values.yaml
-
-image:
-  tag: 'latest'
-
-ingress:
-  enabled: true
-  ingressClassName: public
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  tls:
-    - secretName: demo-app-1-stage.nonprod.antoniostacos.com
-      hosts:
-        - demo-app-1-stage.nonprod.antoniostacos.com
-  entries:
-    - name: public
-      hosts:
-        - hostname: demo-app-1-stage.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-stage.nonprod.antoniostacos.com
-```
-
-:::important
-Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
-:::
-
-### `uat` Environment Sample Configuration:
-
-Create a file named `values.yaml` in the `envs/uat` folder and add the following content:
-
-```yaml
-# envs/uat/values.yaml
-
-image:
-  tag: 'v0.1.0'
-
-ingress:
-  enabled: true
-  ingressClassName: public
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  tls:
-    - secretName: demo-app-1-uat.nonprod.antoniostacos.com
-      hosts:
-        - demo-app-1-uat.nonprod.antoniostacos.com
-  entries:
-    - name: public
-      hosts:
-        - hostname: demo-app-1-uat.apps.nonprod.antoniostacos.onglueops.com
-        - hostname: demo-app-1-uat.nonprod.antoniostacos.com
-```
-
-:::important
-Replace the placeholders as follows:
-- Replace `demo-app-1` with your actual repository name.
-- Replace `venkatamutyala.com` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
-:::
-
-6. Save and commit your changes to the deployment repository.
-
-## Add a Simple HTML "Hello World" Code
-
-Go back to your application repository and edit the `index.html` file. Add a simple "Hello World" HTML code, like this:
-
-```html
-<html>
- <head>
- </head>
- <body>
-   <h1>Hello World from demo-app-1<h1>
- </body>
-</html>
-```
-
-Save the file and commit your changes.
-
-## Trigger GitHub Actions to Publish the Docker Image
-
-Create a pull request (PR) to trigger the GitHub Action you set up for publishing the Docker image based on the latest code changes. The platform will automatically spin up a new environment and deploy the application.
-
-To view the app click on the preview URL. You can check the status of the deployment on Argos CD, which will show metrics, logs, and more. The QR code will also lead you to the preview URL.
-
-<img width="420" alt="Screenshot 2023-07-28 at 12 53 14" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/9661e169-6eee-4bec-a5ee-145751e40b6f"/>
-
-
-## Deploying to Environments
-
-### Check application deployed to your Staging Enviroment
-
-The staging enviroment is automatically deployed, to check your application:
-
-1. Navigate to the `envs/stage` directory within the [deployment-configurations](https://github.com/GlueOps/deployment-configurations) repository.
-
-2. In the `values.yaml` file located in the `stage` folder, you will find the configuration for the staging environment. Check the `hostname` entry to check your application deployed to the staging environment.
-
-### Deploying to `prod` and `uat` Environments
-
-1. To deploy your application to the prod and UAT environments, you need to create a release in your application's repository (e.g., v0.1.0, v1.0.0, etc.). This release will mark the specific version of your application that you want to deploy to these environments.
-
-2. Upon creating the release, GitHub will automatically generate pull requests into the deployment-configurations repository. These pull requests will contain the necessary changes for the prod and UAT environments, located in the `envs/prod` and `envs/uat` directories, respectively.
-
-<img width="362" alt="Screenshot 2023-07-28 at 13 19 12" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/5bc936a8-adcd-40f4-bdc8-ff8b3290ce0d"/>
-
-3. Review and merge the pull requests in the deployment-configurations repository. This will trigger the deployment process to both the `prod` and `uat` environments.
-
-5. Once the deployment process is completed, your application will be accessible in both the `prod` and `uat` environments hostnames 
-
-## Conclusion
-
-Congratulations! You have successfully deployed a basic "Hello World" application onto the GlueOps platform. 
+Once you've done the above, commit your changes to the deployment configurations repository and push the changes. In a short while, you should be able to access your app at the URL: `https://<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>`
