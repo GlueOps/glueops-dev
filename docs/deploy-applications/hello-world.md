@@ -330,7 +330,7 @@ deployment:
   replicas: 1
   enabled: true
   imagePullPolicy: Always
-  imagePullSecrets: regcred
+  imagePullSecrets: <CONTAINER_REGISTRY_CREDENTIALS>
   resources:
     requests:
       cpu: 100m
@@ -349,8 +349,9 @@ ingress:
 Ensure you replace the placeholders appropriately:
 
 - `<MY_ORG>` and `<MY_REPO>` with your GitHub organization and application repository names.
-- Replace `<MY_APP_NAME>`  with your chosen app name.
-- Replace `<MY_CAPTAIN_DOMAIN>` with your assigned captain domain, provided by the Platform Administrators.
+- `<MY_APP_NAME>`  with your chosen app name.
+- `<MY_CAPTAIN_DOMAIN>` with your assigned captain domain, provided by the Platform Administrators.
+- `<CONTAINER_REGISTRY_CREDENTIALS>` if your image is in a private registry you will need to specify a value provided by the Platform Administrators. Otherwise use `nil`.
 :::
 
 Once you've done the above, commit your changes to the deployment configurations repository and push the changes. In a short while, you should be able to access your app at the URL: `https://<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>`
