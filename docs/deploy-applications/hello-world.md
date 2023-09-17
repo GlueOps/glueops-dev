@@ -292,7 +292,7 @@ Save the file and commit your changes and push up your changes.
 
 :::tip
 
-Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<MY_ORG>/<MY_REPO>/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact(s) published to: https://github.com/<MY_ORG>/<MY_REPO>/packages.
+Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<MY_ORG>/<MY_REPO>/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact published to: https://github.com/<MY_ORG>/<MY_REPO>/packages.
 :::
 
 ## Let's deploy your app!
