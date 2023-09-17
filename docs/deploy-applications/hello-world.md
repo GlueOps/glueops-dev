@@ -301,9 +301,11 @@ Once you push up your changes visit your github repository actions page to view 
 **Deployment Configuration Repository:**
 
 Think of this repository as your application's deployment instruction manual. It contains all the essential rules and settings that determine how and where your application should be launched. You don't need to delve into the nitty-gritty of these configurations. Just follow the steps below, and our system will handle the deployment seamlessly.
-
-**IMPORTANT: The exact name and location of this repository will be provided by your Platform Administrators.**
+::::danger important
+ The exact name and location of this "deployment configurations" repository will be provided by your Platform Administrators.
+::::
 ```
+deployment-configurations
 ├── apps
 │   └── app-antoniostacos
 │       └── envs
