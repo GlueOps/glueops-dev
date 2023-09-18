@@ -1,6 +1,6 @@
 ---
 id: deploy-hello-world-to-glueops
-title: Deploy a "Hello World" Application
+title: Deploy "Hello World"
 type: tutorial
 ---
 
