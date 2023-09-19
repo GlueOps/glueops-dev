@@ -26,8 +26,7 @@ const sidebars = {
       collapsible: true,
       items: [
         "deploy-applications/deploy-hello-world-to-glueops",
-        "deploy-applications/deploy-docusarus-website-to-glueops",
-        "deploy-applications/deploy-python-app-to-glueops"
+        "deploy-applications/adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform"
       ],
       link: {
         type: "generated-index",
