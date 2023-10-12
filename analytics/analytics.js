@@ -1,5 +1,6 @@
 import { setCookie, getClientId } from './trackUser';
 import siteConfig from '@generated/docusaurus.config';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 // Singleton module to make sure is executed only once defined with a IIFE function, 
 // which means the function is executed immediately when the script is loaded and only once.  
