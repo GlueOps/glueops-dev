@@ -1,12 +1,13 @@
 ---
-id: cloud-setup-aws
-title: Amazon Web Services (AWS)
+id: create-a-waf-aws-account
+title: Enabling WAF Support
 ---
 
 
-# Creating your AWS Account for the GlueOps Platform
 
-To have the GlueOps Platform you need a single AWS account that will be dedicated to the deployment. We recommend creating an AWS sub account, also known as a member account. This requires you setup an AWS Organization which will own all your accounts. By using an AWS Organization you can easily create dozens of AWS sub accounts. We won't go into great detail on how to do this as this is very AWS specific but if you need help just reach out to the GlueOps team and we can provide you with additional guidance for your use case.
+# Enabling WAF Support for your GlueOps Platform
+
+Regardless of the cloud you are using we support adding a WAF to your platform. So whether you are on Linode, DigitalOcean, AWS, Google Cloud, Azure, etc. We use the robust features of Amazon Web Sevices Web Application Firewall to protect your applications. Using their globally distributed, low latency offering, we can help you protect your L7 Web Apps from being abused by bots, abusive amounts of requests and much more. To enable support for a WAF you need to create an AWS account solely for the WAF. This is independent of your existing AWS account that will be used to deploy the kubernetes cluster. As usualy we recommend creating another AWS sub account, also known as a member account. As mentioned for cloud deployments into AWS, this will require you setup an AWS Organization which will own all your accounts. By using an AWS Organization you can easily create dozens of AWS sub accounts. We won't go into great detail on how to do this as this is very AWS specific but if you need help just reach out to the GlueOps team and we can provide you with additional guidance for your use case.
 
 
 :::info
@@ -18,9 +19,8 @@ Follow the step-by-step guide below to:
 - Create an AWS IAM user
 
 
-## Verifications and Service Quotas
+## Verifications
 
-Depending on your cluster size the GlueOps Platform will need at least 64 vCPU's. To help make it easier to get service quotas we recommend verifying your accounts immediately after account creation. These vCPU's (roughly 16) will be used to deploy the GlueOps Platform Control Plane and the remainder will be used for either your own applications or to provide temporary capacity for security fixes and upgrades.
 
 ### Phone verification
 
@@ -43,19 +43,8 @@ Adding the default should have no direct impact on any consolidated Organization
 
 ### Service Quotas
 
-1. Login to the AWS Sub/member account
-2. Ensure you are in the region that you want the cluster deployed in.
-3. For each quota listed below, follow the steps outlined on the [AWS site to request a quota increase](https://docs.aws.amazon.com/servicequotas/latest/userguide/request-quota-increase.html)
-
-Quotas to increase:
-
-|  Quota name | Minimum Required  |
-|---|---|
-| Running On-Demand Standard (A, C, D, H, I, M, R, T, Z) instances  | 32 vCPU |
-
-
 :::info
-The more applications you have the large these numbers may need to be. Please consult with the GlueOps team for your specific use case.
+If you have more than 200 distinct applications in a single cluster then you may need a quota increase. The upper limit at this time would be 10,000 distinct L7 based applications.
 :::
 
 ## Creating an AWS IAM User and Credentials

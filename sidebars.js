@@ -47,6 +47,8 @@ const sidebars = {
           items: [
             "glueops-platform-administrator/predeployment/create-github-oauth-for-glueops",
             "glueops-platform-administrator/predeployment/create-github-app-for-glueops",
+            "glueops-platform-administrator/predeployment/create-a-waf-aws-account",
+
             {
               type: "category",
               label: "Cloud Setup",
