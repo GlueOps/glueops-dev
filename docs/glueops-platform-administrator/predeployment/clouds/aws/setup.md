@@ -20,7 +20,7 @@ Follow the step-by-step guide below to:
 
 ## Verifications and Service Quotas
 
-Depending on your cluster size the GlueOps Platform will need at least 32 vCPU's. To help make it easier to get service quotas we recommend verifying your accounts immediately after account creation. These vCPU's (roughly 6) will be used to deploy the GlueOps Platform Control Plane and the remainder will be used for either your own applications or to provide temporary capacity for security fixes and upgrades.
+Depending on your cluster size the GlueOps Platform will need at least 64 vCPU's. To help make it easier to get service quotas we recommend verifying your accounts immediately after account creation. These vCPU's (roughly 16) will be used to deploy the GlueOps Platform Control Plane and the remainder will be used for either your own applications or to provide temporary capacity for security fixes and upgrades.
 
 ### Phone verification
 
