@@ -55,6 +55,14 @@ const config = {
     ],
   ],
 
+  clientModules: [
+    require.resolve("./analytics/trackUser.js"),
+    require.resolve("./analytics/analytics.js"),
+  ],
+  customFields: {
+    gluepOpsVersion: 1.000,
+  },
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
