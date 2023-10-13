@@ -6,13 +6,13 @@ import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 // which means the function is executed immediately when the script is loaded and only once.  
 const LogEventManager = (() => {
   let clientId;
-  let gluepOpsVersion;
+  let glueOpsVersion;
 
   const setup = () => {
     const days =  365;
     clientId = getClientId();
     setCookie('clientId', clientId, days);
-    gluepOpsVersion = siteConfig.customFields.gluepOpsVersion || 8000; // Default to 8000 if not defined
+    glueOpsVersion = siteConfig.customFields.glueOpsVersion || 8000; // Default to 8000 if not defined
   };
 
   // Call setup once
@@ -22,8 +22,8 @@ const LogEventManager = (() => {
     get clientId() {
       return clientId;
     },
-    get gluepOpsVersion() {
-      return gluepOpsVersion;
+    get glueOpsVersion() {
+      return glueOpsVersion;
     },
   };
 })();
@@ -33,7 +33,7 @@ const LogEventManager = (() => {
 
 /* Possible eventProperties
  * {  
-      gluepOpsVersion: LogEventManager.gluepOpsVersion,
+      glueOpsVersion: LogEventManager.glueOpsVersion,
       clientId: LogEventManager.clientId,
       event_category: 'Custom Category',
       event_label: 'Custom Label',
@@ -44,8 +44,8 @@ export const logEvent = (eventName, eventProperties) => {
   if (ExecutionEnvironment.canUseDOM) {
     // Log a custom event
     const updatedEventProperties = {
-      gluepOpsVersion: LogEventManager.gluepOpsVersion,
-      clientId: LogEventManager.clientId,
+      glueOpsSiteVersion: LogEventManager.glueOpsVersion,
+      userID: LogEventManager.clientId,
       ...eventProperties,
     };
 

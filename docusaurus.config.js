@@ -60,7 +60,7 @@ const config = {
     require.resolve("./analytics/analytics.js"),
   ],
   customFields: {
-    gluepOpsVersion: 1.000,
+    glueOpsVersion: 1.000,
   },
 
   themeConfig:
