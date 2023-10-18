@@ -1,18 +1,18 @@
 import { setCookie, getClientId } from './trackUser';
-import siteConfig from '@generated/docusaurus.config';
+import pjson from "../package.json";
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 // Singleton module to make sure is executed only once defined with a IIFE function, 
 // which means the function is executed immediately when the script is loaded and only once.  
 const LogEventManager = (() => {
   let clientId;
-  let glueOpsVersion;
+  let version;
 
   const setup = () => {
     const days =  365;
     clientId = getClientId();
     setCookie('clientId', clientId, days);
-    glueOpsVersion = siteConfig.customFields.glueOpsVersion || 8000; // Default to 8000 if not defined
+    version = pjson.version || 8000; // Default to 8000 if not defined
   };
 
   // Call setup once
@@ -22,8 +22,8 @@ const LogEventManager = (() => {
     get clientId() {
       return clientId;
     },
-    get glueOpsVersion() {
-      return glueOpsVersion;
+    get version() {
+      return version;
     },
   };
 })();
@@ -33,7 +33,7 @@ const LogEventManager = (() => {
 
 /* Possible eventProperties
  * {  
-      glueOpsVersion: LogEventManager.glueOpsVersion,
+      version: LogEventManager.version,
       clientId: LogEventManager.clientId,
       event_category: 'Custom Category',
       event_label: 'Custom Label',
@@ -44,7 +44,7 @@ export const logEvent = (eventName, eventProperties) => {
   if (ExecutionEnvironment.canUseDOM) {
     // Log a custom event
     const updatedEventProperties = {
-      glueOpsSiteVersion: LogEventManager.glueOpsVersion,
+      version: LogEventManager.version,
       userID: LogEventManager.clientId,
       ...eventProperties,
     };

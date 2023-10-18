@@ -59,9 +59,6 @@ const config = {
     require.resolve("./analytics/trackUser.js"),
     require.resolve("./analytics/analytics.js"),
   ],
-  customFields: {
-    glueOpsVersion: 1.000,
-  },
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
