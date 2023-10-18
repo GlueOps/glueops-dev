@@ -28,6 +28,7 @@ const LogEventManager = (() => {
   };
 })();
 
+// @TODO define name convention, as recomendation for clarity could be ok UPPERCASE_WITH_UNDERSCORE
 // Possible Button Event Names
 // eventName = purchase_button_clicked_event | git_button_clicked_event
 
@@ -35,8 +36,8 @@ const LogEventManager = (() => {
  * {  
       version: LogEventManager.version,
       clientId: LogEventManager.clientId,
-      event_category: 'Custom Category',
-      event_label: 'Custom Label',
+      event_category: 'Purchase | GIT',
+      event_label: 'Purchase DataOps | Access Github',
     })
  */
 
