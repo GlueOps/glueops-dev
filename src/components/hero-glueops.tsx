@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
 import styles from "./hero-glueops.module.css";
+import { logEvent } from "../../analytics/analytics.js";
 
 
 export default function HeroGlueops(): JSX.Element {
@@ -22,7 +23,9 @@ export default function HeroGlueops(): JSX.Element {
             </p>
             <div className="padding-vert--md row">
               <div className="col col--5">
-                <a href="/docs/introduction" className="button button--lg button--block button--primary">
+                <a href="/docs/introduction" className="button button--lg button--block button--primary" onClick={
+                () => logEvent('get_started_event', { event_category: 'Docs', event_label: "Docs button event"  })
+              }>
                   Get Started
                 </a>
               </div>

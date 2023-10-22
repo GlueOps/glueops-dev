@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import styles from "./powered-by-nx.module.css";
+import { logEvent } from "../../analytics/analytics.js";
 
 export default function PoweredByNx(): JSX.Element {
   return (
@@ -24,7 +25,9 @@ export default function PoweredByNx(): JSX.Element {
             <p className="margin-bottom--md">
             Our experienced DevOps Engineers will provide insights into the efficiency of your software delivery systems and help identify areas for improvement to ensure your CI/CD workflows are optimized for all your microservices.
             </p>
-            <a className="button button--md button--block button--secondary" href="https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa">
+            <a className="button button--md button--block button--secondary" onClick={
+                () => logEvent('purchase_devops_event', { event_category: 'Purchase', event_label: "Purchase DevOps button event"  })
+              } href="https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa">
             Purchase DevOps
             </a>
           </div>

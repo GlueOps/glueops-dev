@@ -14,7 +14,7 @@ export default function PublishWithGlueops(): JSX.Element {
             Our experienced Data Operations Engineers will provide insights into the efficiency and effectiveness of your current data operations practices and help identify areas for improvement to ensure your infrastructure is optimized for all your data workloads.
             </p>
             <a className="button button--md button--block button--secondary" onClick={
-                () => logEvent('purchase_button_clicked_event', { event_category: 'Purchase', event_label: "Purchase DataOps"  })
+                () => logEvent('purchase_dataops_event', { event_category: 'Purchase', event_label: "Purchase DataOps button event"  })
               } href="https://aws.amazon.com/marketplace/pp/prodview-mfwjl2qdvhaes?sr=0-1&ref_=beagle&applicationId=AWSMPContessa">
             Purchase DataOps
             </a>
