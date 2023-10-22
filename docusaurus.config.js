@@ -97,14 +97,23 @@ const config = {
             docId: "introduction",
             position: "left",
             label: "Docs",
+            analytics: {
+              event_name: "docs_event",
+              event_category: "Docs",
+              event_label: "Docs header event",
+            },
           },
-          // },
           {
             href: "https://aws.amazon.com/marketplace/pp/prodview-mfwjl2qdvhaes?sr=0-1&ref_=beagle&applicationId=AWSMPContessa",
             "aria-label": "Purchase DataOps on Amazon Marketplace",
             position: "right",
             title: "Purchase DataOps on Amazon Marketplace",
             label: "Purchase DataOps on Amazon Marketplace",
+            analytics: {
+              event_name: "purchase_dataops_event",
+              event_category: "Purchase",
+              event_label: "Purchase DataOps header event",
+            },
           },
           {
             href: "https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa",
@@ -112,6 +121,11 @@ const config = {
             position: "right",
             title: "Purchase DevOps on Amazon Marketplace",
             label: "Purchase DevOps on Amazon Marketplace",
+            analytics: {
+              event_name: "purchase_devops_event",
+              event_category: "Purchase",
+              event_label: "Purchase DevOps header event",
+            },
           },
           // {
           //   href: "https://nrwl.io",
@@ -127,6 +141,11 @@ const config = {
             "aria-label": "GitHub repository",
             position: "right",
             title: "Glueops on Github",
+            analytics: {
+              event_name: "github_event",
+              event_category: "GitHub",
+              event_label: "GitHub header event",
+            },
           },
         ],
         hideOnScroll: true,
