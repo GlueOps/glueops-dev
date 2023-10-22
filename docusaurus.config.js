@@ -172,7 +172,12 @@ const config = {
             items: [
               {
                 label: "Docs",
-                to: "#",
+                to: "/docs/introduction",
+                analytics: {
+                  event_name: "docs_event",
+                  event_category: "Docs",
+                  event_label: "Docs footer event",
+                },
               },
             ],
           },
