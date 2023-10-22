@@ -9,6 +9,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import styles from "./hero-upgrade.module.css";
+import { logEvent } from "../../analytics/analytics.js";
+
 export default function HeroUpgrade(): JSX.Element {
 
 
@@ -27,7 +29,11 @@ export default function HeroUpgrade(): JSX.Element {
             Reach out to us! We help buisness to make sure they get most out of their Glueops setup.
             </p>
             <div className={styles.reaching_out__link_container}>
-                  <a href="mailto:hello@glueops.dev" target="_blank">
+                  <a href="mailto:hello@glueops.dev" target="_blank" 
+                    onClick={
+                      () => logEvent('email_event', { event_category: 'Email', event_label: "Email event"  })
+                    }
+                  >
                     <svg
                       style={{ height: "2rem", width: "2rem" }}
                       fill="currentColor"
@@ -41,7 +47,11 @@ export default function HeroUpgrade(): JSX.Element {
                     </svg>
           
                   </a>
-                  <a href="https://github.com/GlueOps/glueops-dev" target="_blank">
+                  <a href="https://github.com/GlueOps/glueops-dev" target="_blank"
+                    onClick={
+                      () => logEvent('github_event', { event_category: 'GitHub', event_label: "GitHub upgrade event"  })
+                    }
+                  >
                     
                     <svg
                       style={{ height: "2rem", width: "2rem",  }}
