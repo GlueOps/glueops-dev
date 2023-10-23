@@ -1,4 +1,3 @@
-import { LogEventManager } from './analytics';
 import { googleAnalyticsProvider } from './google-analytics-provider';
 import { consoleLoggerProvider } from './logger-analytics-provider';
 

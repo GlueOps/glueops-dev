@@ -3,7 +3,7 @@ import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 // track-user.js
 import { setCookie, getClientId } from './track-user';
 // analytics-providers.js
-import { AnalyticsProvider, analyticsProviders } from './analytics-providers';
+import { AnalyticsProvider, analyticsProviders } from './analytics-provider/analytics-provider';
 
 // Constants
 // Array to hold analytics providers
@@ -47,8 +47,13 @@ export const LogEventManager = (() => {
 // Function to log events with all analytics providers
 export const logEvent = (eventName, eventProperties) => {
   if (ExecutionEnvironment.canUseDOM) {
+    const updatedEventProperties = {
+      version: LogEventManager.version,
+      userID: LogEventManager.clientId,
+      ...eventProperties,
+    };
     analyticsProvidersArray.forEach(provider => {
-      provider.logEvent(eventName, eventProperties);
+      provider.logEvent(eventName, updatedEventProperties);
     });
   }
 };
