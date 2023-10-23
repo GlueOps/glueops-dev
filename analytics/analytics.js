@@ -1,10 +1,26 @@
-import { setCookie, getClientId } from './trackUser';
 import pjson from "../package.json";
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+// track-user.js
+import { setCookie, getClientId } from './track-user';
+// analytics-providers.js
+import { AnalyticsProvider, analyticsProviders } from './analytics-providers';
+
+// Constants
+// Array to hold analytics providers
+let analyticsProvidersArray = [
+  analyticsProviders[AnalyticsProvider.GOOGLE_ANALYTICS],
+  analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER],
+  // Add more providers as needed
+];
+
+// Function to set the current analytics providers
+const setAnalyticsProviders = (providers) => {
+  analyticsProvidersArray = providers.map(provider => analyticsProviders[provider]).filter(Boolean);
+};
 
 // Singleton module to make sure is executed only once defined with a IIFE function, 
 // which means the function is executed immediately when the script is loaded and only once.  
-const LogEventManager = (() => {
+export const LogEventManager = (() => {
   let clientId;
   let version;
 
@@ -28,7 +44,15 @@ const LogEventManager = (() => {
   };
 })();
 
-// @TODO define name convention, as recomendation for clarity could be ok UPPERCASE_WITH_UNDERSCORE
+// Function to log events with all analytics providers
+export const logEvent = (eventName, eventProperties) => {
+  if (ExecutionEnvironment.canUseDOM) {
+    analyticsProvidersArray.forEach(provider => {
+      provider.logEvent(eventName, eventProperties);
+    });
+  }
+};
+
 // Possible Button Event Names
 // eventName = purchase_dataops_event | git_event
 
@@ -41,21 +65,5 @@ const LogEventManager = (() => {
     })
  */
 
-export const logEvent = (eventName, eventProperties) => {
-  if (ExecutionEnvironment.canUseDOM) {
-    // Log a custom event
-    const updatedEventProperties = {
-      version: LogEventManager.version,
-      userID: LogEventManager.clientId,
-      ...eventProperties,
-    };
-
-    // Check if window.gtag is defined before triggering the event
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', eventName, updatedEventProperties);
-      console.log(`Event ${eventName} logged with properties:`, updatedEventProperties);
-    } else {
-      console.warn(`window.gtag is not defined. Event ${eventName} was not logged.`);
-    }
-  }
-};
+// Set the initial analytics providers (e.g., Google Analytics and Console Logger)
+setAnalyticsProviders([AnalyticsProvider.GOOGLE_ANALYTICS, AnalyticsProvider.CONSOLE_LOGGER]);

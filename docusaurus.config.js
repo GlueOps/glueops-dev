@@ -56,8 +56,11 @@ const config = {
   ],
 
   clientModules: [
-    require.resolve("./analytics/trackUser.js"),
     require.resolve("./analytics/analytics.js"),
+    require.resolve("./analytics/track-user.js"),
+    require.resolve("./analytics/analytics-providers.js"),
+    require.resolve("./analytics/google-analytics-provider.js"),
+    require.resolve("./analytics/logger-analytics-provider.js"),
   ],
 
   themeConfig:
