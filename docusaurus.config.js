@@ -66,7 +66,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-
+      isAnalyticsLoggerDisplayedInProd: false,
       colorMode: {
         defaultMode: "dark",
         disableSwitch: false,
@@ -130,6 +130,7 @@ const config = {
               event_label: "Purchase DevOps header event",
             },
           },
+          // @TODO delete if not needed
           // {
           //   href: "https://nrwl.io",
           //   className: "header-nrwlio-link",

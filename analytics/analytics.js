@@ -1,5 +1,7 @@
 import pjson from "../package.json";
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import config from "@generated/docusaurus.config";
+
 // track-user.js
 import { setCookie, getClientId } from './track-user';
 // analytics-providers.js
@@ -13,9 +15,32 @@ let analyticsProvidersArray = [
   // Add more providers as needed
 ];
 
-// Function to set the current analytics providers
+/**
+ * Checks if the analytics logger should be displayed in the production environment.
+ *
+ * The function considers the `isAnalyticsLoggerDisplayedInProd` configuration in Docusaurus
+ * themeConfig and the NODE_ENV environment variable. The logger is displayed in production
+ * if `isAnalyticsLoggerDisplayedInProd` is truthy and NODE_ENV is 'production'. Otherwise,
+ * it is displayed for other environments.
+ *
+ * @returns {boolean} Returns `true` if the analytics logger should be displayed, otherwise `true`.
+ */
+const isAnalyticsLoggerDisplayedInProd = () => {
+  const result = !!config.themeConfig.isAnalyticsLoggerDisplayedInProd && process.env.NODE_ENV === 'production' ||
+  process.env.NODE_ENV !== 'production';
+  return result;
+};
+
+/**
+ * Sets the analytics providers based on the specified conditions.
+ * @param {string[]} providers - An array of provider names.
+ */
 const setAnalyticsProviders = (providers) => {
-  analyticsProvidersArray = providers.map(provider => analyticsProviders[provider]).filter(Boolean);
+  analyticsProvidersArray = providers
+    .map(provider => analyticsProviders[provider])
+    .filter(provider => Boolean(provider) && isAnalyticsLoggerDisplayedInProd());
+  // Boolean(provider): Filters out any providers that are falsy (undefined, null, false, etc.)
+  // isAnalyticsLoggerDisplayedInProd(): Ensures the analytics logger is displayed based on production environment conditions.
 };
 
 // Singleton module to make sure is executed only once defined with a IIFE function, 
@@ -47,14 +72,15 @@ export const LogEventManager = (() => {
 // Function to log events with all analytics providers
 export const logEvent = (eventName, eventProperties) => {
   if (ExecutionEnvironment.canUseDOM) {
-    const updatedEventProperties = {
-      version: LogEventManager.version,
-      userID: LogEventManager.clientId,
-      ...eventProperties,
-    };
-    analyticsProvidersArray.forEach(provider => {
-      provider.logEvent(eventName, updatedEventProperties);
-    });
+    const { version, clientId } = LogEventManager;
+    const updatedEventProperties = { version, userID: clientId, ...eventProperties };
+    try {
+      analyticsProvidersArray.forEach(provider => {
+        provider.logEvent(eventName, updatedEventProperties);
+      });
+    } catch (error) {
+      console.error('Error logging event:', error);
+    }
   }
 };
 
@@ -71,4 +97,5 @@ export const logEvent = (eventName, eventProperties) => {
  */
 
 // Set the initial analytics providers (e.g., Google Analytics and Console Logger)
+
 setAnalyticsProviders([AnalyticsProvider.GOOGLE_ANALYTICS, AnalyticsProvider.CONSOLE_LOGGER]);
