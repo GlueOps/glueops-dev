@@ -84,18 +84,5 @@ export const logEvent = (eventName, eventProperties) => {
   }
 };
 
-// Possible Button Event Names
-// eventName = purchase_dataops_event | git_event
-
-/* Possible eventProperties
- * {  
-      version: LogEventManager.version,
-      clientId: LogEventManager.clientId,
-      event_category: 'Purchase | GIT | Email | Docs',
-      event_label: 'Purchase DataOps header event | Purchase DevOps header event | Purchase DevOps button event  | Email event | Docs header event | Docs button event | Docs footer event' 
-    })
- */
-
 // Set the initial analytics providers (e.g., Google Analytics and Console Logger)
-
 setAnalyticsProviders([AnalyticsProvider.GOOGLE_ANALYTICS, AnalyticsProvider.CONSOLE_LOGGER]);
