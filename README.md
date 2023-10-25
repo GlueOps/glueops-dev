@@ -30,7 +30,7 @@ The configuration for the analytics logger is done in analytics/analytics.js. It
 - eventProperties
 
 ## Possible EventNames (string) (@TODO complete)
-    eventName = purchase_dataops_event | git_event | purchase_devops_event | github_event | docs_event
+    eventName = purchase_dataops_event | git_event | purchase_devops_event | github_event | docs_event | email_event | get_started_event
 
 ## Possible eventProperties {object} (@TODO complete)
     {  
