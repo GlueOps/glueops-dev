@@ -32,16 +32,16 @@ const isAnalyticsLoggerDisplayedInProd = () => {
 
     return result || process.env.NODE_ENV !== 'production';
 };
-/**
- * Sets the analytics providers based on the specified conditions.
- * @param {string[]} providers - An array of provider names.
- */
+
 const setAnalyticsProviders = (providers) => {
   analyticsProvidersArray = providers
     .map(provider => analyticsProviders[provider])
-    .filter(provider => provider !== analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER] && Boolean(provider) && isAnalyticsLoggerDisplayedInProd());
-  // Boolean(provider): Filters out any providers that are falsy (undefined, null, false, etc.)
-  // isAnalyticsLoggerDisplayedInProd(): Ensures the analytics logger is displayed based on production environment conditions.
+    .filter(provider => {
+      const isLogger = provider === analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER];
+      return (isLogger && isAnalyticsLoggerDisplayedInProd()) || (Boolean(provider) && !isLogger);
+      // Boolean(provider): Filters out any providers that are falsy (undefined, null, false, etc.)
+      // isAnalyticsLoggerDisplayedInProd(): Ensures the analytics logger is displayed based on production environment conditions.
+    });
 };
 
 // Singleton module to make sure is executed only once defined with a IIFE function, 
