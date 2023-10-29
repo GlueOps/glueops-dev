@@ -26,11 +26,12 @@ let analyticsProvidersArray = [
  * @returns {boolean} Returns `true` if the analytics logger should be displayed, otherwise `true`.
  */
 const isAnalyticsLoggerDisplayedInProd = () => {
-  const result = !!config.themeConfig.isAnalyticsLoggerDisplayedInProd && process.env.NODE_ENV === 'production' ||
-  process.env.NODE_ENV !== 'production';
-  return result;
-};
+  const result =
+    !!config.themeConfig.isAnalyticsLoggerDisplayedInProd &&
+    process.env.NODE_ENV === 'production';
 
+    return result || process.env.NODE_ENV !== 'production';
+};
 /**
  * Sets the analytics providers based on the specified conditions.
  * @param {string[]} providers - An array of provider names.
@@ -38,7 +39,7 @@ const isAnalyticsLoggerDisplayedInProd = () => {
 const setAnalyticsProviders = (providers) => {
   analyticsProvidersArray = providers
     .map(provider => analyticsProviders[provider])
-    .filter(provider => Boolean(provider) && isAnalyticsLoggerDisplayedInProd());
+    .filter(provider => provider !== analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER] && Boolean(provider) && isAnalyticsLoggerDisplayedInProd());
   // Boolean(provider): Filters out any providers that are falsy (undefined, null, false, etc.)
   // isAnalyticsLoggerDisplayedInProd(): Ensures the analytics logger is displayed based on production environment conditions.
 };
