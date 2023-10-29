@@ -9,11 +9,7 @@ import { AnalyticsProvider, analyticsProviders } from './analytics-provider/anal
 
 // Constants
 // Array to hold analytics providers
-let analyticsProvidersArray = [
-  analyticsProviders[AnalyticsProvider.GOOGLE_ANALYTICS],
-  analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER],
-  // Add more providers as needed
-];
+let analyticsProvidersArray = [];
 
 /**
  * Checks if the analytics logger should be displayed in the production environment.

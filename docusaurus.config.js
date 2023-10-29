@@ -66,7 +66,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      isAnalyticsLoggerDisplayedInProd: false,
+      isAnalyticsLoggerDisplayedInProd: true,
       colorMode: {
         defaultMode: "dark",
         disableSwitch: false,
