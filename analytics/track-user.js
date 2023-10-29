@@ -20,7 +20,6 @@ function generateClientId() {
         clientId = generateClientId();
         localStorage.setItem('clientId', clientId);
       }
-      console.log(`CliendId generated ${getClientId}`);
     
       return clientId;
     }
