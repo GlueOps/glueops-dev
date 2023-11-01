@@ -37,7 +37,7 @@ The configuration for the analytics logger is done in analytics/analytics.js. It
     {  
         version: LogEventManager.version,
         clientId: LogEventManager.clientId,
-        event_category: 'Purchase | GIT | Email | Docs',
+        event_category: 'Purchase | GitHub | Email | Docs',
         event_label: 'Purchase DataOps header event | Purchase DevOps header event | Purchase DevOps button event  | Email event | Docs header event | Docs button event | Docs footer event' 
     }
 
