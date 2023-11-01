@@ -47,9 +47,11 @@ export const LogEventManager = (() => {
   let version;
 
   const setup = () => {
-    const days =  365;
-    clientId = getClientId();
-    setCookie('clientId', clientId, days);
+    if (!!config.themeConfig.includeClientId) {
+      const days =  365;
+      clientId = getClientId();
+      setCookie('clientId', clientId, days);
+    }
     version = pjson.version || 8000; // Default to 8000 if not defined
   };
 
@@ -70,7 +72,7 @@ export const LogEventManager = (() => {
 export const logEvent = (eventName, eventProperties) => {
   if (ExecutionEnvironment.canUseDOM) {
     const { version, clientId } = LogEventManager;
-    const updatedEventProperties = { version, userID: clientId, ...eventProperties };
+    const updatedEventProperties = !!config.themeConfig.includeClientId ? { version, userID: clientId, ...eventProperties } : {version, ...eventProperties};
     try {
       analyticsProvidersArray.forEach(provider => {
         provider.logEvent(eventName, updatedEventProperties);
