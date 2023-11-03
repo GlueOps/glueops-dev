@@ -4,6 +4,14 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
+const getGtagID = () => {
+  // Get the tracking ID from the environment variable
+  const trackingID = process.env.GTAG_ID;
+
+  // Use the tracking ID
+  return trackingID;
+};
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Glueops",
@@ -48,7 +56,7 @@ const config = {
           filename: "sitemap.xml",
         },
         gtag: {
-          trackingID: "G-0G8JFD8T0E",
+          trackingID: getGtagID(),
           anonymizeIP: true,
         },
       }),
