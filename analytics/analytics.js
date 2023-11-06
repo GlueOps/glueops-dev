@@ -27,7 +27,6 @@ const isAnalyticsLoggerDisplayedInProd = () => {
     process.env.NODE_ENV === 'production';
     console.log(process.env.NODE_ENV," process.env.NODE_ENV");
     console.log(config.themeConfig.isAnalyticsLoggerDisplayedInProd, "config.themeConfig.isAnalyticsLoggerDisplayedInProd");
-    console.log(process.env.GTAG_ID, "process.env.GTAG_ID");
 
     return result || process.env.NODE_ENV !== 'production';
 };
