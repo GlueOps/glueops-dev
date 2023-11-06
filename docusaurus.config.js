@@ -3,6 +3,15 @@
 
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+require('dotenv').config();
+
+const getGtagID = () => {
+  // Get the tracking ID from the environment variable
+  const trackingID = process.env.GTAG_ID;
+
+  // Use the tracking ID
+  return trackingID || 'YOUR_DEFAULT_TRACKING_ID';
+};
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -47,14 +56,27 @@ const config = {
           ignorePatterns: ["/tags/**"],
           filename: "sitemap.xml",
         },
+        gtag: {
+          trackingID: getGtagID(),
+          anonymizeIP: true,
+        },
       }),
     ],
+  ],
+
+  clientModules: [
+    require.resolve("./analytics/analytics.js"),
+    require.resolve("./analytics/track-user.js"),
+    require.resolve("./analytics/analytics-provider/analytics-provider.js"),
+    require.resolve("./analytics/analytics-provider/google-analytics-provider.js"),
+    require.resolve("./analytics/analytics-provider/logger-analytics-provider.js"),
   ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-
+      isAnalyticsLoggerDisplayedInProd: process.env.DISPLAY_ANALYTICS_LOGGER === 'true',
+      includeClientId:  process.env.INCLUDE_CLIENT_ID === 'true',
       colorMode: {
         defaultMode: "dark",
         disableSwitch: false,
@@ -88,14 +110,23 @@ const config = {
             docId: "introduction",
             position: "left",
             label: "Docs",
+            analytics: {
+              event_name: "docs_event",
+              event_category: "Docs",
+              event_label: "Docs header event",
+            },
           },
-          // },
           {
             href: "https://aws.amazon.com/marketplace/pp/prodview-mfwjl2qdvhaes?sr=0-1&ref_=beagle&applicationId=AWSMPContessa",
             "aria-label": "Purchase DataOps on Amazon Marketplace",
             position: "right",
             title: "Purchase DataOps on Amazon Marketplace",
             label: "Purchase DataOps on Amazon Marketplace",
+            analytics: {
+              event_name: "purchase_dataops_event",
+              event_category: "Purchase",
+              event_label: "Purchase DataOps header event",
+            },
           },
           {
             href: "https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa",
@@ -103,7 +134,13 @@ const config = {
             position: "right",
             title: "Purchase DevOps on Amazon Marketplace",
             label: "Purchase DevOps on Amazon Marketplace",
+            analytics: {
+              event_name: "purchase_devops_event",
+              event_category: "Purchase",
+              event_label: "Purchase DevOps header event",
+            },
           },
+          // @TODO delete if not needed
           // {
           //   href: "https://nrwl.io",
           //   className: "header-nrwlio-link",
@@ -118,6 +155,11 @@ const config = {
             "aria-label": "GitHub repository",
             position: "right",
             title: "Glueops on Github",
+            analytics: {
+              event_name: "github_event",
+              event_category: "GitHub",
+              event_label: "GitHub header event",
+            },
           },
         ],
         hideOnScroll: true,
@@ -144,7 +186,12 @@ const config = {
             items: [
               {
                 label: "Docs",
-                to: "#",
+                to: "/docs/introduction",
+                analytics: {
+                  event_name: "docs_event",
+                  event_category: "Docs",
+                  event_label: "Docs footer event",
+                },
               },
             ],
           },
