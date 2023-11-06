@@ -33,6 +33,8 @@ const setAnalyticsProviders = (providers) => {
   analyticsProvidersArray = providers
     .map(provider => analyticsProviders[provider])
     .filter(provider => {
+      console.log("setAnalyticsProviders");
+      console.log(isAnalyticsLoggerDisplayedInProd(), 'isAnalyticsLoggerDisplayedInProd');
       const isLogger = provider === analyticsProviders[AnalyticsProvider.CONSOLE_LOGGER];
       return (isLogger && isAnalyticsLoggerDisplayedInProd()) || (Boolean(provider) && !isLogger);
       // Boolean(provider): Filters out any providers that are falsy (undefined, null, false, etc.)
