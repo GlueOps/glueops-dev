@@ -10,7 +10,7 @@ const getGtagID = () => {
   const trackingID = process.env.GTAG_ID;
 
   // Use the tracking ID
-  return trackingID;
+  return trackingID || 'YOUR_DEFAULT_TRACKING_ID';
 };
 
 /** @type {import('@docusaurus/types').Config} */
