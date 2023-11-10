@@ -3,7 +3,6 @@
 
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-require('dotenv').config();
 
 const getGtagID = () => {
   // Get the tracking ID from the environment variable
@@ -75,8 +74,8 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      isAnalyticsLoggerDisplayedInProd: process.env.DISPLAY_ANALYTICS_LOGGER === 'true',
-      includeClientId:  process.env.INCLUDE_CLIENT_ID === 'true',
+      isAnalyticsLoggerDisplayedInProd: process.env.DISPLAY_ANALYTICS_LOGGER === "TRUE",
+      includeClientId:  process.env.INCLUDE_CLIENT_ID === "TRUE",
       colorMode: {
         defaultMode: "dark",
         disableSwitch: false,
