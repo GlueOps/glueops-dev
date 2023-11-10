@@ -3,7 +3,6 @@
 
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-require('dotenv').config();
 
 const getGtagID = () => {
   // Get the tracking ID from the environment variable
