@@ -55,19 +55,24 @@ The configuration for the analytics logger is done in analytics/analytics.js. It
     }
  <br />
 
-## Configuring `clientId` in docusaurus.config.js
-The `clientId` is now configurable in the `docusaurus.config.js` file. To include or exclude the `clientId` in events, update the configuration as follows:
+## Configuring clientId and Analytics Logger Display in docusaurus.config.js
+The configuration of clientId and the control of analytics logger display in the docusaurus.config.js file offer flexibility in tailoring your analytics setup. Follow these steps to customize these settings:
 
-1. Open the `docusaurus.config.js` file.
-2. Locate the themeConfig configuration section.
-3. Set the `includeClientId` flag based on your preference.
+    1. Open your docusaurus.config.js file.
+    2. Navigate to the themeConfig configuration section.
+    3. Adjust the following flags based on your preferences:
+        includeClientId: Set this boolean flag to true if you want to include clientId in your events, or false if you prefer to exclude it.
+        isAnalyticsLoggerDisplayedInProd: Set this boolean flag to true if you want to display the analytics logger in the production environment, or false if you wish to hide it.
 
-   Example:
+Note: Both variables can be configured as environment variables for enhanced flexibility.
+
+Example:
    ```js
    module.exports = {
      // ... other configurations
      themeConfig: ({ 
-        includeClientId: true, // Set to `true` to include clientId, `false` to exclude
+        includeClientId: true,
+        isAnalyticsLoggerDisplayedInProd: true,
          // ... other themeConfig configurations
      }),
    };
