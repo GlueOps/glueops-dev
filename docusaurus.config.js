@@ -139,15 +139,6 @@ const config = {
               event_label: "Purchase DevOps header event",
             },
           },
-          // @TODO delete if not needed
-          // {
-          //   href: "https://nrwl.io",
-          //   className: "header-nrwlio-link",
-          //   "aria-label": "Nrwl consulting",
-          //   position: "right",
-          //   title: "Check Nrwl",
-          //   label: "Nrwl",
-          // },
           {
             href: "https://github.com/GlueOps/glueops-dev",
             className: "header-github-link",
