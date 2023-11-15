@@ -5,7 +5,7 @@
 Implemented solution focuses on tracking user interactions and events.
 
 ## Useful links
-- GA4 Propreties -  [link](https://docs.google.com/document/d/1yoWmgTJUfOGaIIHuPwJSdT3408_BbM_QAwqVQXSHJJI/edit#heading=h.tfpvwbcpo5fj
+- GA4 Properties -  [link](https://docs.google.com/document/d/1yoWmgTJUfOGaIIHuPwJSdT3408_BbM_QAwqVQXSHJJI/edit#heading=h.tfpvwbcpo5fj
 )
 -  GlueOps - Google Analytics [link](https://docs.google.com/spreadsheets/d/1agw7PhV8OJppWvkZoocT_FrxSRRboHuum9VuYhBiaNw/edit#gid=1198684761)
  <br />
