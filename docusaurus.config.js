@@ -16,7 +16,7 @@ const getGtagID = () => {
 const config = {
   title: "Glueops",
   tagline: "Dataops and Devops platform",
-  url: "https://glueops.dev/",
+  url: "https://docs.glueops.dev/",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -94,7 +94,7 @@ const config = {
           content:
             "GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.",
         },
-        { name: "og:image", content: "https://glueops.dev/images/glueops.png" },
+        { name: "og:image", content: "https://docs.glueops.dev/images/glueops.png" },
       ],
       navbar: {
         title: "Glueops",
