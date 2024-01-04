@@ -99,7 +99,7 @@ Adding logo to your GitHub App ensures that when our bot comments it'll use the 
 
 Once uploaded, this is the final outcome
 
-<img width="600" alt="Screenshot 2023-07-26 at 22 26 19" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/eb8dd8e2-24dc-4a7d-910b-efa1a3f23968"/>
+<img width="600" alt="Screenshot 2023-07-26 at 22 26 19" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/eb8dd8e2-24dc-4a7d-910b-efa1a3f23968.png"/>
 
 :::info
 You can also upload your own custom image if desired.
