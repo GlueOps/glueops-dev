@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 
 ## Set Up GitHub Actions for Docker Image Publishing
-GlueOps relies on Docker images to deploy applications. We'll set up GitHub Actions to automatically build and publish a Docker image of your Docusaurus website to GitHub Container Registry (GHCR). As a happy path, we have provided this [Custom Action to push Docker images to GitHub Container Registry](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr). Here's how you can set it up:
+GlueOps relies on Docker images to deploy applications. We'll set up GitHub Actions to automatically build and publish a Docker image of your Docusaurus website to GitHub Container Registry (GHCR). As a happy path, we have provided this [Custom Action to push Docker images to GitHub Container Registry](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr-docker-hub-or-aws-ecr). Here's how you can set it up:
 
 - Create a `.github/workflows` folder.
 - Create a new file named `ghcr.yaml` in the workflows folder.
