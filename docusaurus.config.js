@@ -94,7 +94,7 @@ const config = {
           content:
             "GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.",
         },
-        { name: "og:image", content: "https://cdn.glueops.dev/doc-assets/v1/gssssslueops.png" },
+        { name: "og:image", content: "https://cdn.glueops.dev/doc-assets/v1/logos/logo.png" },
       ],
       navbar: {
         title: "Glueops",
