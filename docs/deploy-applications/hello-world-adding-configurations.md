@@ -23,22 +23,22 @@ _Using the URL above, replace `<MY_CAPTAIN_DOMAIN>` with the correct value provi
 
 Once you are on the cluster info home page, click on the `Resource/Link` for `Secrets Management`. You will then be taking our our secrets management system (Vault). For the role enter "editor" as you will need read/write access and then click on `Sign in with OIDC Provider`
 
-![Alt text](.https://cdn.glueops.dev/doc-assets/v1/login.png)
+![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/login.png)
 
 To create our first configuration/secret, Click on "Create secret +`
 
-![Alt text](.https://cdn.glueops.dev/doc-assets/v1/create-secret.png)
+![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/create-secret.png)
 
 Finally, let's enter in the details for the new greeting message. For the field `Path for this secret` you will want to use `app-projectname` in our case our demo projectname as used in other tutorials is `antoniostacos`.
 For the `key` enter `GREETING_MESSAGE` (this is indeed case sensitive) and for the value (left of the `key`) enter: `¡Hola Mundo!`. 
 
-![Alt text](.https://cdn.glueops.dev/doc-assets/v1/create-secret-greeting-message.png)
+![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/create-secret-greeting-message.png)
 
 Once complete, click Save!
 
 You can expect the confirmation page to look like this:
 
-![Alt text](.https://cdn.glueops.dev/doc-assets/v1/saved-secret.png)
+![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/saved-secret.png)
 
 ## Let's wrap up and get this new greeting deployed!
 
