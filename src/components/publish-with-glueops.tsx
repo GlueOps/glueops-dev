@@ -24,7 +24,7 @@ export default function PublishWithGlueops(): JSX.Element {
           className="col col--6"
           aria-hidden="true"
           style={{
-            backgroundImage: "url('/images/gitops.avif')",
+            backgroundImage: "url('https://cdn.glueops.dev/doc-assets/v1/gitops.avif')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",

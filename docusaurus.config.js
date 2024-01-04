@@ -20,7 +20,7 @@ const config = {
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "images/glueops.png",
+  favicon: "https://cdn.glueops.dev/logos/logo.png",
   organizationName: "Glueops",
   projectName: "website",
   deploymentBranch: "master",
@@ -94,14 +94,14 @@ const config = {
           content:
             "GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.",
         },
-        { name: "og:image", content: "https://docs.glueops.dev/images/glueops.png" },
+        { name: "og:image", content: "https://docs.glueops.devhttps://cdn.glueops.dev/doc-assets/v1/gssssslueops.png" },
       ],
       navbar: {
         title: "Glueops",
         logo: {
           alt: "Glueops Logo",
-          src: "images/glueops.png",
-          srcDark: "images/glueops.png",
+          src: "https://cdn.glueops.dev/logos/logo.png",
+          srcDark: "https://cdn.glueops.dev/logos/logo.png",
         },
         items: [
           {
