@@ -16,7 +16,7 @@ const getGtagID = () => {
 const config = {
   title: "Glueops",
   tagline: "Dataops and Devops platform",
-  url: "https://docs.glueops.dev/",
+  url: process.env.CONFIG_URL || "https://localhost/",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
