@@ -13,9 +13,12 @@ The GlueOps Platform requires you install a GitHub App so that the following ser
 
 To enable GlueOps access to your GitHub organization, you will need to do the following:
 
-- [Create the GitHub App ID](#create-the-github-app-id)
-- [Generate the private key](#generate-the-private-key)
-- [Get Installation ID](#get-installation-id)
+- [Creating your GitHub App](#creating-your-github-app)
+  - [Create the GitHub App ID](#create-the-github-app-id)
+  - [Generate the private key](#generate-the-private-key)
+  - [Add Display logo (Optional)](#add-display-logo-optional)
+  - [Get Installation ID](#get-installation-id)
+  - [Retrieving values](#retrieving-values)
 
 :::info
 For each cluster you deploy with the GlueOps platform, create a separate GitHub app as directed below.
@@ -33,18 +36,18 @@ To create the GitHub App, follow these steps:
 
 1. On your Github Organization page, go to the **Settings > Developer settings** and click on **GitHub Apps**.
 
-<img width="308" alt="Screenshot 2023-07-26 at 14 33 31" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/678e70a5-d62d-45d0-9148-bb02b01b7b3a"/>
+<img width="308" alt="Screenshot 2023-07-26 at 14 33 31" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/678e70a5-d62d-45d0-9148-bb02b01b7b3a.png"/>
 
 2. Click on **New GitHub App** button.
 
-<img width="1025" alt="Screenshot 2023-07-26 at 20 44 42" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/ba92dac6-a1cc-48ef-8312-4922d60f3697"/>
+<img width="1025" alt="Screenshot 2023-07-26 at 20 44 42" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/ba92dac6-a1cc-48ef-8312-4922d60f3697.png"/>
 
 1. **GitHub App name**: Enter a name for your GitHub app. This will get used as the username for all comments in your Pull Requests and it must be globally unique across all of GitHub. If your **captain domain** is `nonprod.antoniostacos.onglueops.com`, and since it is over the 34 character limit we would recommend calling it: `np - antoniostacos.onglueops.com` where `np` is shorthand for `nonprod`
 
 
    - **Homepage URL**: Specify the URL for the GitHub App's homepage. We suggest using `https://glueops.dev`for consistency.
 
-<img width="894" alt="Screenshot 2023-07-27 at 23 47 04" src="/images/docs/v1/generate-github-app.png"/>
+<img width="894" alt="Screenshot 2023-07-27 at 23 47 04" src="https://cdn.glueops.dev/doc-assets/v1/docs/v1/generate-github-app.png"/>
 
 
 1. Deselect Active as Webhooks are not currently required by the GitHub App.
@@ -61,7 +64,7 @@ To create the GitHub App, follow these steps:
 
 3. Click on **Create GitHub App** to create the GitHub App with the provided configuration.
 
-<img width="500" alt="Screenshot 2023-07-26 at 21 11 11" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/9469a75f-0ee3-463b-8bf3-194f3153ef38"/>
+<img width="500" alt="Screenshot 2023-07-26 at 21 11 11" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/9469a75f-0ee3-463b-8bf3-194f3153ef38.png"/>
 
 4. After creating the GitHub App, you will be provided with an **App ID**.
 
@@ -69,7 +72,7 @@ To create the GitHub App, follow these steps:
 Save the App ID so you can provide it to GlueOps
 :::
 
-<img width="600%" alt="Screenshot 2023-07-27 at 23 47 04" src="/images/docs/v1/github-app-id.png"/>
+<img width="600%" alt="Screenshot 2023-07-27 at 23 47 04" src="https://cdn.glueops.dev/doc-assets/v1/docs/v1/github-app-id.png"/>
 
 ## Generate the private key
 
@@ -79,7 +82,7 @@ To generate the private key for your GitHub App, follow these steps:
 
 - Click on **Generate a private key**. This will download a private key file.
 
-<img width="600%" alt="Screenshot 2023-07-26 at 22 15 09" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/d3977388-7f6d-4c0c-aa17-b186faa60af6"/>
+<img width="600%" alt="Screenshot 2023-07-26 at 22 15 09" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/7f6d-4c0c-aa17-b186faa60af6.png"/>
 
 :::info
 Save the Private Key so you can provide it to GlueOps
@@ -88,15 +91,15 @@ Save the Private Key so you can provide it to GlueOps
 ## Add Display logo (Optional)
 Adding logo to your GitHub App ensures that when our bot comments it'll use the image for easy identification. To add the logo:
 
-- Save and download the [GlueOps logo image](https://github.com/GlueOps/glueops-dev-old/assets/39309699/e786b648-a9b1-4beb-ba43-97be1dea4ed1)
+- Save and download the [GlueOps logo image](https://cdn.glueops.dev/logos/logo.png)
 
 - On the GitHub App's homepage, locate the **Display Information** section and click on **Upload logo**
 
-<img width="416" alt="Screenshot 2023-07-19 at 14 30 29" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/5030575f-3af3-4299-9153-cf7650a316cb"/>
+<img width="416" alt="Screenshot 2023-07-19 at 14 30 29" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/3af3-4299-9153-cf7650a316cb.png"/>
 
 Once uploaded, this is the final outcome
 
-<img width="600" alt="Screenshot 2023-07-26 at 22 26 19" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/eb8dd8e2-24dc-4a7d-910b-efa1a3f23968"/>
+<img width="600" alt="Screenshot 2023-07-26 at 22 26 19" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/eb8dd8e2-24dc-4a7d-910b-efa1a3f23968.png"/>
 
 :::info
 You can also upload your own custom image if desired.
@@ -110,13 +113,13 @@ To complete the GitHub App setup, you need to install the GitHub App in your org
 
 - Choose an account to install your GitHub App
 
-<img width="1092" alt="Screenshot 2023-07-28 at 01 06 19" src="/images/docs/v1/github-app-install.png"/>
+<img width="1092" alt="Screenshot 2023-07-28 at 01 06 19" src="https://cdn.glueops.dev/doc-assets/v1/docs/v1/github-app-install.png"/>
 
 - Confirm the installation by following the on-screen prompts.
 
 - This ID can be retrieved from the URL of the App installation homepage
 
-<img width="1032" alt="Screenshot 2023-07-28 at 01 19 29" src="/images/docs/v1/github-app-installed.png"/>
+<img width="1032" alt="Screenshot 2023-07-28 at 01 19 29" src="https://cdn.glueops.dev/doc-assets/v1/docs/v1/github-app-installed.png"/>
 
 :::info
 From the URL `https://github.com/organizations/antoniostacos/settings/installations/40423720` the GitHub App Installation ID would be `40423720`. Save this Installation ID so that you can provide it to GlueOps.
@@ -126,8 +129,11 @@ From the URL `https://github.com/organizations/antoniostacos/settings/installati
 
 By completing the above steps, you should have obtained the following values from the GitHub App:
 
-- [GitHub App ID](#create-the-github-app-id)
-- [Private key](#generate-the-private-key)
-- [Installation ID](#get-installation-id)
+- [Creating your GitHub App](#creating-your-github-app)
+  - [Create the GitHub App ID](#create-the-github-app-id)
+  - [Generate the private key](#generate-the-private-key)
+  - [Add Display logo (Optional)](#add-display-logo-optional)
+  - [Get Installation ID](#get-installation-id)
+  - [Retrieving values](#retrieving-values)
 
 These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing passsword service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.

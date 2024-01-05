@@ -271,7 +271,7 @@ app-antoniostacos
 </Tabs>
 :::
 
-By creating and saving the following YAML configuration, you're setting up a GitHub Action that will automatically publish a Docker image of your application to the GitHub Container Registry (GHCR.io). This will allow the GlueOps platform to use the latest version of your app in it's deployments. As a happy path, we have provided this [custom action to push Docker images to your GitHub Container Registry (GHCR.io)](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr). 
+By creating and saving the following YAML configuration, you're setting up a GitHub Action that will automatically publish a Docker image of your application to the GitHub Container Registry (GHCR.io). This will allow the GlueOps platform to use the latest version of your app in it's deployments. As a happy path, we have provided this [custom action to push Docker images to your GitHub Container Registry (GHCR.io)](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr-docker-hub-or-aws-ecr). 
 
 To use it, Simply create the file below
 

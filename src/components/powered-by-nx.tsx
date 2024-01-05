@@ -11,7 +11,7 @@ export default function PoweredByNx(): JSX.Element {
           className="col col--6"
           aria-hidden="true"
           style={{
-            backgroundImage: "url('/images/preview.avif')",
+            backgroundImage: "url('https://cdn.glueops.dev/doc-assets/v1/preview.avif')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",

@@ -10,7 +10,7 @@ export default function Upgrade(): JSX.Element {
   return (
     <Layout title="Upgrade" description="GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.">
       <Head>
-        <meta property="og:image" content="https://glueops.dev/images/glueops.png" />
+        <meta property="og:image" content="https://cdn.glueops.dev/logos/logo.png" />
       </Head>
       <main>
         <HeroUpgrade />

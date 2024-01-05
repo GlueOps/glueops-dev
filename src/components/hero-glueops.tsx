@@ -35,7 +35,7 @@ export default function HeroGlueops(): JSX.Element {
             <div className={styles.illustration}>
               <div
                 className={styles.illustration__container}
-                style={{ backgroundImage: 'url("/images/vector.svg")', width: "100%", height: "100%"}}
+                style={{ backgroundImage: 'url("https://cdn.glueops.dev/doc-assets/v1/vector.svg")', width: "100%", height: "100%"}}
               >
               </div>
             </div>

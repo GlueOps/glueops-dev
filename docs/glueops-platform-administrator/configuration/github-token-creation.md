@@ -14,10 +14,10 @@ To enable GitHub Actions to notify our platform of code changes, we need to conf
 
 1. To get your token secret, go to [https://github.com/settings/tokens](https://github.com/settings/tokens) and click on **Generate new token(classic).**
 
-<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://github.com/GlueOps/glueops-dev-old/assets/39309699/158bbb62-6710-4933-b076-1efb8d6bdc02"/>
+<img width="927" alt="Screenshot 2023-07-28 at 02 51 03" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/6710-4933-b076-1efb8d6bdc02.png"/>
 
-2. Use the onscreen information to generate your token. The only scope required is the **repo** scope. 
+1. Use the onscreen information to generate your token. The only scope required is the **repo** scope. 
 
-<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://github.com/GlueOps/glueops-dev/assets/6570292/c4e4d8ef-1007-4f24-8bbd-75c4624831da"/>
+<img width="869" alt="Screenshot 2023-07-28 at 02 55 12" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/c4e4d8ef-1007-4f24-8bbd-75c4624831da.png"/>
 
 3. Click on **Generate token** and copy your token some place secure.
