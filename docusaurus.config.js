@@ -17,7 +17,7 @@ const config = {
   title: "Glueops",
   tagline: "Dataops and Devops platform",
   url: process.env.CONFIG_URL || "https://localhost/",
-  baseUrl: "/",
+  baseUrl: "/docs",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "https://cdn.glueops.dev/logos/logo.png",
@@ -41,6 +41,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: '/',
           sidebarPath: require.resolve("./sidebars.js"),
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/GlueOps/glueops-dev/blob/main",
