@@ -17,7 +17,7 @@ const config = {
   title: "Glueops",
   tagline: "Dataops and Devops platform",
   url: process.env.CONFIG_URL || "https://localhost/",
-  baseUrl: "/docs/",
+  baseUrl: "/platform/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "https://cdn.glueops.dev/logos/logo.png",
@@ -174,15 +174,15 @@ const config = {
           {
             title: "Resources",
             items: [
-              // {
-              //   label: "Docs",
-              //   to: "/docs/introduction",
-              //   analytics: {
-              //     event_name: "docs_event",
-              //     event_category: "Docs",
-              //     event_label: "Docs footer event",
-              //   },
-              // },
+              {
+                label: "Docs",
+                to: "/platform/docs/introduction",
+                analytics: {
+                  event_name: "docs_event",
+                  event_category: "Docs",
+                  event_label: "Docs footer event",
+                },
+              },
             ],
           },
           
