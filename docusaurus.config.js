@@ -174,15 +174,15 @@ const config = {
           {
             title: "Resources",
             items: [
-              {
-                label: "Docs",
-                to: "/docs/introduction",
-                analytics: {
-                  event_name: "docs_event",
-                  event_category: "Docs",
-                  event_label: "Docs footer event",
-                },
-              },
+              // {
+              //   label: "Docs",
+              //   to: "/docs/introduction",
+              //   analytics: {
+              //     event_name: "docs_event",
+              //     event_category: "Docs",
+              //     event_label: "Docs footer event",
+              //   },
+              // },
             ],
           },
           
