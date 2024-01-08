@@ -41,6 +41,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: '/',
           sidebarPath: require.resolve("./sidebars.js"),
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/GlueOps/glueops-dev/blob/main",
@@ -83,7 +84,6 @@ const config = {
       },
       docs: {
         sidebar: {
-          routeBasePath: '/',
           hideable: true,
           autoCollapseCategories: true,
         },
