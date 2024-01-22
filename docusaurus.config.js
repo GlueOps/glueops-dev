@@ -14,14 +14,14 @@ const getGtagID = () => {
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Glueops",
+  title: "GlueOps",
   tagline: "Dataops and Devops platform",
   url: process.env.CONFIG_URL || "https://localhost/",
   baseUrl: "/docs",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "https://cdn.glueops.dev/logos/logo.png",
-  organizationName: "Glueops",
+  organizationName: "GlueOps",
   projectName: "website",
   deploymentBranch: "master",
   trailingSlash: false,
@@ -98,9 +98,9 @@ const config = {
         { name: "og:image", content: "https://cdn.glueops.dev/doc-assets/v1/logos/logo.png" },
       ],
       navbar: {
-        title: "Glueops",
+        title: "GlueOps",
         logo: {
-          alt: "Glueops Logo",
+          alt: "GlueOps Logo",
           src: "https://cdn.glueops.dev/logos/logo.png",
           srcDark: "https://cdn.glueops.dev/logos/logo.png",
         },
@@ -145,7 +145,7 @@ const config = {
             className: "header-github-link",
             "aria-label": "GitHub repository",
             position: "right",
-            title: "Glueops on Github",
+            title: "GlueOps on Github",
             analytics: {
               event_name: "github_event",
               event_category: "GitHub",
