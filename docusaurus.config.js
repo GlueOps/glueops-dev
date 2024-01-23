@@ -14,14 +14,14 @@ const getGtagID = () => {
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Glueops",
+  title: "GlueOps",
   tagline: "Dataops and Devops platform",
   url: process.env.CONFIG_URL || "https://localhost/",
   baseUrl: "/docs",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "https://cdn.glueops.dev/logos/logo.png",
-  organizationName: "Glueops",
+  organizationName: "GlueOps",
   projectName: "website",
   deploymentBranch: "master",
   trailingSlash: false,
@@ -98,9 +98,9 @@ const config = {
         { name: "og:image", content: "https://cdn.glueops.dev/doc-assets/v1/logos/logo.png" },
       ],
       navbar: {
-        title: "Glueops",
+        title: "GlueOps",
         logo: {
-          alt: "Glueops Logo",
+          alt: "GlueOps Logo",
           src: "https://cdn.glueops.dev/logos/logo.png",
           srcDark: "https://cdn.glueops.dev/logos/logo.png",
         },
@@ -116,36 +116,36 @@ const config = {
               event_label: "Docs header event",
             },
           },
-          {
-            href: "https://aws.amazon.com/marketplace/pp/prodview-mfwjl2qdvhaes?sr=0-1&ref_=beagle&applicationId=AWSMPContessa",
-            "aria-label": "Purchase DataOps on Amazon Marketplace",
-            position: "right",
-            title: "Purchase DataOps on Amazon Marketplace",
-            label: "Purchase DataOps on Amazon Marketplace",
-            analytics: {
-              event_name: "purchase_dataops_event",
-              event_category: "Purchase",
-              event_label: "Purchase DataOps header event",
-            },
-          },
-          {
-            href: "https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa",
-            "aria-label": "Purchase DevOps on Amazon Marketplace",
-            position: "right",
-            title: "Purchase DevOps on Amazon Marketplace",
-            label: "Purchase DevOps on Amazon Marketplace",
-            analytics: {
-              event_name: "purchase_devops_event",
-              event_category: "Purchase",
-              event_label: "Purchase DevOps header event",
-            },
-          },
+          // {
+          //   href: "https://aws.amazon.com/marketplace/pp/prodview-mfwjl2qdvhaes?sr=0-1&ref_=beagle&applicationId=AWSMPContessa",
+          //   "aria-label": "Purchase DataOps on Amazon Marketplace",
+          //   position: "right",
+          //   title: "Purchase DataOps on Amazon Marketplace",
+          //   label: "Purchase DataOps on Amazon Marketplace",
+          //   analytics: {
+          //     event_name: "purchase_dataops_event",
+          //     event_category: "Purchase",
+          //     event_label: "Purchase DataOps header event",
+          //   },
+          // },
+          // {
+          //   href: "https://aws.amazon.com/marketplace/pp/prodview-soaz2d3nlms6k?sr=0-2&ref_=beagle&applicationId=AWSMPContessa",
+          //   "aria-label": "Purchase DevOps on Amazon Marketplace",
+          //   position: "right",
+          //   title: "Purchase DevOps on Amazon Marketplace",
+          //   label: "Purchase DevOps on Amazon Marketplace",
+          //   analytics: {
+          //     event_name: "purchase_devops_event",
+          //     event_category: "Purchase",
+          //     event_label: "Purchase DevOps header event",
+          //   },
+          // },
           {
             href: "https://github.com/GlueOps/glueops-dev",
             className: "header-github-link",
             "aria-label": "GitHub repository",
             position: "right",
-            title: "Glueops on Github",
+            title: "GlueOps on Github",
             analytics: {
               event_name: "github_event",
               event_category: "GitHub",
