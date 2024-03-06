@@ -26,7 +26,9 @@ const sidebars = {
       collapsible: true,
       items: [
         "deploy-applications/deploy-hello-world-to-glueops",
-        "deploy-applications/adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform"
+        "deploy-applications/adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform",
+        "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations"
+
       ],
       link: {
         type: "generated-index",
