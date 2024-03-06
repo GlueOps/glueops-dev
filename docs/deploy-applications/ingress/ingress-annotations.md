@@ -1,5 +1,5 @@
 ---
-id: glueops-ingress-annotations
+id: glueops-ingress-and-loadbalancer-customizations
 title: Ingress Annotations
 ---
 
