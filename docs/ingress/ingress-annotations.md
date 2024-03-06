@@ -5,10 +5,12 @@ title: Ingress Annotations
 
 
 # Basic Usage Example:
+
+
 ```yaml
 ingress:
-  enabled: true
-  ingressClassName: public
+  enabled: true # default is false. 
+  ingressClassName: public # Leave this as-is.
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt # By default we support Letsencrypt SSL certificates via HTTP Verification.
     nginx.ingress.kubernetes.io/affinity: cookie # Adding a sticky session based on cookies
@@ -16,7 +18,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-max-age: "7200" # The max age of this cookie is 2 hours before it expires
   entries:
     - name: public # another name can be used here at your descretion
-      hosts:
+      hosts: # add more hostnames as your application requires
         - hostname: "antoniostacos.com" 
         - hostname: "www.antoniostacos.com"
 ```
