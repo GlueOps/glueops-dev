@@ -122,7 +122,7 @@ Within your repo create the file that contains your code:
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```js title="&lt;MY_REPO&gt;/app.js"
+```js title="<MY_REPO>/app.js"
 const express = require('express');
 const app = express();
 
@@ -139,7 +139,7 @@ app.listen(8080, () => {
 </TabItem>
 <TabItem value="py" label="Python">
 
-```py title="&lt;MY_REPO&gt;/app.py"
+```py title="<MY_REPO>/app.py"
 import os
 from flask import Flask
 app = Flask(__name__)
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 </TabItem>
 <TabItem value="ruby" label="Ruby">
 
-```ruby title="&lt;MY_REPO&gt;/app.rb"
+```ruby title="<MY_REPO>/app.rb"
 require 'sinatra'
 
 set :bind, '0.0.0.0'  # This binds the server to all network interfaces.
@@ -179,7 +179,7 @@ Next, within your application repository, create a new file named `Dockerfile`. 
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```docker title="&lt;MY_REPO&gt;/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM node:18-alpine
 
 WORKDIR /app
@@ -193,7 +193,7 @@ CMD ["node", "app.js"]
 </TabItem>
 <TabItem value="py" label="Python">
 
-```docker title="&lt;MY_REPO&gt;/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM python:3-alpine
 
 WORKDIR /app
@@ -207,7 +207,7 @@ CMD ["python", "app.py"]
 </TabItem>
 <TabItem value="ruby" label="Ruby">
 
-```docker title="&lt;MY_REPO&gt;/Dockerfile"
+```docker title="<MY_REPO>/Dockerfile"
 FROM ruby:3-alpine
 
 WORKDIR /app
@@ -275,7 +275,7 @@ By creating and saving the following YAML configuration, you're setting up a Git
 
 To use it, Simply create the file below
 
-```yaml title="&lt;MY_REPO&gt;/.github/workflows/ghcr.yaml"
+```yaml title="<MY_REPO>/.github/workflows/ghcr.yaml"
 name: Publish to GHCR.io
  
 on: [push]
@@ -292,7 +292,11 @@ Save the file and commit your changes and push up your changes.
 
 :::tip
 
-Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/&lt;MY_ORG&gt;/&lt;MY_REPO&gt;/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact published to: https://github.com/&lt;MY_ORG&gt;/&lt;MY_REPO&gt;/packages.
+Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<span>&lt;</span>MY_ORG<span>&gt;
+</span>/<span>&lt;</span>MY_REPO<span>&gt;
+</span>/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact published to: https://github.com/<span>&lt;</span>MY_ORG<span>&gt;
+</span>/<span>&lt;</span>MY_REPO<span>&gt;
+</span>/packages.
 :::
 
 ## Let's deploy your app!
@@ -317,9 +321,9 @@ deployment-configurations
 
 Now, within your "deployment configurations" repository, create the following file:
 
-```yaml title="apps/&lt;MY_REPO&gt;/envs/qa/values.yaml"
+```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
 image:
-  repository: '&lt;MY_ORG&gt;/&lt;MY_REPO&gt;'
+  repository: '<MY_ORG>/<MY_REPO>'
   registry: ghcr.io
   pullPolicy: Always
   port: 8080
@@ -348,7 +352,7 @@ ingress:
 :::tip
 Ensure you replace the placeholders appropriately:
 
-- `&lt;MY_ORG&gt;` and `&lt;MY_REPO&gt;` with your GitHub organization and application repository names.
+- `<MY_ORG>` and `<MY_REPO>` with your GitHub organization and application repository names.
 - `<MY_APP_NAME>`  with your chosen app name.
 - `<MY_CAPTAIN_DOMAIN>` with your assigned captain domain, provided by the Platform Administrators.
 - `<CONTAINER_REGISTRY_CREDENTIALS>` if your image is in a private registry you will need to specify a value provided by the Platform Administrators. Otherwise use `nil`.
