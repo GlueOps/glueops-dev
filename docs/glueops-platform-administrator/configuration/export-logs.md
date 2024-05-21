@@ -207,7 +207,7 @@ spec:
   service:
     httpServer: true
     parsersFile: parsers.conf
-    httpPort: '45072' # see FluentBit metrics port configuration
+    httpPort: 45072 # see FluentBit metrics port configuration
 ---
 ```
 
@@ -233,12 +233,12 @@ spec:
   dnsPolicy: ClusterFirstWithHostNet
   fluentBitConfigName: 'glueops-core-fluent-bit-config-primary' # needs to match the ClusterFluentBitConfig object name
   hostNetwork: true
-  metricsPort: '45072' # needs to be unique across the cluster AND match the httpPort defined in ClusterFluentBitConfig
+  metricsPort: 45072 # needs to be unique across the cluster AND match the httpPort defined in ClusterFluentBitConfig
   envVars:
   - name: KEY_NAME # keyvalue pairs of environment variables can be set here. Ex. AWS credentials and more.
     value: "VALUE"
   ports:
-    - containerPort: '45073' # needs to be unique across the cluster
+    - containerPort: 45073 # needs to be unique across the cluster
       name: "fluentbit"
   image: "docker.io/kubesphere/fluent-bit:v2.2.0" # to make debugging easier, add a -debug to the suffix of the image name. Ex. docker.io/kubesphere/fluent-bit:v2.2.0-debug
   positionDB:
