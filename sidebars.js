@@ -77,6 +77,7 @@ const sidebars = {
           collapsible: true,
           items: [
             "glueops-platform-administrator/configuration/glueops-deployment-configuration",
+            "glueops-platform-administrator/configuration/export-logs",
             {
               type: "category",
               label: "GitHub token setup",
