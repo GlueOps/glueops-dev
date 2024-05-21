@@ -21,7 +21,7 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterInput
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
   name: 'glueops-core-platform-cri-primary' # Must be unique among all objects of same type
   namespace: glueops-core-fluent-operator
 spec:
@@ -43,8 +43,8 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterInput
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
-  name: `glueops-core-platform-sysd-primary` # Must be unique among all objects of same type
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
+  name: 'glueops-core-platform-sysd-primary' # Must be unique among all objects of same type
   namespace: glueops-core-fluent-operator
 spec:
   systemd:
@@ -68,13 +68,14 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterParser
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
   name: 'glueops-json' # Must be unique among all objects of same type and match the name defined in ClusterFilter
   namespace: glueops-core-fluent-operator  
 spec:
   json:
     timeFormat: "%Y-%m-%dT%H:%M:%S" # ISO 8601 standard
     timeKey: "time"
+---
 ```
 
 ## Defining a custom lua script:
@@ -84,7 +85,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
   name: 'glueops-core-containerd-lua-script-primary' # Must be unique among all objects of same type and needs to match the name in the ClusterFilter objects
   namespace: glueops-core-fluent-operator 
 data:
@@ -105,6 +106,7 @@ data:
             return 0,timestamp,record
             end
     end
+---
 ```
 
 
@@ -115,7 +117,7 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterFilter
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
   name: glueops-core-filter-primary # Must be unique among all objects of same type
   namespace: glueops-core-fluent-operator
 spec:
@@ -153,6 +155,7 @@ spec:
         wildcard:
           - kubernetes_*
   match: kube.*
+---
 ```
 
 ## Defining Outputs:
@@ -162,7 +165,7 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterOutput
 metadata:
   labels:
-    logging.glueops.dev: 'glueops-core-primary' # needs to manage the label defined in: ClusterFluentBitConfig
+    logging.glueops.dev: 'glueops-core-primary' # needs to match the label defined in: ClusterFluentBitConfig
   name: 'fluent-bit-datadog-output-primary' # Must be unique among all objects of same type
   namespace: glueops-core-fluent-operator
 spec:
@@ -174,6 +177,7 @@ spec:
     dd_source: 'nonprod.antoniostacos.onglueops.com' # update this to your cluster name
     dd_tags: 'captain_domain=nonprod.antoniostacos.onglueops.com,env=nonprod' # comma separated key value pairs
     tls: true
+---
 ```
 
 ## Bringing it all together:
