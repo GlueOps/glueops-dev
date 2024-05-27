@@ -253,6 +253,14 @@ spec:
       memory: 25Mi
   tolerations:
     - operator: Exists
+  # volumes:
+  #   - name: hostbuffer
+  #     hostPath:
+  #       path: /tmp/fluent-bit-buffer
+  # volumesMounts:
+  #   - mountPath: /host/fluent-bit-buffer
+  #     mountPropagation: HostToContainer
+  #     name: hostbuffer
 ---
 ```
 
