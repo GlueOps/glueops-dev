@@ -34,7 +34,7 @@ spec:
     readFromHead: false
     refreshIntervalSeconds: 10
     skipLongLines: true
-    storageType: filesystem
+    #storageType: filesystem
     tag: kube.*
 ---
 ```
