@@ -208,6 +208,14 @@ spec:
     httpServer: true
     parsersFile: parsers.conf
     httpPort: 45072 # see FluentBit metrics port configuration
+    # storage:
+    #  path: "/host/fluent-bit-buffer/"
+    #  backlogMemLimit: "50MB"
+    #  checksum: "off"
+    #  deleteIrrecoverableChunks: "on"
+    #  maxChunksUp: 128
+    #  metrics: "on"
+    #  sync: normal
 ---
 ```
 
