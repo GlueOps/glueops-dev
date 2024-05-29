@@ -208,7 +208,7 @@ spec:
     httpServer: true
     parsersFile: parsers.conf
     httpPort: 45072 # see FluentBit metrics port configuration
-    # storage:
+    # storage: # See ClusterInput CRD. If storage is filesystemt his needs to be defined
     #  path: "/host/fluent-bit-buffer/"
     #  backlogMemLimit: "50MB"
     #  checksum: "off"
@@ -261,7 +261,7 @@ spec:
       memory: 25Mi
   tolerations:
     - operator: Exists
-  # volumes:
+  # volumes: # See ClusterInput CRD. If storage is filesystemt his needs to be defined
   #   - name: hostbuffer
   #     hostPath:
   #       path: /tmp/fluent-bit-buffer
