@@ -160,7 +160,7 @@ spec:
 
 ## Defining Outputs:
 
-```yaml title="Define filters and parsers"
+```yaml title="Datadog Output"
 apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterOutput
 metadata:
