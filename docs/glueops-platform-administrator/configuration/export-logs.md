@@ -34,7 +34,7 @@ spec:
     readFromHead: false
     refreshIntervalSeconds: 10
     skipLongLines: true
-    #storageType: filesystem
+    #storageType: filesystem #if you want to buffer to disk instead of memory. It requires modifications to the ClusterFluentBitConfig and FluentBit CRDs
     tag: kube.*
 ---
 ```
