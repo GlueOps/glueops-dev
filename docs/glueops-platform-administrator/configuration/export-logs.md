@@ -288,5 +288,5 @@ spec:
 
 
 Additional resources:
-- CRDs: https://doc.crds.dev/github.com/fluent/fluent-operator@v2.7.0
+- CRDs: https://doc.crds.dev/github.com/fluent/fluent-operator (By default it'll pull up the latest, so please check with GlueOps first one which version to use)
 - General docs as the CRDs are lacking information: https://docs.fluentbit.io/manual/v/dev-2.2
