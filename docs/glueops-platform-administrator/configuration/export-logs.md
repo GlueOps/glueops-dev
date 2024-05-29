@@ -270,6 +270,19 @@ spec:
   #     mountPropagation: HostToContainer
   #     name: hostbuffer
 ---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: glueops-core-fluent-operator
+  name: glueops-core-primary # Must be unique among all objects of same type
+spec:
+  endpoints:
+    - port: metrics
+      path: /api/v2/metrics/prometheus
+      interval: 5s
+  selector:
+    matchLabels:
+      logging.glueops.dev: 'glueops-core-primary'  # needs to match the label used in ClusterFluentBitConfig 
 ```
 
 
