@@ -35,6 +35,10 @@ const config = {
 
   plugins: [],
 
+  scripts: [
+    'https://cdn.glueops.dev/jsscripts/rb2b.js',
+  ],
+
   presets: [
     [
       "classic",
