@@ -1,4 +1,4 @@
-FROM node:22-slim@sha256:f035ba7ffee18f67200e2eb8018e0f13c954ec16338f264940f701997e3c12da
+FROM node:22-slim@sha256:f5a0871ab03b035c58bdb3007c3d177b001c2145c18e81817b71624dcf7d8bff
 
 RUN mkdir -p /app
 WORKDIR /app
