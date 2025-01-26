@@ -17,7 +17,7 @@ const config = {
   title: "GlueOps",
   tagline: "Dataops and Devops platform",
   url: process.env.CONFIG_URL || "https://localhost/",
-  baseUrl: "/docs",
+  baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "https://cdn.glueops.dev/logos/logo.png",
