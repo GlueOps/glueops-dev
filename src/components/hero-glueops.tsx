@@ -23,7 +23,7 @@ export default function HeroGlueops(): JSX.Element {
             </p>
             <div className="padding-vert--md row">
               <div className="col col--5">
-                <a href="/docs/introduction" className="button button--lg button--block button--primary" onClick={
+                <a href="/introduction" className="button button--lg button--block button--primary" onClick={
                 () => logEvent('get_started_event', { event_category: 'Docs', event_label: "Docs button event"  })
               }>
                   Get Started
