@@ -168,7 +168,7 @@ const config = {
                 html: `
                     <p>
                     GlueOps, LLC<br>
-                    35 N Franklin Ave<br>
+                    34 N Franklin Ave<br>
                     Ste 687 2062<br>
                     Pinedale, WY 82941
                     </p>
