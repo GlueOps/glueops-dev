@@ -4512,9 +4512,9 @@ css-what@^6.0.1, css-what@^6.1.0:
   integrity sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==
 
 cssdb@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/cssdb/-/cssdb-8.4.0.tgz#232a1aa7751983ed2b40331634902d4c93f0456c"
-  integrity sha512-lyATYGyvXwQ8h55WeQeEHXhI+47rl52pXSYkFK/ZrCbAJSgVIaPFjYc3RM8TpRHKk7W3wsAZImmLps+P5VyN9g==
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/cssdb/-/cssdb-8.4.1.tgz#df8b2d17c7e5ade9c7cf07817dd13a20dcf51f90"
+  integrity sha512-DOGpy+qUgoAEaG/nJ7woMUSsiHDKJzGdytoxXGfqg1keqdqX70t+D3lRtZgIXDJKdMwfkWOSTiyRIcGFqpURSA==
 
 cssesc@^3.0.0:
   version "3.0.0"
