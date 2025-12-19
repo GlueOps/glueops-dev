@@ -11105,7 +11105,7 @@ react-dom@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dom@^19.2.2:
+react-dom@^19.0.0:
   version "19.2.3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.3.tgz#f0b61d7e5c4a86773889fcc1853af3ed5f215b17"
   integrity sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==
@@ -11211,7 +11211,7 @@ react@^16.8.4:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-react@^19.2.2:
+react@^19.0.0:
   version "19.2.3"
   resolved "https://registry.yarnpkg.com/react/-/react-19.2.3.tgz#d83e5e8e7a258cf6b4fe28640515f99b87cd19b8"
   integrity sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==
