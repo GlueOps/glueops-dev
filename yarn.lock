@@ -2070,9 +2070,9 @@
     vfile "^6.0.0"
 
 "@mdx-js/react@^3.0.0", "@mdx-js/react@^3.0.1":
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/@mdx-js/react/-/react-3.1.0.tgz"
-  integrity sha512-QjHtSaoameoalGnKDT3FoIl4+9RwyTmo9ZJGBdLOks/YOiWHoRDI3PUwEzOE7kEmGcV3AFcp9K6dYu9rEuKLAQ==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@mdx-js/react/-/react-3.1.1.tgz#24bda7fffceb2fe256f954482123cda1be5f5fef"
+  integrity sha512-f++rKLQgUVYDAtECQ6fn/is15GkEH9+nZPM3MS0RcxVqoTfawHvDlSCH7JbMhAM6uJ32v3eXLvLmLvjGu7PTQw==
   dependencies:
     "@types/mdx" "^2.0.0"
 
@@ -2479,7 +2479,7 @@
 
 "@types/mdx@^2.0.0":
   version "2.0.13"
-  resolved "https://registry.npmjs.org/@types/mdx/-/mdx-2.0.13.tgz"
+  resolved "https://registry.yarnpkg.com/@types/mdx/-/mdx-2.0.13.tgz#68f6877043d377092890ff5b298152b0a21671bd"
   integrity sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==
 
 "@types/mime@^1":
@@ -11105,7 +11105,7 @@ react-dom@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dom@^19.2.2:
+react-dom@^19.0.0:
   version "19.2.3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.3.tgz#f0b61d7e5c4a86773889fcc1853af3ed5f215b17"
   integrity sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==
@@ -11211,7 +11211,7 @@ react@^16.8.4:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-react@^19.2.2:
+react@^19.0.0:
   version "19.2.3"
   resolved "https://registry.yarnpkg.com/react/-/react-19.2.3.tgz#d83e5e8e7a258cf6b4fe28640515f99b87cd19b8"
   integrity sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==
