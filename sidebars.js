@@ -27,8 +27,32 @@ const sidebars = {
       items: [
         "deploy-applications/deploy-hello-world-to-glueops",
         "deploy-applications/adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform",
-        "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations"
-
+        "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations",
+        {
+          type: "category",
+          label: "Traefik Ingress",
+          collapsible: true,
+          items: [
+            "deploy-applications/traefik/traefik-overview",
+            "deploy-applications/traefik/traefik-standard-ingress",
+            "deploy-applications/traefik/traefik-basic-ingressroute",
+            "deploy-applications/traefik/traefik-path-routing",
+            "deploy-applications/traefik/traefik-multiple-ingressroutes",
+            "deploy-applications/traefik/traefik-middleware-headers",
+            "deploy-applications/traefik/traefik-middleware-ip-allowlist",
+            "deploy-applications/traefik/traefik-middleware-ratelimit",
+            "deploy-applications/traefik/traefik-middleware-basicauth",
+            "deploy-applications/traefik/traefik-canary-cookie",
+            "deploy-applications/traefik/traefik-tls-redirect",
+            "deploy-applications/traefik/traefik-ingressroutetcp",
+          ],
+          link: {
+            type: "generated-index",
+            title: "Traefik Ingress & Routing",
+            description: "Configure routing, middleware, TLS, and advanced traffic patterns using Traefik with the public-traefik IngressClass.",
+            slug: "/traefik-ingress",
+          },
+        },
       ],
       link: {
         type: "generated-index",
