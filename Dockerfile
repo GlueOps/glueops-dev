@@ -1,11 +1,16 @@
-FROM node:24-slim@sha256:61bf992754b4ab288d41cb92c25392195d0035871b4723a0abd30a49dcba356c
+FROM node:24-slim AS build
 
-RUN mkdir -p /app
 WORKDIR /app
-COPY . /app
+COPY package.json yarn.lock* ./
+RUN yarn install
+COPY . .
+RUN yarn build
 
-RUN yarn
+FROM nginx:alpine-slim
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
 
-ENTRYPOINT yarn build && yarn serve --port 80 --host 0.0.0.0
+CMD ["nginx", "-g", "daemon off;"]

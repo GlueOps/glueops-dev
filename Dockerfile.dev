@@ -1,0 +1,10 @@
+FROM node:24-slim
+
+WORKDIR /app
+COPY package.json yarn.lock* ./
+RUN yarn install
+COPY . .
+
+EXPOSE 80
+
+ENTRYPOINT ["yarn", "start", "--port", "80", "--host", "0.0.0.0"]

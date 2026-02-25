@@ -6,6 +6,10 @@ This project is a Docusaurus v2 documentation site for the GlueOps platform. Doc
 
 ```
 glueops-dev/
+├── Dockerfile                    # Multi-stage production build (static HTML via nginx)
+├── Dockerfile.dev                # Development build (Docusaurus dev server with live reload)
+├── nginx.conf                    # Nginx config for the production container
+├── .dockerignore                 # Docker build context exclusions
 ├── docusaurus.config.js          # Site config (routeBasePath: '/')
 ├── sidebars.js                   # Manual sidebar definition (NOT auto-generated)
 ├── docs/                         # All documentation pages
@@ -20,6 +24,19 @@ glueops-dev/
 ├── static/                       # Static assets
 └── analytics/                    # Analytics scripts
 ```
+
+## Docker
+
+There are two Dockerfiles for different purposes. Both expose port 80.
+
+| File | Purpose | Base Image | Output |
+|------|---------|------------|--------|
+| `Dockerfile` | Production | `node:24-slim` (build) → `nginx:alpine-slim` (serve) | Static HTML served by nginx |
+| `Dockerfile.dev` | Development | `node:24-slim` | Docusaurus dev server with live reload |
+
+- **`Dockerfile`** — Multi-stage build. Stage 1 installs dependencies and runs `yarn build` to produce static HTML. Stage 2 copies the output into an nginx container with `nginx.conf` for serving. This is what CI builds and deploys.
+- **`Dockerfile.dev`** — Single-stage build. Runs the Docusaurus dev server (`yarn start`) for local development with hot module reloading. Mount your source code as a volume for live reload.
+- **`nginx.conf`** — Nginx server config used by the production container. Includes `try_files` fallback for client-side routing, gzip compression, and static asset caching.
 
 ## Adding a New Documentation Page — Checklist
 
