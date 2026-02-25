@@ -25,8 +25,8 @@ const sidebars = {
       label: "Developers",
       collapsible: true,
       items: [
-        "deploy-applications/deploy-hello-world-to-glueops",
-        "deploy-applications/adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform",
+        "deploy-applications/deploy-first-app",
+        "deploy-applications/add-secrets-with-vault",
         "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations",
         {
           type: "category",

@@ -264,15 +264,17 @@ The site replaces domain references dynamically so readers see their own cluster
 | Pattern | Where to use | Handled by |
 |---------|--------------|-----------|
 | `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) | Swizzled `CodeBlock` component — replaces at render time |
-| `<CaptainDomain />` | Inline prose / paragraph text | MDX component — renders current domain reactively |
+| `<CaptainDomain />` | Inline prose / paragraph text (non-URL domain names) | MDX component — renders current domain as styled text |
+| `<CaptainDomainLink to="https://sub.{domain}" />` | `https://` URLs in prose that readers should visit | `CaptainDomainLink` component — clickable link when domain is customized, styled text with tooltip when default |
 | `{{ .Values.captain_domain }}` | Helm template YAML inside code fences | Not replaced — displayed as-is (real Helm expression) |
 
 ### Rules
 
 1. **Code fences** — write `CAPTAIN_DOMAIN` as a literal sentinel. The swizzled CodeBlock replaces every occurrence with the reader's domain.
-2. **Prose text** — use `<CaptainDomain />`. Files using this component **must** have a `.mdx` extension. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` require `.mdx`.
-3. **Helm YAML in code fences** — use `{{ .Values.captain_domain }}`. This is the actual Helm expression and is intentionally left as-is.
-4. **Never hardcode** a specific domain like `my-cluster.my-tenant.onglueops.com` in docs. Use the appropriate pattern above.
+2. **Prose text (non-URL domain names)** — use `<CaptainDomain />` for bare domain names that are not clickable URLs. Files using this component **must** have a `.mdx` extension. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` require `.mdx`.
+3. **Prose text (clickable URLs)** — use `<CaptainDomainLink to="https://sub.{domain}/path" />` for any `https://` URL the reader should visit. The `to` prop uses `{domain}` as a placeholder. Optional `children` override the link text (e.g., `<CaptainDomainLink to="https://argocd.{domain}">ArgoCD dashboard</CaptainDomainLink>`). When the reader has set their domain, it renders as a clickable link opening in a new tab. When using the default domain, it renders as styled text with a tooltip prompting them to set their domain. Requires `.mdx` extension.
+4. **Helm YAML in code fences** — use `{{ .Values.captain_domain }}`. This is the actual Helm expression and is intentionally left as-is.
+5. **Never hardcode** a specific domain like `my-cluster.my-tenant.onglueops.com` in docs. Use the appropriate pattern above.
 
 ### Examples
 
@@ -284,10 +286,18 @@ curl https://my-app.apps.CAPTAIN_DOMAIN
 ```
 ````
 
-**In prose (`.mdx` file):**
+**In prose — bare domain name (`.mdx` file):**
 
 ```markdown
 Your app will be available at `https://my-app.apps.`<CaptainDomain />.
+```
+
+**Clickable URL in prose (`.mdx` file):**
+
+```markdown
+Visit <CaptainDomainLink to="https://cluster-info.{domain}" /> to see your cluster info.
+
+Or with custom text: <CaptainDomainLink to="https://argocd.{domain}">ArgoCD dashboard</CaptainDomainLink>
 ```
 
 **In Helm template YAML (code fence):**

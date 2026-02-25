@@ -180,6 +180,34 @@ html[data-theme="dark"] {
 }
 
 /**
+ Captain Domain link (CaptainDomainLink component)
+ */
+.captain-domain-link {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.9em;
+  background: var(--ifm-code-background);
+  border-radius: var(--ifm-code-border-radius);
+  padding: 0.1em 0.3em;
+  text-decoration: none;
+}
+
+a.captain-domain-link {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a.captain-domain-link:hover {
+  color: var(--ifm-link-hover-color);
+}
+
+.captain-domain-link-disabled {
+  cursor: default;
+  border-bottom: 1px dashed var(--ifm-font-color-secondary);
+  opacity: 0.85;
+}
+
+/**
  Responsive: hide label on small screens
  */
 @media (max-width: 996px) {

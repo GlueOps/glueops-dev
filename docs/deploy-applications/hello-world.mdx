@@ -1,361 +1,119 @@
 ---
-id: deploy-hello-world-to-glueops
-title: Deploy "Hello World"
+id: deploy-first-app
+title: Deploy Your First App
 type: tutorial
 ---
 
-# Deploy a "Hello World" Application
+# Deploy Your First App
 
-In this guide, we will walk you through the process of deploying a "Hello World" application onto the GlueOps platform. We'll start from scratch and cover each step in detail to ensure you have a smooth deployment experience. You may see references to `antoniostacos`, this name is for demo purposes only and can be replaced with your actual project or company name where appropriate.
+In this guide you'll deploy a pre-built web application onto the GlueOps platform. No custom code, Dockerfile, or CI pipeline is needed — you'll configure two small YAML files and push them to your deployment-configurations repository. ArgoCD handles the rest.
 
-By the end of this guide, you will have deployed your antoniostacos application in a QA environment on the GlueOps platform.
+By the end, you'll have a running app with a public URL and a custom environment variable.
 
-## Create a New Repository
+## Prerequisites
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-:::note
-
-In the file structures shown below, we've used the `<` symbol next to files or folders to indicate those you'll be working on or creating during this tutorial.
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```
-app-antoniostacos <
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.js
-├── README.md
-```
-
-</TabItem>
-<TabItem value="py" label="Python">
-
-```
-app-antoniostacos <
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.py
-├── README.md
-```
-</TabItem>
-<TabItem value="ruby" label="Ruby">
-
-```
-app-antoniostacos <
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.rb
-├── README.md
-```
-</TabItem>
-</Tabs>
-
-:::
-
-Go to GitHub and create a [new repository](https://github.com/new). When naming your repository, you can use a format like `app-yourprojectname`, for example: `app-antoniostacos`.
-
-## Add your application code and Dockerfile
-
-:::info
-Marked below are the files we will be adding:
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```
-app-antoniostacos
-├── Dockerfile <
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.js <
-├── README.md
-```
-
-</TabItem>
-<TabItem value="py" label="Python">
-
-```
-app-antoniostacos
-├── Dockerfile <
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.py <
-├── README.md
-```
-</TabItem>
-<TabItem value="ruby" label="Ruby">
-
-```
-app-antoniostacos
-├── Dockerfile <
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml
-│       └── qa-cd.yaml
-├── app.rb <
-├── README.md
-```
-</TabItem>
-</Tabs>
-:::
-
-### Application Code
-
-Within your repo create the file that contains your code:
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```js title="<MY_REPO>/app.js"
-const express = require('express');
-const app = express();
-
-app.get('/', (req, res) => {
-    const greeting = process.env.GREETING_MESSAGE || 'Hello, World!';
-    res.send(greeting);
-});
-
-app.listen(8080, () => {
-    console.log('Server running on http://localhost:8080');
-});
-```
-
-</TabItem>
-<TabItem value="py" label="Python">
-
-```py title="<MY_REPO>/app.py"
-import os
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    greeting = os.environ.get('GREETING_MESSAGE', 'Hello, World!')
-    return greeting
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
-```
-</TabItem>
-<TabItem value="ruby" label="Ruby">
-
-```ruby title="<MY_REPO>/app.rb"
-require 'sinatra'
-
-set :bind, '0.0.0.0'  # This binds the server to all network interfaces.
-set :port, 8080       # This sets the default port to 8080.
-
-get '/' do
-  greeting = ENV['GREETING_MESSAGE'] || 'Hello, World!'
-  greeting
-end
-```
-</TabItem>
-</Tabs>
-
-
-Save the file and commit your changes.
-
-### Dockerfile
-
-Next, within your application repository, create a new file named `Dockerfile`. Populate this file using the template provided below based on your chosen programming language.
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```docker title="<MY_REPO>/Dockerfile"
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY . /app
-
-RUN npm install express
-
-CMD ["node", "app.js"]
-```
-</TabItem>
-<TabItem value="py" label="Python">
-
-```docker title="<MY_REPO>/Dockerfile"
-FROM python:3-alpine
-
-WORKDIR /app
-
-COPY . /app
-
-RUN pip install --no-cache-dir Flask
-
-CMD ["python", "app.py"]
-```
-</TabItem>
-<TabItem value="ruby" label="Ruby">
-
-```docker title="<MY_REPO>/Dockerfile"
-FROM ruby:3-alpine
-
-WORKDIR /app
-
-COPY . /app
-
-RUN gem install sinatra webrick
-
-CMD ["ruby", "app.rb"]
-```
-</TabItem>
-</Tabs>
-
-Save the file and commit your changes.
-
-## Add CI to publish a Docker image to GitHub Container Registry
-:::info
-Marked below are the files we will be adding:
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```
-app-antoniostacos
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml <
-│       └── qa-cd.yaml
-├── app.js
-├── README.md
-```
-
-</TabItem>
-<TabItem value="py" label="Python">
-
-```
-app-antoniostacos
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml <
-│       └── qa-cd.yaml
-├── app.py
-├── README.md
-```
-</TabItem>
-<TabItem value="ruby" label="Ruby">
-
-```
-app-antoniostacos
-├── Dockerfile
-├── .github
-│   └── workflows
-│       ├── ghcr.yaml <
-│       └── qa-cd.yaml
-├── app.rb
-├── README.md
-```
-</TabItem>
-</Tabs>
-:::
-
-By creating and saving the following YAML configuration, you're setting up a GitHub Action that will automatically publish a Docker image of your application to the GitHub Container Registry (GHCR.io). This will allow the GlueOps platform to use the latest version of your app in it's deployments. As a happy path, we have provided this [custom action to push Docker images to your GitHub Container Registry (GHCR.io)](https://github.com/marketplace/actions/build-docker-image-and-push-to-ghcr-docker-hub-or-aws-ecr). 
-
-To use it, Simply create the file below
-
-```yaml title="<MY_REPO>/.github/workflows/ghcr.yaml"
-name: Publish to GHCR.io
- 
-on: [push]
-
-jobs:
-  build_tag_push_to_ghcr:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build, Tag and Push Docker Image to GHCR
-        uses: GlueOps/github-actions-build-push-containers@main
-```
-
-Save the file and commit your changes and push up your changes.
+- Access to your team's **deployment-configurations** repository. Your Platform Administrator will provide the repo name and location.
+- Your cluster information page: <CaptainDomainLink to="https://cluster-info.{domain}" />
 
 :::tip
-
-Once you push up your changes visit your github repository actions page to view the status. You can find it at: https://github.com/<span>&lt;</span>MY_ORG<span>&gt;
-</span>/<span>&lt;</span>MY_REPO<span>&gt;
-</span>/actions. If all the circles next to your actions are "Green", it indicates that the processes completed successfully. If you see any "Red" circles then you may need to revisit the steps above before continuing. In the end you should see an artifact published to: https://github.com/<span>&lt;</span>MY_ORG<span>&gt;
-</span>/<span>&lt;</span>MY_REPO<span>&gt;
-</span>/packages.
+If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
-## Let's deploy your app!
+## 1. Create the app directory structure
 
-:::info
-**Deployment Configuration Repository:**
+Inside your deployment-configurations repository, create the following directory structure:
 
-Think of this repository as your application's deployment instruction manual. It contains all the essential rules and settings that determine how and where your application should be launched. You don't need to delve into the nitty-gritty of these configurations. Just follow the steps below, and our system will handle the deployment seamlessly.
-::::danger important
- The exact name and location of this "deployment configurations" repository will be provided by your Platform Administrators.
-::::
 ```
 deployment-configurations
-├── apps
-│   └── app-antoniostacos
-│       └── envs
-│           └── qa
-│               └── values.yaml <
+└── apps
+    └── hello-world
+        ├── base
+        │   └── base-values.yaml
+        └── envs
+            └── prod
+                └── values.yaml
 ```
 
-:::
+- `base/base-values.yaml` — Configuration shared across all environments (image, port).
+- `envs/prod/values.yaml` — Environment-specific settings (replicas, ingress, env vars).
 
-Now, within your "deployment configurations" repository, create the following file:
+## 2. Add base values
 
-```yaml title="apps/<MY_REPO>/envs/qa/values.yaml"
+This file defines the container image. We're using [`traefik/whoami`](https://github.com/traefik/whoami), a lightweight web server that displays request and system information — perfect for testing deployments.
+
+```yaml title="apps/hello-world/base/base-values.yaml"
 image:
-  repository: '<MY_ORG>/<MY_REPO>'
-  registry: ghcr.io
-  pullPolicy: Always
-  port: 8080
-  tag: main
+  registry: docker.io
+  repository: traefik/whoami
+  tag: latest
+  port: 80
+```
+
+## 3. Add environment values
+
+This file enables the Deployment, Service, and Ingress, and sets a `GREETING_MESSAGE` environment variable:
+
+```yaml title="apps/hello-world/envs/prod/values.yaml"
+deployment:
+  enabled: true
+  replicas: 1
+  envVariables:
+    - name: GREETING_MESSAGE
+      value: "Hello, World!"
+
 service:
   enabled: true
-deployment:
-  replicas: 1
-  enabled: true
-  imagePullPolicy: Always
-  imagePullSecrets: <CONTAINER_REGISTRY_CREDENTIALS>
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
 
 ingress:
   enabled: true
-  ingressClassName: public
+  ingressClassName: public-traefik
   entries:
     - name: public
       hosts:
-        - hostname: '<MY_APP_NAME>-qa.apps.CAPTAIN_DOMAIN'
+        - hostname: '{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}'
 ```
 
-:::tip
-Ensure you replace the placeholders appropriately:
+:::info How the hostname works
+The `hostname` uses Helm template expressions that are resolved automatically at deploy time:
+- `{{ include "app.name" . }}` → the app's directory name (e.g., `hello-world`)
+- `{{ .Values.captain_domain }}` → your cluster's domain, injected by the platform
 
-- `<MY_ORG>` and `<MY_REPO>` with your GitHub organization and application repository names.
-- `<MY_APP_NAME>`  with your chosen app name.
-- If the captain domain shown in the examples doesn't look right, update your **Captain Domain** in the top navigation bar.
-- `<CONTAINER_REGISTRY_CREDENTIALS>` if your image is in a private registry you will need to specify a value provided by the Platform Administrators. Otherwise use `nil`.
+You don't need to hardcode any values — the platform fills them in for you.
 :::
 
-Once you've done the above, commit your changes to the deployment configurations repository and push the changes. In a short while, you should be able to access your app at the URL: <code>https://&lt;MY_APP_NAME&gt;-qa.apps.<CaptainDomain /></code>
+## 4. Deploy
+
+Commit both files and push to your deployment-configurations repository. ArgoCD will detect the changes and deploy your app automatically.
+
+- **ArgoCD sync:** ~3 minutes
+- **DNS propagation:** ~2 additional minutes
+
+You can monitor the deployment status from the ArgoCD dashboard, accessible via your <CaptainDomainLink to="https://cluster-info.{domain}">cluster information page</CaptainDomainLink>.
+
+## 5. Verify
+
+Once deployed, open your browser and visit:
+
+<CaptainDomainLink to="https://hello-world-prod.apps.{domain}" />
+
+You should see the `whoami` response page showing hostname, IP addresses, and HTTP request details.
+
+To confirm your `GREETING_MESSAGE` environment variable was injected, visit:
+
+<CaptainDomainLink to="https://hello-world-prod.apps.{domain}/?env=true" />
+
+Look for `GREETING_MESSAGE=Hello, World!` in the output.
+
+## Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Base values** | Shared config (image, port) that applies to every environment. |
+| **Environment values** | Per-environment overrides (replicas, ingress, env vars) in `envs/<env>/values.yaml`. |
+| **captain_domain** | Your cluster's domain — injected automatically by the platform. Never hardcode it. |
+| **ArgoCD** | Watches your deployment-configurations repo and syncs changes to the cluster automatically. |
+
+## Next steps
+
+- [Add Secrets with Vault](add-secrets-with-vault) — Pull sensitive configuration from Vault instead of hardcoding values.
+- [Traefik Ingress & Routing](/traefik-ingress) — Explore advanced routing patterns: path-based routing, middleware, rate limiting, and more.
