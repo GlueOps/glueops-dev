@@ -14,7 +14,7 @@ glueops-dev/
 ├── sidebars.js                   # Manual sidebar definition (NOT auto-generated)
 ├── docs/                         # All documentation pages
 │   ├── introduction.md           # Landing page (id: introduction)
-│   ├── cluster-domains.md        # Captain domain explanation
+│   ├── cluster-domains.mdx        # Captain domain explanation
 │   ├── deploy-applications/      # Developer guides
 │   │   ├── traefik/              # Traefik routing guides (13 pages)
 │   │   ├── ingress/              # Legacy ingress docs
@@ -92,3 +92,38 @@ If the new page belongs to a section with an overview page (e.g., `docs/deploy-a
 - **Docs at root** — `routeBasePath: '/'` means docs are served from `/`, not `/docs/`
 - **Edit links** — each page gets an "Edit this page" link pointing to the GitHub repo
 - **Broken links throw** — `onBrokenLinks: "throw"`, so invalid internal links will break the build
+
+## Captain Domain Feature
+
+The site has a dynamic domain replacement feature that lets readers type their cluster domain into a navbar input, which automatically updates all domain references across the docs. The default domain is `nonprod.antoniostacos.onglueops.com`.
+
+### Architecture
+
+| Layer | File | Purpose |
+|-------|------|---------|
+| React Context | `src/contexts/CaptainDomainContext.tsx` | Stores domain in state + `localStorage` (key: `glueops_captain_domain`) |
+| Provider | `src/theme/Root.tsx` | Wraps the entire app with `CaptainDomainProvider` |
+| Navbar Input | `src/theme/NavbarItem/CaptainDomainInput.tsx` | Text input widget in the navbar |
+| Navbar Registration | `src/theme/NavbarItem/ComponentTypes.tsx` | Registers `custom-captainDomainInput` navbar item type |
+| CodeBlock Swizzle | `src/theme/CodeBlock/index.tsx` | Replaces `CAPTAIN_DOMAIN` sentinel in code fences |
+| MDX Component | `src/theme/MDXComponents.tsx` | Exports `<CaptainDomain />` for prose usage |
+| Styles | `src/css/custom.css` | Styles for navbar widget and inline component |
+
+### Three Domain Reference Patterns
+
+| Pattern | Where to use | How it works |
+|---------|--------------|--------------|
+| `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) | CodeBlock swizzle replaces it reactively |
+| `<CaptainDomain />` | Inline prose text | MDX component renders the current domain |
+| `{{ .Values.captain_domain }}` | Helm template YAML in code fences | Shown as-is (not replaced) — it's a real Helm expression |
+
+### File Extension Rule
+
+Any doc file that uses the `<CaptainDomain />` JSX component **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components.
+
+### Writing Guidelines
+
+- **Code fences:** Write `CAPTAIN_DOMAIN` as a raw sentinel. The swizzled CodeBlock replaces it with the user's domain automatically.
+- **Prose text:** Use `<CaptainDomain />`. Example: `Navigate to <CaptainDomain /> in your browser.`
+- **Helm templates:** Use `{{ .Values.captain_domain }}` — this is a real Helm expression and must not be replaced.
+- **Never hardcode** a specific cluster domain (e.g., `nonprod.jupiter.onglueops.rocks`) in documentation prose or code fences. Use one of the three patterns above instead.
