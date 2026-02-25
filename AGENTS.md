@@ -119,11 +119,11 @@ The site has a dynamic domain replacement feature that lets readers type their c
 
 ### File Extension Rule
 
-Any doc file that uses the `<CaptainDomain />` JSX component **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components.
+Any doc file that uses the `<CaptainDomain />` JSX component **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` require `.mdx`.
 
 ### Writing Guidelines
 
 - **Code fences:** Write `CAPTAIN_DOMAIN` as a raw sentinel. The swizzled CodeBlock replaces it with the user's domain automatically.
 - **Prose text:** Use `<CaptainDomain />`. Example: `Navigate to <CaptainDomain /> in your browser.`
 - **Helm templates:** Use `{{ .Values.captain_domain }}` — this is a real Helm expression and must not be replaced.
-- **Never hardcode** a specific cluster domain (e.g., `nonprod.jupiter.onglueops.rocks`) in documentation prose or code fences. Use one of the three patterns above instead.
+- **Never hardcode** a specific cluster domain (e.g., `my-cluster.my-tenant.onglueops.com`) in documentation prose or code fences. Use one of the three patterns above instead.
