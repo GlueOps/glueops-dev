@@ -138,11 +138,11 @@ With the example configuration:
 kubectl get middlewares -n nonprod | grep rate-limit
 
 # Normal request — should return 200
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
 
 # Trigger rate limiting — rapid burst
 for i in $(seq 1 30); do
-  curl -s -o /dev/null -w "%{http_code}\n" https://my-app.apps.nonprod.jupiter.onglueops.rocks
+  curl -s -o /dev/null -w "%{http_code}\n" https://my-app.apps.CAPTAIN_DOMAIN
 done
 # After ~20 requests, you should see 429 responses
 ```

@@ -166,7 +166,7 @@ With `customResourcesMap`, you can define the middleware in `base-values.yaml` (
 kubectl get middlewares -n nonprod | grep security-headers
 
 # Check response headers
-curl -I https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl -I https://my-app.apps.CAPTAIN_DOMAIN
 ```
 
 Expected response headers:

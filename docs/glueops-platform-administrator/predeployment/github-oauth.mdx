@@ -32,7 +32,7 @@ To create the OAuth App, follow these steps:
 <img width="995" alt="Screenshot 2023-07-26 at 20 28 27" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/b8348e31-1695-4b61-bd22-fd1513411034.png"/>
 
 1. **Application name**: Enter a name for your OAuth app. This will start with `dex.` and end with your **captain domain**.
-Assuming your **captain domain** is `nonprod.antoniostacos.onglueops.com`, your application name should be: `dex.nonprod.antoniostacos.onglueops.com`. 
+Assuming your **captain domain** is <CaptainDomain />, your application name should be: <code>dex.<CaptainDomain /></code>. 
 
 :::info
 The GlueOps team will provide you with the **captain domain**.
@@ -40,13 +40,13 @@ The GlueOps team will provide you with the **captain domain**.
 
 1. **Homepage URL**: Specify the homepage URL for your OAuth app. The homepage URL contains the following
     - The URL suffix `https://dex`. Where `dex` is the service we manage.
-    - The application name. In this case `dex.nonprod.antoniostacos.onglueops.com`
+    - The application name. In this case <code>dex.<CaptainDomain /></code>
     - The tenant key identifying your organization. In this case `antoniostacos`
     - The top level domain for GlueOps services `onglueops.com` 
 
-For the example cluster, the home page URL is `https://dex.nonprod.antoniostacos.onglueops.com`.
+For the example cluster, the home page URL is <code>https://dex.<CaptainDomain /></code>.
 
-1. **Authorization callback URL**: Set the authorization callback URL for your OAuth app. Add `/callback` to the homepage URL. For the example cluster your authorization callback URL would be `https://dex.nonprod.antoniostacos.onglueops.com/callback`.
+1. **Authorization callback URL**: Set the authorization callback URL for your OAuth app. Add `/callback` to the homepage URL. For the example cluster your authorization callback URL would be <code>https://dex.<CaptainDomain />/callback</code>.
 
 2. Once you have filled in the details, click on **Register application** to create the GitHub OAuth app.
 

@@ -141,7 +141,7 @@ kubectl get middlewares -n nonprod | grep ip-allowlist
 kubectl describe middleware ip-allowlist -n nonprod
 
 # From an allowed IP — should return 200
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
 
 # From a blocked IP — should return 403 Forbidden
 ```

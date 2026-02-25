@@ -174,8 +174,8 @@ spec:
     host: 'http-intake.logs.us3.datadoghq.com' # change this to the respective region
     compress: gzip
     apikey: XXXXXXXXXXXXXXXXXXXXXXXX
-    dd_source: 'nonprod.antoniostacos.onglueops.com' # update this to your cluster name
-    dd_tags: 'captain_domain=nonprod.antoniostacos.onglueops.com,env=nonprod' # comma separated key value pairs
+    dd_source: 'CAPTAIN_DOMAIN' # update this to your cluster name
+    dd_tags: 'captain_domain=CAPTAIN_DOMAIN,env=nonprod' # comma separated key value pairs
     tls: true
 ---
 ```

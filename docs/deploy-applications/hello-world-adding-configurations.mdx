@@ -16,9 +16,9 @@ In this guide, you'll learn how to add configurations and secrets to your applic
 :::info prerequisites
 
 Before you get started we will begin referencing links located on your cluster information home page:
-  `https://cluster-info.<MY_CAPTAIN_DOMAIN>`
+  <code>https://cluster-info.<CaptainDomain /></code>
 
-_Using the URL above, replace `<MY_CAPTAIN_DOMAIN>` with the correct value provided by your Platform Administrator_
+_If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar._
 :::
 
 Once you are on the cluster info home page, click on the `Resource/Link` for `Secrets Management`. You will then be taking our our secrets management system (Vault). For the role enter "editor" as you will need read/write access and then click on `Sign in with OIDC Provider`
@@ -114,7 +114,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: '<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>'
+        - hostname: '<MY_APP_NAME>-qa.apps.CAPTAIN_DOMAIN'
 
 externalSecret:
   enabled: true

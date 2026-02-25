@@ -107,8 +107,8 @@ customResourcesMap:
 kubectl get ingressroutetcps -n nonprod | grep my-app-tcp
 
 # Test with openssl (SNI-based connection)
-openssl s_client -connect my-app-tcp.apps.nonprod.jupiter.onglueops.rocks:443 \
-  -servername my-app-tcp.apps.nonprod.jupiter.onglueops.rocks
+openssl s_client -connect my-app-tcp.apps.CAPTAIN_DOMAIN:443 \
+  -servername my-app-tcp.apps.CAPTAIN_DOMAIN
 ```
 
 :::warning

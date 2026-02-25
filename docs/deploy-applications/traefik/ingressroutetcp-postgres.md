@@ -152,7 +152,7 @@ kubectl get tlsoptions -n nonprod | grep postgres-tls-options
 
 # Connect with psql (requires PostgreSQL 17+ client for sslnegotiation=direct)
 docker run --rm postgres:18 \
-  psql "host=<app-name>-prod.apps.<captain_domain> port=443 \
+  psql "host=<app-name>-prod.apps.CAPTAIN_DOMAIN port=443 \
         user=postgres password=glueops-demo dbname=postgres \
         sslmode=require sslnegotiation=direct" \
   -c "SELECT 1;"

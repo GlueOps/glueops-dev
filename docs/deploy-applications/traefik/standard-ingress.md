@@ -42,7 +42,7 @@ ingress:
 
 ```bash
 kubectl get ingress -n nonprod | grep my-app
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
 ```
 
 ---
@@ -77,11 +77,11 @@ ingress:
 
 ```bash
 # First request sets a cookie
-curl -v https://my-app-sticky.apps.nonprod.jupiter.onglueops.rocks 2>&1 | grep Set-Cookie
+curl -v https://my-app-sticky.apps.CAPTAIN_DOMAIN 2>&1 | grep Set-Cookie
 # Output should include: Set-Cookie: my-sticky-cookie=<hash>; ...
 
 # Subsequent requests with the cookie go to the same pod
-curl -b "my-sticky-cookie=<hash>" https://my-app-sticky.apps.nonprod.jupiter.onglueops.rocks
+curl -b "my-sticky-cookie=<hash>" https://my-app-sticky.apps.CAPTAIN_DOMAIN
 ```
 
 ---
@@ -120,8 +120,8 @@ When you specify explicit paths, only those paths will be routed. Requests to ot
 ### Verify
 
 ```bash
-curl https://my-app-paths.apps.nonprod.jupiter.onglueops.rocks/api
-curl https://my-app-paths.apps.nonprod.jupiter.onglueops.rocks/health
+curl https://my-app-paths.apps.CAPTAIN_DOMAIN/api
+curl https://my-app-paths.apps.CAPTAIN_DOMAIN/health
 ```
 
 ---
@@ -153,8 +153,8 @@ ingress:
 
 ```bash
 # Both hostnames route to the same service
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
-curl https://my-app-alt.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-alt.apps.CAPTAIN_DOMAIN
 ```
 
 ---
@@ -202,7 +202,7 @@ The middleware reference format is **`<namespace>-<middleware-name>@kubernetescr
 ### Verify
 
 ```bash
-curl -I https://my-app-mw.apps.nonprod.jupiter.onglueops.rocks
+curl -I https://my-app-mw.apps.CAPTAIN_DOMAIN
 # Response headers should include:
 # X-Frame-Options: DENY
 # X-Content-Type-Options: nosniff
@@ -253,12 +253,12 @@ The middleware reference format is `<namespace>-<middleware-name>@kubernetescrd`
 
 ```bash
 # HTTP → should redirect to HTTPS (301)
-curl -D- -o /dev/null http://my-app-tls.apps.nonprod.jupiter.onglueops.rocks
+curl -D- -o /dev/null http://my-app-tls.apps.CAPTAIN_DOMAIN
 # HTTP/1.1 301 Moved Permanently
-# Location: https://my-app-tls.apps.nonprod.jupiter.onglueops.rocks/
+# Location: https://my-app-tls.apps.CAPTAIN_DOMAIN/
 
 # HTTPS → serves the app
-curl https://my-app-tls.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app-tls.apps.CAPTAIN_DOMAIN
 ```
 
 ---

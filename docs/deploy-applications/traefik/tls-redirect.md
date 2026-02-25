@@ -186,14 +186,14 @@ The `TLSOption` resource enforces:
 
 ```bash
 # HTTP → should redirect to HTTPS (301)
-curl -v http://my-app.apps.nonprod.jupiter.onglueops.rocks 2>&1 | grep -i location
-# Location: https://my-app.apps.nonprod.jupiter.onglueops.rocks/
+curl -v http://my-app.apps.CAPTAIN_DOMAIN 2>&1 | grep -i location
+# Location: https://my-app.apps.CAPTAIN_DOMAIN/
 
 # HTTPS → should serve the app
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
 
 # Test TLS version enforcement (TLS 1.1 should fail)
-curl --tls-max 1.1 https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl --tls-max 1.1 https://my-app.apps.CAPTAIN_DOMAIN
 # Should fail with an SSL error
 ```
 

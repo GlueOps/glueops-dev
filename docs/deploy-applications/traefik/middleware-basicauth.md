@@ -157,11 +157,11 @@ customResourcesMap:
 
 ```bash
 # Without credentials — returns 401 Unauthorized
-curl -I https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl -I https://my-app.apps.CAPTAIN_DOMAIN
 # HTTP/2 401
 
 # With credentials — returns 200
-curl -u user:password https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl -u user:password https://my-app.apps.CAPTAIN_DOMAIN
 ```
 
 ## Multiple Users
