@@ -13,7 +13,7 @@ By the end, you'll have a running app with a public URL and a custom environment
 ## Prerequisites
 
 - Access to your team's **deployment-configurations** repository. Your Platform Administrator will provide the repo name and location.
-- Your cluster information page: <code>https://cluster-info.<CaptainDomain /></code>
+- Your cluster information page: <CaptainDomainLink to="https://cluster-info.{domain}" />
 
 :::tip
 If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
@@ -88,19 +88,19 @@ Commit both files and push to your deployment-configurations repository. ArgoCD 
 - **ArgoCD sync:** ~3 minutes
 - **DNS propagation:** ~2 additional minutes
 
-You can monitor the deployment status from the ArgoCD dashboard, accessible via your [cluster information page](https://cluster-info.CAPTAIN_DOMAIN).
+You can monitor the deployment status from the ArgoCD dashboard, accessible via your <CaptainDomainLink to="https://cluster-info.{domain}">cluster information page</CaptainDomainLink>.
 
 ## 5. Verify
 
 Once deployed, open your browser and visit:
 
-<code>https://hello-world-prod.apps.<CaptainDomain /></code>
+<CaptainDomainLink to="https://hello-world-prod.apps.{domain}" />
 
 You should see the `whoami` response page showing hostname, IP addresses, and HTTP request details.
 
 To confirm your `GREETING_MESSAGE` environment variable was injected, visit:
 
-<code>https://hello-world-prod.apps.<CaptainDomain />/?env=true</code>
+<CaptainDomainLink to="https://hello-world-prod.apps.{domain}/?env=true" />
 
 Look for `GREETING_MESSAGE=Hello, World!` in the output.
 

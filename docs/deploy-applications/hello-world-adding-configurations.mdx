@@ -18,7 +18,7 @@ We'll add a new secret alongside the `GREETING_MESSAGE` you set up in the previo
 
 :::info
 Your cluster information page has a link to Vault:
-  <code>https://cluster-info.<CaptainDomain /></code>
+  <CaptainDomainLink to="https://cluster-info.{domain}" />
 
 _If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar._
 :::
@@ -105,7 +105,7 @@ Commit the changes and push. ArgoCD will sync the update in ~3 minutes.
 
 ## 4. Verify
 
-Visit <code>https://hello-world-prod.apps.<CaptainDomain />/?env=true</code> and look for both:
+Visit <CaptainDomainLink to="https://hello-world-prod.apps.{domain}/?env=true" /> and look for both:
 
 - `GREETING_MESSAGE=Hello, World!` — your static environment variable
 - `SECRET_MESSAGE=This value came from Vault!` — injected from Vault via ExternalSecret
