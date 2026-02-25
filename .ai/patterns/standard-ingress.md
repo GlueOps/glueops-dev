@@ -47,7 +47,8 @@ ingress:
 
 ~~~bash
 kubectl get ingress -n nonprod | grep <app-name>
-curl https://<app-name>.apps.nonprod.jupiter.onglueops.rocks
+# CAPTAIN_DOMAIN is replaced dynamically with the reader's domain
+curl https://<app-name>.apps.CAPTAIN_DOMAIN
 ~~~
 
 ## Key Points

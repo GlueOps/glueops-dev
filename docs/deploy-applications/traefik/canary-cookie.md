@@ -155,11 +155,11 @@ customResourcesMap:
 
 ```bash
 # Default traffic → goes to v1 (stable)
-curl https://my-app-canary.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app-canary.apps.CAPTAIN_DOMAIN
 # Name: canary-v1
 
 # With canary cookie → goes to v2 (canary)
-curl -b "canary=v2" https://my-app-canary.apps.nonprod.jupiter.onglueops.rocks
+curl -b "canary=v2" https://my-app-canary.apps.CAPTAIN_DOMAIN
 # Name: canary-v2
 ```
 

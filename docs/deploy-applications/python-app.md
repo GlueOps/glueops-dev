@@ -231,7 +231,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: python-app-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-prod.apps.CAPTAIN_DOMAIN
         - hostname: python-app-prod.nonprod.antoniostacos.net
 ```
 
@@ -239,7 +239,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 ###  `stage` Environment Sample Configuration:
@@ -262,7 +262,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: python-app-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-stage.apps.CAPTAIN_DOMAIN
         - hostname: python-app-stage.nonprod.antoniostacos.net
 ```
 
@@ -270,7 +270,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 ### `uat` Environment Sample Configuration:
@@ -293,7 +293,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: python-app-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: python-app-uat.apps.CAPTAIN_DOMAIN
         - hostname: python-app-uat.nonprod.antoniostacos.net
 ```
 
@@ -301,7 +301,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `python-app` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 6. Save and commit your changes to the deployment repository.

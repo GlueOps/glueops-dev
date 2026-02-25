@@ -197,7 +197,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-prod.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-prod.apps.CAPTAIN_DOMAIN
         - hostname: docusarus-website-prod.nonprod.antoniostacos.net
 ```
 
@@ -205,7 +205,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 ###  `stage` Environment Sample Configuration:
@@ -228,7 +228,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-stage.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-stage.apps.CAPTAIN_DOMAIN
         - hostname: docusarus-website-stage.nonprod.antoniostacos.net
 ```
 
@@ -236,7 +236,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 ### `uat` Environment Sample Configuration:
@@ -259,7 +259,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: docusarus-website-uat.apps.nonprod.antoniostacos.onglueops.com
+        - hostname: docusarus-website-uat.apps.CAPTAIN_DOMAIN
         - hostname: docusarus-website-uat.nonprod.antoniostacos.net
 ```
 
@@ -267,7 +267,7 @@ ingress:
 Replace the placeholders as follows:
 - Replace `docusarus-website` with your actual repository name.
 - Replace `antoniostacos.net` with your actual hosting name.
-- Replace `nonprod.antoniostacos.onglueops.com` with the name of your GlueOps cluster provided by GlueOps.
+- If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
 :::
 
 6. Save and commit your changes to the deployment repository.

@@ -346,7 +346,7 @@ ingress:
   entries:
     - name: public
       hosts:
-        - hostname: '<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>'
+        - hostname: '<MY_APP_NAME>-qa.apps.CAPTAIN_DOMAIN'
 ```
 
 :::tip
@@ -354,8 +354,8 @@ Ensure you replace the placeholders appropriately:
 
 - `<MY_ORG>` and `<MY_REPO>` with your GitHub organization and application repository names.
 - `<MY_APP_NAME>`  with your chosen app name.
-- `<MY_CAPTAIN_DOMAIN>` with your assigned captain domain, provided by the Platform Administrators.
+- If the captain domain shown in the examples doesn't look right, update your **Captain Domain** in the top navigation bar.
 - `<CONTAINER_REGISTRY_CREDENTIALS>` if your image is in a private registry you will need to specify a value provided by the Platform Administrators. Otherwise use `nil`.
 :::
 
-Once you've done the above, commit your changes to the deployment configurations repository and push the changes. In a short while, you should be able to access your app at the URL: `https://<MY_APP_NAME>-qa.apps.<MY_CAPTAIN_DOMAIN>`
+Once you've done the above, commit your changes to the deployment configurations repository and push the changes. In a short while, you should be able to access your app at the URL: <code>https://&lt;MY_APP_NAME&gt;-qa.apps.<CaptainDomain /></code>

@@ -140,8 +140,8 @@ Using `customResourcesMap` here makes it easy to add or remove routes per enviro
 
 | Resource | Name | Hostname |
 |----------|------|----------|
-| IngressRoute | `my-app-api` | `my-app-api.apps.<captain_domain>` |
-| IngressRoute | `my-app-web` | `my-app-web.apps.<captain_domain>` |
+| IngressRoute | `my-app-api` | <code>my-app-api.apps.<CaptainDomain /></code> |
+| IngressRoute | `my-app-web` | <code>my-app-web.apps.<CaptainDomain /></code> |
 
 Both route to the same `my-app-prod` service.
 
@@ -152,8 +152,8 @@ Both route to the same `my-app-prod` service.
 kubectl get ingressroutes -n nonprod | grep my-app
 
 # Both hostnames should resolve (after ~2 min for DNS)
-curl https://my-app-api.apps.nonprod.jupiter.onglueops.rocks
-curl https://my-app-web.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app-api.apps.CAPTAIN_DOMAIN
+curl https://my-app-web.apps.CAPTAIN_DOMAIN
 ```
 
 ## Key Points

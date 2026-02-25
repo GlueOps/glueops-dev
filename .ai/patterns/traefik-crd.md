@@ -133,8 +133,8 @@ customResourcesMap:
 kubectl get <crd-plural> -n nonprod | grep <resource-name>
 kubectl get ingressroutes -n nonprod | grep <app-name>
 
-# Test
-curl <verification-command>
+# Test (CAPTAIN_DOMAIN is replaced dynamically with the reader's domain)
+curl https://<app-name>.apps.CAPTAIN_DOMAIN
 ~~~
 
 ## Key Points

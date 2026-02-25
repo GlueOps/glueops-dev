@@ -114,7 +114,7 @@ kubectl get ingressroutes -n nonprod | grep my-app
 kubectl get svc -n nonprod | grep my-app
 
 # Test the route (after ~2 min for DNS)
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks
+curl https://my-app.apps.CAPTAIN_DOMAIN
 ```
 
 ## Key Points

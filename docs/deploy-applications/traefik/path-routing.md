@@ -134,9 +134,9 @@ You can route different paths to **different services** by changing the `service
 ## Verify
 
 ```bash
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks/api
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks/web
-curl https://my-app.apps.nonprod.jupiter.onglueops.rocks/
+curl https://my-app.apps.CAPTAIN_DOMAIN/api
+curl https://my-app.apps.CAPTAIN_DOMAIN/web
+curl https://my-app.apps.CAPTAIN_DOMAIN/
 ```
 
 The `whoami` response includes the request URL, so you can confirm each path is being received correctly.
