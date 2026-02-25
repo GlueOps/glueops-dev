@@ -183,3 +183,4 @@ spec:
 - [Cookie-Based Canary Routing](./traefik-canary-cookie) — Route traffic by cookie
 - [TLS & HTTPS Redirect](./traefik-tls-redirect) — Force HTTPS + TLS version enforcement
 - [IngressRouteTCP](./traefik-ingressroutetcp) — TCP pass-through routing
+- [IngressRouteTCP: PostgreSQL](./traefik-ingressroutetcp-postgres) — TCP routing with TLS termination + ALPN

@@ -45,6 +45,7 @@ const sidebars = {
             "deploy-applications/traefik/traefik-canary-cookie",
             "deploy-applications/traefik/traefik-tls-redirect",
             "deploy-applications/traefik/traefik-ingressroutetcp",
+            "deploy-applications/traefik/traefik-ingressroutetcp-postgres",
           ],
           link: {
             type: "generated-index",
