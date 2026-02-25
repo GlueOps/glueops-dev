@@ -1,126 +1,128 @@
 ---
-id: adding-configurations-and-secrets-to-the-hello-world-app-glueops-platform
-title: Adding Application Configurations
+id: add-secrets-with-vault
+title: Add Secrets with Vault
 type: tutorial
 ---
 
-# Adding Application Configurations/Secrets
-:::caution
-Before diving in, it's essential to have a [Hello World App Deployment](../deploy-applications/deploy-hello-world-to-glueops) running. Once that's in place, we can explore how to tweak its greeting using configurations and secrets.
+# Add Secrets with Vault
+
+:::caution prerequisite
+You must have a running app from the [Deploy Your First App](deploy-first-app) tutorial before continuing.
 :::
 
-In this guide, you'll learn how to add configurations and secrets to your applications using the GlueOps platform. As an example, we'll update the default greeting of your existing 'Hello World' app to showcase this functionality.
+In this guide, you'll learn how to store sensitive values in Vault and inject them into your application as environment variables. Instead of hardcoding secrets in your deployment configuration, you'll use an **ExternalSecret** that automatically syncs values from Vault into your Kubernetes pod.
 
-## Let's create the new greeting message
+We'll add a new secret alongside the `GREETING_MESSAGE` you set up in the previous tutorial.
 
-:::info prerequisites
+## 1. Create a secret in Vault
 
-Before you get started we will begin referencing links located on your cluster information home page:
+:::info
+Your cluster information page has a link to Vault:
   <code>https://cluster-info.<CaptainDomain /></code>
 
 _If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar._
 :::
 
-Once you are on the cluster info home page, click on the `Resource/Link` for `Secrets Management`. You will then be taking our our secrets management system (Vault). For the role enter "editor" as you will need read/write access and then click on `Sign in with OIDC Provider`
+From the cluster info home page, click the `Link` for **Secrets Management** to open Vault. For the role, enter **editor** (you need read/write access), then click **Sign in with OIDC Provider**.
 
-![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/login.png)
+![Vault Login](https://cdn.glueops.dev/doc-assets/v1/openbao/openbao-login-with-editor.png)
 
-To create our first configuration/secret, Click on "Create secret +`
+Once logged in, select the **secret/** mount point.
 
-![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/create-secret.png)
+![Select Secrets Mount Point](https://cdn.glueops.dev/doc-assets/v1/openbao/select-secrets-mount-point.png)
 
-Finally, let's enter in the details for the new greeting message. For the field `Path for this secret` you will want to use `app-projectname` in our case our demo projectname as used in other tutorials is `antoniostacos`.
-For the `key` enter `GREETING_MESSAGE` (this is indeed case sensitive) and for the value (left of the `key`) enter: `¡Hola Mundo!`. 
+Click **Create secret +**
 
-![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/create-secret-greeting-message.png)
+![Create Secret](https://cdn.glueops.dev/doc-assets/v1/openbao/add-secret.png)
 
-Once complete, click Save!
+Enter the details for your secret:
 
-You can expect the confirmation page to look like this:
+- **Path for this secret:** Use your app name (e.g., `hello-world`)
+- **Key:** `SECRET_MESSAGE` (case sensitive)
+- **Value:** `This value came from Vault!`
 
-![Alt text](https://cdn.glueops.dev/doc-assets/v1/vault/saved-secret.png)
+![Add Secret Details](https://cdn.glueops.dev/doc-assets/v1/openbao/create-secret.png)
 
-## Let's wrap up and get this new greeting deployed!
+Click **Save**. You should see a confirmation page:
 
-:::info
-You will need to go back to your `values.yaml` within your deployment configurations repository. In this case case it's the same repo/file you used when you initially deployed the "Hello World!" application.
+![Secret Created](https://cdn.glueops.dev/doc-assets/v1/openbao/confirmation-of-secret-being-created.png)
+
+## 2. Add the ExternalSecret to your deployment
+
+Open `envs/prod/values.yaml` in your deployment-configurations repository — the same file from the previous tutorial:
 
 ```
 deployment-configurations
-├── apps
-│   └── app-antoniostacos
-│       └── envs
-│           └── qa
-│               └── values.yaml <
+└── apps
+    └── hello-world
+        ├── base
+        │   └── base-values.yaml
+        └── envs
+            └── prod
+                └── values.yaml   ← edit this file
 ```
-:::
 
+Add the `externalSecret` block to the bottom of the file. Here's the complete updated file:
 
-We are going to add the following YAML to the very bottom of the existing file:
-
-```yaml
-externalSecret:
+```yaml title="apps/hello-world/envs/prod/values.yaml"
+deployment:
   enabled: true
-  secrets:   
-    <MY_APP_PROJECTNAME>:
-      dataFrom:
-        key: secret/<MY_APP_PROJECTNAME>
-```
+  replicas: 1
+  envVariables:
+    - name: GREETING_MESSAGE
+      value: "Hello, World!"
 
-:::caution Replacements:
-
- `<MY_APP_PROJECTNAME>` with the name you used when adding the secret/configuration. In our case it's `app-antoniostacos`
-
-
-```yaml
-externalSecret:
-  enabled: true
-  secrets:   
-    app-antoniostacos:
-      dataFrom:
-        key: secret/app-antoniostacos
-```
-:::
-
-And that's it! Save the file, commit the changes and push them back up! Within a few moments you should see the greeting changed on the QA deployment of your "Hello World" website.
-
-:::info Reference
-
-In case you aren't sure where to place the `YAML` in this guide, it would look like this when appended to the previously provided `YAML`:
-
-
-```yaml
-image:
-  repository: '<MY_ORG>/<MY_REPO>'
-  registry: ghcr.io
-  pullPolicy: Always
-  port: 8080
-  tag: main
 service:
   enabled: true
-deployment:
-  replicas: 1
-  enabled: true
-  imagePullPolicy: Always
-  imagePullSecrets: <CONTAINER_REGISTRY_CREDENTIALS>
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
 
 ingress:
   enabled: true
-  ingressClassName: public
+  ingressClassName: public-traefik
   entries:
     - name: public
       hosts:
-        - hostname: '<MY_APP_NAME>-qa.apps.CAPTAIN_DOMAIN'
+        - hostname: '{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}'
 
 externalSecret:
   enabled: true
-  secrets:   
-    <MY_APP_PROJECTNAME>:
+  secrets:
+    hello-world:
       dataFrom:
-        key: secret/<MY_APP_PROJECTNAME>
+        key: secret/hello-world
 ```
+
+:::info How it works
+- `externalSecret.enabled: true` turns on the ExternalSecret integration.
+- `secrets.hello-world` creates an ExternalSecret named after your app.
+- `dataFrom.key: secret/hello-world` tells it to pull **all** key-value pairs from the Vault path `secret/hello-world` and inject them as environment variables.
+
+The `GREETING_MESSAGE` from `envVariables` remains unchanged — it's a static value defined in your config. The Vault secret (`SECRET_MESSAGE`) is injected alongside it automatically.
 :::
+
+## 3. Deploy
+
+Commit the changes and push. ArgoCD will sync the update in ~3 minutes.
+
+## 4. Verify
+
+Visit <code>https://hello-world-prod.apps.<CaptainDomain />/?env=true</code> and look for both:
+
+- `GREETING_MESSAGE=Hello, World!` — your static environment variable
+- `SECRET_MESSAGE=This value came from Vault!` — injected from Vault via ExternalSecret
+
+:::tip
+If the Vault secret doesn't appear immediately, give it a moment — the ExternalSecret controller refreshes every few seconds. You can also check the ExternalSecret resource status in the ArgoCD dashboard.
+:::
+
+## Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| **ExternalSecret** | A Kubernetes resource that syncs secrets from an external provider (Vault) into a Kubernetes Secret. |
+| **`dataFrom`** | Pulls all key-value pairs from a Vault path — no need to list each key individually. |
+| **`envVariables`** | Static env vars defined directly in your values file. Good for non-sensitive config. |
+| **Vault** | The secrets management system. Secrets are stored at paths like `secret/hello-world`. |
+
+## Next steps
+
+- [Traefik Ingress & Routing](/traefik-ingress) — Explore advanced routing patterns with Traefik.
