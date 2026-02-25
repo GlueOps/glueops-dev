@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.52.0-noble@sha256:a021500a801bab0611049217ffad6b9697d827205c15babb86a53bc1a61c02d5
+FROM mcr.microsoft.com/playwright:v1.53.2-noble@sha256:60c416740c425693f774300baedb27be5190d12389ed8524d639ca203347258f
 
 WORKDIR /tests
 RUN npm init -y && npm install @playwright/test@1.49.1
