@@ -106,24 +106,27 @@ The site has a dynamic domain replacement feature that lets readers type their c
 | Navbar Input | `src/theme/NavbarItem/CaptainDomainInput.tsx` | Text input widget in the navbar |
 | Navbar Registration | `src/theme/NavbarItem/ComponentTypes.tsx` | Registers `custom-captainDomainInput` navbar item type |
 | CodeBlock Swizzle | `src/theme/CodeBlock/index.tsx` | Replaces `CAPTAIN_DOMAIN` sentinel in code fences |
-| MDX Component | `src/theme/MDXComponents.tsx` | Exports `<CaptainDomain />` for prose usage |
-| Styles | `src/css/custom.css` | Styles for navbar widget and inline component |
+| MDX Component | `src/theme/MDXComponents.tsx` | Exports `<CaptainDomain />` for prose usage and `<CaptainDomainLink />` for clickable domain URLs |
+| MDX Link Component | `src/components/CaptainDomainLink.tsx` | Renders clickable `<a>` when domain is customized, styled text with tooltip when default |
+| Styles | `src/css/custom.css` | Styles for navbar widget, inline component, and link component |
 
-### Three Domain Reference Patterns
+### Domain Reference Patterns
 
 | Pattern | Where to use | How it works |
-|---------|--------------|--------------|
+|---------|--------------||--------------|
 | `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) | CodeBlock swizzle replaces it reactively |
-| `<CaptainDomain />` | Inline prose text | MDX component renders the current domain |
+| `<CaptainDomain />` | Inline prose text (bare domain names, not clickable) | MDX component renders the current domain |
+| `<CaptainDomainLink to="https://sub.{domain}" />` | `https://` URLs in prose that readers should visit | Clickable link when domain is customized, styled text with tooltip when default |
 | `{{ .Values.captain_domain }}` | Helm template YAML in code fences | Shown as-is (not replaced) — it's a real Helm expression |
 
 ### File Extension Rule
 
-Any doc file that uses the `<CaptainDomain />` JSX component **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` require `.mdx`.
+Any doc file that uses the `<CaptainDomain />` or `<CaptainDomainLink />` JSX components **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` and `<CaptainDomainLink />` require `.mdx`.
 
 ### Writing Guidelines
 
 - **Code fences:** Write `CAPTAIN_DOMAIN` as a raw sentinel. The swizzled CodeBlock replaces it with the user's domain automatically.
-- **Prose text:** Use `<CaptainDomain />`. Example: `Navigate to <CaptainDomain /> in your browser.`
+- **Prose text (domain names):** Use `<CaptainDomain />`. Example: `Your domain is <CaptainDomain />.`
+- **Prose text (clickable URLs):** Use `<CaptainDomainLink to="https://sub.{domain}/path" />` for any `https://` URL the reader should visit. Optional `children` override the link text: `<CaptainDomainLink to="https://argocd.{domain}">ArgoCD dashboard</CaptainDomainLink>`.
 - **Helm templates:** Use `{{ .Values.captain_domain }}` — this is a real Helm expression and must not be replaced.
-- **Never hardcode** a specific cluster domain (e.g., `my-cluster.my-tenant.onglueops.com`) in documentation prose or code fences. Use one of the three patterns above instead.
+- **Never hardcode** a specific cluster domain (e.g., `my-cluster.my-tenant.onglueops.com`) in documentation prose or code fences. Use one of the patterns above instead.
