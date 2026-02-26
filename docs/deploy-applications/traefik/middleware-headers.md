@@ -162,12 +162,12 @@ With `customResourcesMap`, you can define the middleware in `base-values.yaml` (
 ## Verify
 
 ```bash
-# Check the middleware exists
-kubectl get middlewares -n nonprod | grep security-headers
-
-# Check response headers
-curl -I https://my-app.apps.CAPTAIN_DOMAIN
+curl -I https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 Expected response headers:
 ```

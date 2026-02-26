@@ -155,13 +155,17 @@ customResourcesMap:
 
 ```bash
 # Default traffic → goes to v1 (stable)
-curl https://my-app-canary.apps.CAPTAIN_DOMAIN
+curl https://my-app-canary-prod.apps.CAPTAIN_DOMAIN
 # Name: canary-v1
 
 # With canary cookie → goes to v2 (canary)
-curl -b "canary=v2" https://my-app-canary.apps.CAPTAIN_DOMAIN
+curl -b "canary=v2" https://my-app-canary-prod.apps.CAPTAIN_DOMAIN
 # Name: canary-v2
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-canary-uat`).
+:::
 
 ## Key Points
 

@@ -211,13 +211,6 @@ The HTTP redirect IngressRoute on the `web` entrypoint will **not** interfere wi
 ## Verify
 
 ```bash
-# Check the Certificate resource status
-kubectl get certificates -n nonprod | grep traefik-letsencrypt-cert
-# READY should be True
-
-# Check the TLS Secret was created
-kubectl get secrets -n nonprod | grep traefik-letsencrypt-cert
-
 # Test HTTPS — should return a valid Let's Encrypt certificate
 curl -v https://app.example.com
 curl -v https://api.example.com
@@ -226,11 +219,9 @@ curl -v https://api.example.com
 curl -D- -o /dev/null http://app.example.com
 # HTTP/1.1 301 Moved Permanently
 # Location: https://app.example.com/
-
-# Debug if certificate is not ready
-kubectl describe certificate traefik-letsencrypt-cert -n nonprod
-kubectl describe challenges -n nonprod
 ```
+
+You can monitor certificate status from the ArgoCD dashboard.
 
 ## Key Points
 

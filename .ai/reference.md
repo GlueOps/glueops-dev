@@ -160,7 +160,7 @@ key: value
 ```
 
 ```bash
-kubectl get pods
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
 
 ```javascript
@@ -214,7 +214,7 @@ All Traefik guide pages follow this structure:
 3. **Prerequisites** — `base/base-values.yaml` code block
 4. **Configuration** — tabbed `customResources` (list) vs `customResourcesMap` (map) examples
 5. **What Gets Created** or **How It Works** — table or bullet list
-6. **Verify** — `kubectl` and `curl` commands
+6. **Verify** — `curl` commands (do not use `kubectl` — platform users do not have kubectl access; for certificate or TCP apps, mention the ArgoCD dashboard for resource status)
 7. **Key Points** — bullet list of important takeaways
 8. **Admonitions** — `:::info`, `:::caution`, `:::warning` at the end
 
@@ -248,10 +248,10 @@ In verification/curl examples, use the `CAPTAIN_DOMAIN` sentinel (not template e
 
 ```bash
 # ✅ Use the CAPTAIN_DOMAIN sentinel — replaced dynamically for the reader
-curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 
 # ❌ Don't hardcode a specific cluster domain
-curl https://my-app.apps.my-cluster.my-tenant.onglueops.com
+curl https://my-app-prod.apps.my-cluster.my-tenant.onglueops.com
 
 # ❌ Don't use Helm template expressions outside of Helm YAML
 curl https://{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}

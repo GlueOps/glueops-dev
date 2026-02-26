@@ -77,24 +77,12 @@ This is the simplest approach for Let's Encrypt certificates. If you need more c
 ## Verify
 
 ```bash
-# Check the Ingress
-kubectl get ingress -n nonprod | grep traefik-ingress-letsencrypt
-
-# Check cert-manager auto-created the Certificate
-kubectl get certificates -n nonprod | grep traefik-ingress-letsencrypt-cert
-# READY should be True
-
-# Check the TLS Secret was created
-kubectl get secrets -n nonprod | grep traefik-ingress-letsencrypt-cert
-
 # Test HTTPS — should return a valid Let's Encrypt certificate
 curl -v https://app.example.com
 curl -v https://api.example.com
-
-# Debug if certificate is not ready
-kubectl describe certificate traefik-ingress-letsencrypt-cert -n nonprod
-kubectl describe challenges -n nonprod
 ```
+
+You can monitor certificate status from the ArgoCD dashboard.
 
 ## Key Points
 

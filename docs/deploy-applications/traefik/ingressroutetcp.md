@@ -103,13 +103,13 @@ customResourcesMap:
 ## Verify
 
 ```bash
-# Check the IngressRouteTCP exists
-kubectl get ingressroutetcps -n nonprod | grep my-app-tcp
-
-# Test with openssl (SNI-based connection)
-openssl s_client -connect my-app-tcp.apps.CAPTAIN_DOMAIN:443 \
-  -servername my-app-tcp.apps.CAPTAIN_DOMAIN
+openssl s_client -connect my-app-tcp-prod.apps.CAPTAIN_DOMAIN:443 \
+  -servername my-app-tcp-prod.apps.CAPTAIN_DOMAIN
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-tcp-uat`).
+:::
 
 :::warning
 With `tls.passthrough: true`, Traefik forwards the raw TLS connection to the backend without terminating it. The backend service **must** handle TLS itself. If your backend does not speak TLS natively (e.g., `traefik/whoami`), the TLS handshake will fail. For a working end-to-end test, use a backend with TLS configured (e.g., an nginx container with TLS certificates).

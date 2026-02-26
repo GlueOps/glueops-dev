@@ -107,15 +107,12 @@ customResourcesMap:
 ## Verify
 
 ```bash
-# Check the IngressRoute exists
-kubectl get ingressroutes -n nonprod | grep my-app
-
-# Check the service
-kubectl get svc -n nonprod | grep my-app
-
-# Test the route (after ~2 min for DNS)
-curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 ## Key Points
 

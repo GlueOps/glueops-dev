@@ -134,10 +134,14 @@ You can route different paths to **different services** by changing the `service
 ## Verify
 
 ```bash
-curl https://my-app.apps.CAPTAIN_DOMAIN/api
-curl https://my-app.apps.CAPTAIN_DOMAIN/web
-curl https://my-app.apps.CAPTAIN_DOMAIN/
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN/api
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN/web
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN/
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 The `whoami` response includes the request URL, so you can confirm each path is being received correctly.
 

@@ -134,18 +134,19 @@ With the example configuration:
 ## Verify
 
 ```bash
-# Check the middleware
-kubectl get middlewares -n nonprod | grep rate-limit
-
 # Normal request — should return 200
-curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 
 # Trigger rate limiting — rapid burst
 for i in $(seq 1 30); do
-  curl -s -o /dev/null -w "%{http_code}\n" https://my-app.apps.CAPTAIN_DOMAIN
+  curl -s -o /dev/null -w "%{http_code}\n" https://my-app-prod.apps.CAPTAIN_DOMAIN
 done
 # After ~20 requests, you should see 429 responses
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 ## Key Points
 

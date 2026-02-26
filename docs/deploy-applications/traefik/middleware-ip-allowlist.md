@@ -136,15 +136,15 @@ With `customResourcesMap`, the IP allowlist middleware is defined in `base-value
 ## Verify
 
 ```bash
-# Check the middleware
-kubectl get middlewares -n nonprod | grep ip-allowlist
-kubectl describe middleware ip-allowlist -n nonprod
-
 # From an allowed IP — should return 200
-curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 
 # From a blocked IP — should return 403 Forbidden
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 ## Key Points
 

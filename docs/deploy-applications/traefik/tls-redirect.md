@@ -186,16 +186,20 @@ The `TLSOption` resource enforces:
 
 ```bash
 # HTTP → should redirect to HTTPS (301)
-curl -v http://my-app.apps.CAPTAIN_DOMAIN 2>&1 | grep -i location
-# Location: https://my-app.apps.CAPTAIN_DOMAIN/
+curl -v http://my-app-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep -i location
+# Location: https://my-app-prod.apps.CAPTAIN_DOMAIN/
 
 # HTTPS → should serve the app
-curl https://my-app.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 
 # Test TLS version enforcement (TLS 1.1 should fail)
-curl --tls-max 1.1 https://my-app.apps.CAPTAIN_DOMAIN
+curl --tls-max 1.1 https://my-app-prod.apps.CAPTAIN_DOMAIN
 # Should fail with an SSL error
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 ## Available TLS Versions
 

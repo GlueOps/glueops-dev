@@ -157,12 +157,16 @@ customResourcesMap:
 
 ```bash
 # Without credentials — returns 401 Unauthorized
-curl -I https://my-app.apps.CAPTAIN_DOMAIN
+curl -I https://my-app-prod.apps.CAPTAIN_DOMAIN
 # HTTP/2 401
 
 # With credentials — returns 200
-curl -u user:password https://my-app.apps.CAPTAIN_DOMAIN
+curl -u user:password https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
+:::
 
 ## Multiple Users
 
