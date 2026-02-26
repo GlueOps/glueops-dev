@@ -7,7 +7,7 @@ type: tutorial
 
 # GlueOps Captain Domains
 
-GlueOps utilizes a deterministic DNS naming convention for your clusters and associated applications, providing a structured and organized way to access your deployed services. 
+Your **captain domain** is the base domain for your GlueOps cluster. Platform services like ArgoCD and Grafana are all accessible under it, and it serves as the default base domain for application routing.
 
 :::info
 The captain domain is automatically provided by GlueOps as part of its service.
@@ -16,17 +16,19 @@ The captain domain is automatically provided by GlueOps as part of its service.
 Let's break down the components of a GlueOps captain domain using an example:
 
 ```
-<cluster>.<tenant>.onglueops.com
+<cluster>.<tenant>.onglueops.<tld>
 ```
 
 For example: <CaptainDomain />
 
 The domain consists of the following parts:
 
-1. **Cluster Identifier (`nonprod`):** This part represents the identifier of the cluster to which the application is deployed. In a typical setup, you might have both production and non-production (nonprod) clusters. For instance, a staging deployment of the `order-api` to a non-production cluster could look like <code>order-api-staging.<CaptainDomain /></code>. Similarly, a production deployment of the same application to a production cluster would start with `order-api.prod.your-org.onglueops.com`.
+1. **Cluster Identifier (<code><CaptainDomainPart segment="cluster" /></code>):** Identifies which cluster this domain belongs to. Organizations typically run separate clusters per environment — for example, `nonprod` and `prod`.
 
-2. **Tenant Key:** This component identifies your organization and remains common to all clusters deployed on the GlueOps platform.
+2. **Tenant Key (<code><CaptainDomainPart segment="tenant" /></code>):** Your organization's identifier on the GlueOps platform. This remains the same across all of your clusters.
 
-4. **Core Domain for GlueOps Tenant Services (`onglueops.com`):** This is the primary domain for the GlueOps tenant services. 
+3. **Core Domain (<code><CaptainDomainPart segment="tld" /></code>):** The base domain for GlueOps tenant services.
 
-The deterministic DNS naming convention ensures consistency and clarity in accessing your applications across different environments and clusters within the GlueOps platform. This organized approach simplifies application management and facilitates seamless communication between services.
+### Application Routing
+
+By default, applications deployed to the cluster use hostnames under <code>apps.<CaptainDomain /></code>. For example, an app called `api` could be reachable at <code>api.apps.<CaptainDomain /></code>. The exact hostname is defined in each app's routing configuration (IngressRoute or Ingress), so you have full control — including the option to use your own custom domains entirely.
