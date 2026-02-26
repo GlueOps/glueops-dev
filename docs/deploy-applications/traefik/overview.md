@@ -184,5 +184,7 @@ spec:
 - [Sticky Sessions (IngressRoute)](./traefik-sticky-ingressroute) — Cookie-based session affinity via IngressRoute CRD
 - [Canary with Sticky Sessions](./traefik-canary-sticky) — Canary routing combined with pod affinity
 - [TLS & HTTPS Redirect](./traefik-tls-redirect) — Force HTTPS + TLS version enforcement
+- [Let's Encrypt Certificates (IngressRoute)](./traefik-letsencrypt) — HTTP-01 cert issuance with cert-manager + IngressRoute
+- [Let's Encrypt Certificates (Standard Ingress)](./traefik-ingress-letsencrypt) — HTTP-01 cert issuance with cert-manager annotation
 - [IngressRouteTCP](./traefik-ingressroutetcp) — TCP pass-through routing
 - [IngressRouteTCP: PostgreSQL](./traefik-ingressroutetcp-postgres) — TCP routing with TLS termination + ALPN

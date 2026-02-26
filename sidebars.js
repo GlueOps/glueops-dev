@@ -46,6 +46,8 @@ const sidebars = {
             "deploy-applications/traefik/traefik-sticky-ingressroute",
             "deploy-applications/traefik/traefik-canary-sticky",
             "deploy-applications/traefik/traefik-tls-redirect",
+            "deploy-applications/traefik/traefik-letsencrypt",
+            "deploy-applications/traefik/traefik-ingress-letsencrypt",
             "deploy-applications/traefik/traefik-ingressroutetcp",
             "deploy-applications/traefik/traefik-ingressroutetcp-postgres",
           ],
