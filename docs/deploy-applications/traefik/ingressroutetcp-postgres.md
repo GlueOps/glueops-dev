@@ -72,13 +72,13 @@ customResources:
       routes:
         - match: HostSNI(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
           services:
-            - name: {{ include "app.name" . }}
-              namespace: {{ include "app.namespace" . }}
+            - name: '{{ include "app.name" . }}'
+              namespace: '{{ include "app.namespace" . }}'
               port: 5432
       tls:
         options:
           name: postgres-tls-options
-          namespace: {{ include "app.namespace" . }}
+          namespace: '{{ include "app.namespace" . }}'
 ```
 
 </TabItem>
@@ -123,13 +123,13 @@ customResourcesMap:
       routes:
         - match: HostSNI(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
           services:
-            - name: {{ include "app.name" . }}
-              namespace: {{ include "app.namespace" . }}
+            - name: '{{ include "app.name" . }}'
+              namespace: '{{ include "app.namespace" . }}'
               port: 5432
       tls:
         options:
           name: postgres-tls-options
-          namespace: {{ include "app.namespace" . }}
+          namespace: '{{ include "app.namespace" . }}'
 ```
 
 </TabItem>

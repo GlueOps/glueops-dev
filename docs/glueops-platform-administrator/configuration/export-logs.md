@@ -5,7 +5,7 @@ title: Exporting Logs from GlueOps
 
 # Export/Ship your logs to an external sink
 
-:::danger
+:::warning
 These docs are beta.
 :::
  
@@ -219,10 +219,9 @@ spec:
 ---
 ```
 
-## Deploying the fluentbit daaemonset to ship logs:
+## Deploying the fluentbit daemonset to ship logs:
 
 ```yaml title="Define Fluentbit daemonset (this actually deploys pods and takes up compute resources in the cluster"
-apiVersion: rbac.authorization.k8s.io/v1
 apiVersion: fluentbit.fluent.io/v1alpha2
 kind: FluentBit
 metadata:

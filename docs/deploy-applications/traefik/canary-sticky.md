@@ -39,7 +39,7 @@ image:
 deployment:
   enabled: true
   replicas: 1
-  env:
+  envVariables:
     - name: WHOAMI_NAME
       value: "canary-v1"
 

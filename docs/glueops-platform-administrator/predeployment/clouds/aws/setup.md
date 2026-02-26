@@ -83,4 +83,4 @@ By completing the above steps, you should have verified your AWS accounts and ob
 - [IAM User ARN](#creating-an-AWS-iam-user-and-credentials)
 - [IAM User Credentials](#creating-aws-iam-user-credentials)
 
-These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing passsword service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.
+These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing password service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.

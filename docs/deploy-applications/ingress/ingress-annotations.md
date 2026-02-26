@@ -17,7 +17,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-name: route # Adding a cookie named route
     nginx.ingress.kubernetes.io/session-cookie-max-age: "7200" # The max age of this cookie is 2 hours before it expires
   entries:
-    - name: public # another name can be used here at your descretion
+    - name: public # another name can be used here at your discretion
       hosts: # add more hostnames as your application requires
         - hostname: "antoniostacos.com" 
         - hostname: "www.antoniostacos.com"

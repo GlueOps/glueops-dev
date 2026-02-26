@@ -16,7 +16,7 @@ glueops-dev/
 │   ├── introduction.md           # Landing page (id: introduction)
 │   ├── cluster-domains.mdx        # Captain domain explanation
 │   ├── deploy-applications/      # Developer guides
-│   │   ├── traefik/              # Traefik routing guides (13 pages)
+│   │   ├── traefik/              # Traefik routing guides (17 pages)
 │   │   ├── ingress/              # Legacy ingress docs
 │   │   └── images/               # Screenshots for hello-world guides
 │   └── glueops-platform-administrator/   # Platform admin guides

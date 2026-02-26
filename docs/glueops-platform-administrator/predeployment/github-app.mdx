@@ -42,7 +42,7 @@ To create the GitHub App, follow these steps:
 
 <img width="1025" alt="Screenshot 2023-07-26 at 20 44 42" src="https://cdn.glueops.dev/doc-assets/v1/old-github-uploads/ba92dac6-a1cc-48ef-8312-4922d60f3697.png"/>
 
-1. **GitHub App name**: Enter a name for your GitHub app. This will get used as the username for all comments in your Pull Requests and it must be globally unique across all of GitHub. If your **captain domain** is <CaptainDomain />, and since it is over the 34 character limit we would recommend calling it: `np - antoniostacos.onglueops.com` where `np` is shorthand for `nonprod`
+1. **GitHub App name**: Enter a name for your GitHub app. This will get used as the username for all comments in your Pull Requests and it must be globally unique across all of GitHub. If your **captain domain** is <CaptainDomain />, and since it is over the 34 character limit we would recommend using a shortened version such as `np - your-org.onglueops.com` where `np` is shorthand for `nonprod`
 
 
    - **Homepage URL**: Specify the URL for the GitHub App's homepage. We suggest using `https://glueops.dev`for consistency.
@@ -122,7 +122,7 @@ To complete the GitHub App setup, you need to install the GitHub App in your org
 <img width="1032" alt="Screenshot 2023-07-28 at 01 19 29" src="https://cdn.glueops.dev/doc-assets/v1/docs/v1/github-app-installed.png"/>
 
 :::info
-From the URL `https://github.com/organizations/antoniostacos/settings/installations/40423720` the GitHub App Installation ID would be `40423720`. Save this Installation ID so that you can provide it to GlueOps.
+From the URL `https://github.com/organizations/YOUR_ORG/settings/installations/12345678` the GitHub App Installation ID would be `12345678`. Save this Installation ID so that you can provide it to GlueOps.
 :::
 
 ## Retrieving values
@@ -136,4 +136,4 @@ By completing the above steps, you should have obtained the following values fro
   - [Get Installation ID](#get-installation-id)
   - [Retrieving values](#retrieving-values)
 
-These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing passsword service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.
+These values will be required by the GlueOps team before they can deploy your cluster. Please use a temporary sharing password service like [Doppler](https://share.doppler.com/) or [OneTimeSecret](https://onetimesecret.com/) to share it with GlueOps.

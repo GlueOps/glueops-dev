@@ -52,8 +52,8 @@ customResources:
         - match: Host(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
-            - name: {{ include "app.name" . }}
-              namespace: {{ include "app.namespace" . }}
+            - name: '{{ include "app.name" . }}'
+              namespace: '{{ include "app.namespace" . }}'
               port: 80
               sticky:
                 cookie:
@@ -93,8 +93,8 @@ customResourcesMap:
         - match: Host(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
-            - name: {{ include "app.name" . }}
-              namespace: {{ include "app.namespace" . }}
+            - name: '{{ include "app.name" . }}'
+              namespace: '{{ include "app.namespace" . }}'
               port: 80
               sticky:
                 cookie:

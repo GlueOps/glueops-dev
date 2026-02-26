@@ -146,7 +146,7 @@ ingress:
     - name: public
       hosts:
         - hostname: '{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}'
-        - hostname: my-app-alt.apps.{{ .Values.captain_domain }}
+        - hostname: 'my-app-alt.apps.{{ .Values.captain_domain }}'
 ```
 
 ### Verify

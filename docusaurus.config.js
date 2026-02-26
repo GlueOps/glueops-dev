@@ -172,7 +172,7 @@ const config = {
           },
           
         ],
-        copyright: `©2023 GlueOps, LLC.`,
+        copyright: `© ${new Date().getFullYear()} GlueOps, LLC.`,
       },
       prism: {
         theme: lightCodeTheme,
