@@ -1,6 +1,6 @@
 ---
 id: glueops-ingress-and-loadbalancer-customizations
-title: Ingress Annotations
+title: `ingress-nginx` Annotations
 ---
 
 
