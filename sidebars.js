@@ -26,7 +26,7 @@ const sidebars = {
       collapsible: true,
       items: [
         "deploy-applications/deploy-first-app",
-        "deploy-applications/add-secrets-with-vault",
+        "deploy-applications/manage-environment-secrets",
         "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations",
         {
           type: "category",
