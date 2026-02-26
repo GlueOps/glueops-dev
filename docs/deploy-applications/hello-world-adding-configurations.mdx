@@ -1,31 +1,31 @@
 ---
-id: add-secrets-with-vault
-title: Add Secrets with Vault
+id: manage-environment-secrets
+title: Manage Environment Secrets
 type: tutorial
 ---
 
-# Add Secrets with Vault
+# Manage Environment Secrets
 
 :::caution prerequisite
 You must have a running app from the [Deploy Your First App](deploy-first-app) tutorial before continuing.
 :::
 
-In this guide, you'll learn how to store sensitive values in Vault and inject them into your application as environment variables. Instead of hardcoding secrets in your deployment configuration, you'll use an **ExternalSecret** that automatically syncs values from Vault into your Kubernetes pod.
+In this guide, you'll learn how to store sensitive values in an encrypted store and inject them into your application as environment variables. Instead of hardcoding secrets in your deployment configuration, you'll use an **ExternalSecret** that automatically syncs values from your secret store into your Kubernetes pod.
 
 We'll add a new secret alongside the `GREETING_MESSAGE` you set up in the previous tutorial.
 
-## 1. Create a secret in Vault
+## 1. Create a secret
 
 :::info
-Your cluster information page has a link to Vault:
+Your cluster information page has a link to the Encrypted Secret Store:
   <CaptainDomainLink to="https://cluster-info.{domain}" />
 
 _If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar._
 :::
 
-From the cluster info home page, click the `Link` for **Secrets Management** to open Vault. For the role, enter **editor** (you need read/write access), then click **Sign in with OIDC Provider**.
+From the cluster info home page, click the `Link` for **Secrets Management** to open the secret store. For the role, enter **editor** (you need read/write access), then click **Sign in with OIDC Provider**.
 
-![Vault Login](https://cdn.glueops.dev/doc-assets/v1/openbao/openbao-login-with-editor.png)
+![Secret Store Login](https://cdn.glueops.dev/doc-assets/v1/openbao/openbao-login-with-editor.png)
 
 Once logged in, select the **secret/** mount point.
 
@@ -39,7 +39,7 @@ Enter the details for your secret:
 
 - **Path for this secret:** Use your app name (e.g., `hello-world`)
 - **Key:** `SECRET_MESSAGE` (case sensitive)
-- **Value:** `This value came from Vault!`
+- **Value:** `This value came from your Secret Store!`
 
 ![Add Secret Details](https://cdn.glueops.dev/doc-assets/v1/openbao/create-secret.png)
 
@@ -94,9 +94,9 @@ externalSecret:
 :::info How it works
 - `externalSecret.enabled: true` turns on the ExternalSecret integration.
 - `secrets.hello-world` creates an ExternalSecret named after your app.
-- `dataFrom.key: secret/hello-world` tells it to pull **all** key-value pairs from the Vault path `secret/hello-world` and inject them as environment variables.
+- `dataFrom.key: secret/hello-world` tells it to pull **all** key-value pairs from the secret path `secret/hello-world` and inject them as environment variables.
 
-The `GREETING_MESSAGE` from `envVariables` remains unchanged — it's a static value defined in your config. The Vault secret (`SECRET_MESSAGE`) is injected alongside it automatically.
+The `GREETING_MESSAGE` from `envVariables` remains unchanged — it's a static value defined in your config. The secret (`SECRET_MESSAGE`) is injected alongside it automatically.
 :::
 
 ## 3. Deploy
@@ -108,20 +108,20 @@ Commit the changes and push. ArgoCD will sync the update in ~3 minutes.
 Visit <CaptainDomainLink to="https://hello-world-prod.apps.{domain}/?env=true" /> and look for both:
 
 - `GREETING_MESSAGE=Hello, World!` — your static environment variable
-- `SECRET_MESSAGE=This value came from Vault!` — injected from Vault via ExternalSecret
+- `SECRET_MESSAGE=This value came from your Secret Store!` — injected via ExternalSecret
 
 :::tip
-If the Vault secret doesn't appear immediately, give it a moment — the ExternalSecret controller refreshes every few seconds. You can also check the ExternalSecret resource status in the ArgoCD dashboard.
+If the secret doesn't appear immediately, give it a moment — the ExternalSecret controller refreshes every few seconds. You can also check the ExternalSecret resource status in the ArgoCD dashboard.
 :::
 
 ## Key concepts
 
 | Concept | Description |
 |---------|-------------|
-| **ExternalSecret** | A Kubernetes resource that syncs secrets from an external provider (Vault) into a Kubernetes Secret. |
-| **`dataFrom`** | Pulls all key-value pairs from a Vault path — no need to list each key individually. |
+| **ExternalSecret** | A Kubernetes resource that syncs secrets from an external provider (e.g. OpenBao) into a Kubernetes Secret. |
+| **`dataFrom`** | Pulls all key-value pairs from a secret path — no need to list each key individually. |
 | **`envVariables`** | Static env vars defined directly in your values file. Good for non-sensitive config. |
-| **Vault** | The secrets management system. Secrets are stored at paths like `secret/hello-world`. |
+| **OpenBao** | The secrets management system. Secrets are stored at paths like `secret/hello-world`. |
 
 ## Next steps
 
