@@ -181,6 +181,8 @@ spec:
 - [Middleware: Rate Limiting](./traefik-middleware-ratelimit) — Request rate limits
 - [Middleware: Basic Auth](./traefik-middleware-basicauth) — HTTP basic authentication
 - [Cookie-Based Canary Routing](./traefik-canary-cookie) — Route traffic by cookie
+- [Sticky Sessions (IngressRoute)](./traefik-sticky-ingressroute) — Cookie-based session affinity via IngressRoute CRD
+- [Canary with Sticky Sessions](./traefik-canary-sticky) — Canary routing combined with pod affinity
 - [TLS & HTTPS Redirect](./traefik-tls-redirect) — Force HTTPS + TLS version enforcement
 - [IngressRouteTCP](./traefik-ingressroutetcp) — TCP pass-through routing
 - [IngressRouteTCP: PostgreSQL](./traefik-ingressroutetcp-postgres) — TCP routing with TLS termination + ALPN
