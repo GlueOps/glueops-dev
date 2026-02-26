@@ -23,9 +23,9 @@ For example: <CaptainDomain />
 
 The domain consists of the following parts:
 
-1. **Cluster Identifier (`nonprod`):** This part represents the identifier of the cluster to which the application is deployed. In a typical setup, you might have both production and non-production (nonprod) clusters. For instance, a staging deployment of the `order-api` to a non-production cluster could look like <code>order-api-staging.<CaptainDomain /></code>. Similarly, a production deployment of the same application to a production cluster would start with `order-api.prod.antoniostacos.onglueops.com`.
+1. **Cluster Identifier (`nonprod`):** This part represents the identifier of the cluster to which the application is deployed. In a typical setup, you might have both production and non-production (nonprod) clusters. For instance, a staging deployment of the `order-api` to a non-production cluster could look like <code>order-api-staging.<CaptainDomain /></code>. Similarly, a production deployment of the same application to a production cluster would start with `order-api.prod.your-org.onglueops.com`.
 
-2. **Tenant Key (`antoniostacos`):** This component identifies your organization and remains common to all clusters deployed on the GlueOps platform.
+2. **Tenant Key:** This component identifies your organization and remains common to all clusters deployed on the GlueOps platform.
 
 4. **Core Domain for GlueOps Tenant Services (`onglueops.com`):** This is the primary domain for the GlueOps tenant services. 
 
