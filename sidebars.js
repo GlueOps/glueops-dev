@@ -43,6 +43,8 @@ const sidebars = {
             "deploy-applications/traefik/traefik-middleware-ratelimit",
             "deploy-applications/traefik/traefik-middleware-basicauth",
             "deploy-applications/traefik/traefik-canary-cookie",
+            "deploy-applications/traefik/traefik-sticky-ingressroute",
+            "deploy-applications/traefik/traefik-canary-sticky",
             "deploy-applications/traefik/traefik-tls-redirect",
             "deploy-applications/traefik/traefik-ingressroutetcp",
             "deploy-applications/traefik/traefik-ingressroutetcp-postgres",
