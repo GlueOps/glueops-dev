@@ -1,6 +1,7 @@
 ---
 id: glueops-ingress-and-loadbalancer-customizations
-title: "`ingress-nginx` Annotations"
+title: "ingress-nginx Annotations"
+description: "Supported ingress-nginx annotations for session affinity, authentication, TLS, and more."
 ---
 
 
