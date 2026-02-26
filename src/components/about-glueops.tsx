@@ -46,7 +46,7 @@ const callouts: Callout[] = [
   },
   {
     title: "Encrypted Secret Management",
-    text: "Ensure security with an encrypted secret store for confidential values, including seamless integration with popular options like AWS Secrets Manager.",
+    text: "Ensure security with an encrypted secret store for confidential values, including seamless integration with popular options like OpenBao.",
     icon: ShareIcon,
   },
   {
