@@ -46,10 +46,12 @@ ingress:
 ## Verify
 
 ~~~bash
-kubectl get ingress -n nonprod | grep <app-name>
-# CAPTAIN_DOMAIN is replaced dynamically with the reader's domain
-curl https://<app-name>.apps.CAPTAIN_DOMAIN
+curl https://<app-name>-prod.apps.CAPTAIN_DOMAIN
 ~~~
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `<app-name>-uat`).
+:::
 
 ## Key Points
 

@@ -75,7 +75,7 @@ ingress:
 
 :::info How the hostname works
 The `hostname` uses Helm template expressions that are resolved automatically at deploy time:
-- `{{ include "app.name" . }}` → the app's directory name (e.g., `hello-world`)
+- `{{ include "app.name" . }}` → the app's directory name plus environment suffix (e.g., `hello-world-prod`)
 - `{{ .Values.captain_domain }}` → your cluster's domain, injected by the platform
 
 You don't need to hardcode any values — the platform fills them in for you.

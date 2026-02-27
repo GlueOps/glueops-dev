@@ -190,19 +190,23 @@ Two cookie mechanisms work together, each serving a different purpose:
 
 ```bash
 # Default traffic → v1 (stable) with sticky cookie
-curl -v https://my-app-canary-sticky.apps.CAPTAIN_DOMAIN 2>&1 | grep -iE "(Name:|Set-Cookie)"
+curl -v https://my-app-canary-sticky-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep -iE "(Name:|Set-Cookie)"
 # Name: canary-v1
 # Set-Cookie: my-sticky-cookie=<hash>; ... Secure; HttpOnly; SameSite=None
 
 # With canary cookie → v2 (canary) with sticky cookie
-curl -v -b "canary=v2" https://my-app-canary-sticky.apps.CAPTAIN_DOMAIN 2>&1 | grep -iE "(Name:|Set-Cookie)"
+curl -v -b "canary=v2" https://my-app-canary-sticky-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep -iE "(Name:|Set-Cookie)"
 # Name: canary-v2
 # Set-Cookie: my-sticky-cookie=<hash>; ... Secure; HttpOnly; SameSite=None
 
 # Repeated requests with the sticky cookie go to the same pod
-curl -b "my-sticky-cookie=<hash>" https://my-app-canary-sticky.apps.CAPTAIN_DOMAIN
+curl -b "my-sticky-cookie=<hash>" https://my-app-canary-sticky-prod.apps.CAPTAIN_DOMAIN
 # Hostname: <same-pod-name-each-time>
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-canary-sticky-uat`).
+:::
 
 ## Key Points
 

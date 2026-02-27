@@ -128,6 +128,10 @@ curl -b "my-sticky-cookie=<hash>" https://traefik-sticky-prod.apps.CAPTAIN_DOMAI
 # The "Hostname:" line in the whoami response should be the same across multiple requests
 ```
 
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `traefik-sticky-uat`).
+:::
+
 ## Key Points
 
 - Sticky sessions are configured on the **service reference** inside the IngressRoute `routes[].services[]` block — not via annotations

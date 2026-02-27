@@ -40,7 +40,7 @@ customResources:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: my-app-api
+      name: my-app-api-prod
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -49,7 +49,7 @@ customResources:
         - web
         - websecure
       routes:
-        - match: Host(`my-app-api.apps.{{ .Values.captain_domain }}`)
+        - match: Host(`my-app-api-prod.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
             - name: '{{ include "app.name" . }}'
@@ -59,7 +59,7 @@ customResources:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: my-app-web
+      name: my-app-web-prod
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -68,7 +68,7 @@ customResources:
         - web
         - websecure
       routes:
-        - match: Host(`my-app-web.apps.{{ .Values.captain_domain }}`)
+        - match: Host(`my-app-web-prod.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
             - name: '{{ include "app.name" . }}'
@@ -93,7 +93,7 @@ customResourcesMap:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: my-app-api
+      name: my-app-api-prod
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -102,7 +102,7 @@ customResourcesMap:
         - web
         - websecure
       routes:
-        - match: Host(`my-app-api.apps.{{ .Values.captain_domain }}`)
+        - match: Host(`my-app-api-prod.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
             - name: '{{ include "app.name" . }}'
@@ -112,7 +112,7 @@ customResourcesMap:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: my-app-web
+      name: my-app-web-prod
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -121,7 +121,7 @@ customResourcesMap:
         - web
         - websecure
       routes:
-        - match: Host(`my-app-web.apps.{{ .Values.captain_domain }}`)
+        - match: Host(`my-app-web-prod.apps.{{ .Values.captain_domain }}`)
           kind: Rule
           services:
             - name: '{{ include "app.name" . }}'
@@ -140,21 +140,22 @@ Using `customResourcesMap` here makes it easy to add or remove routes per enviro
 
 | Resource | Name | Hostname |
 |----------|------|----------|
-| IngressRoute | `my-app-api` | <code>my-app-api.apps.<CaptainDomain /></code> |
-| IngressRoute | `my-app-web` | <code>my-app-web.apps.<CaptainDomain /></code> |
+| IngressRoute | `my-app-api-prod` | <code>my-app-api-prod.apps.<CaptainDomain /></code> |
+| IngressRoute | `my-app-web-prod` | <code>my-app-web-prod.apps.<CaptainDomain /></code> |
 
 Both route to the same `my-app-prod` service.
 
 ## Verify
 
 ```bash
-# Both IngressRoutes should exist
-kubectl get ingressroutes -n nonprod | grep my-app
-
 # Both hostnames should resolve (after ~2 min for DNS)
-curl https://my-app-api.apps.CAPTAIN_DOMAIN
-curl https://my-app-web.apps.CAPTAIN_DOMAIN
+curl https://my-app-api-prod.apps.CAPTAIN_DOMAIN
+curl https://my-app-web-prod.apps.CAPTAIN_DOMAIN
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-api-uat`).
+:::
 
 ## Key Points
 

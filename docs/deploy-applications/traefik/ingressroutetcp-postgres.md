@@ -146,10 +146,6 @@ customResourcesMap:
 ## Verify
 
 ```bash
-# Check the resources exist
-kubectl get ingressroutetcps -n nonprod | grep traefik-tcp-postgres
-kubectl get tlsoptions -n nonprod | grep postgres-tls-options
-
 # Connect with psql (requires PostgreSQL 17+ client for sslnegotiation=direct)
 docker run --rm postgres:18 \
   psql "host=<app-name>-prod.apps.CAPTAIN_DOMAIN port=443 \
@@ -157,6 +153,10 @@ docker run --rm postgres:18 \
         sslmode=require sslnegotiation=direct" \
   -c "SELECT 1;"
 ```
+
+:::note
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `<app-name>-uat`).
+:::
 
 :::info
 **Why `sslnegotiation=direct`?** Standard PostgreSQL connections start unencrypted, then upgrade to TLS via the `SSLRequest` message. But Traefik's `IngressRouteTCP` expects TLS from the very first byte (for SNI matching). The `sslnegotiation=direct` option (PostgreSQL 17+ clients) makes `psql` start with a TLS handshake immediately, which is what Traefik needs.
