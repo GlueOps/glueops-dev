@@ -84,8 +84,8 @@ ingress:
 
 ```bash
 # First request sets a cookie
-curl -v https://my-app-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep Set-Cookie
-# Output should include: Set-Cookie: my-sticky-cookie=<hash>; ...
+curl -v https://my-app-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep set-cookie
+# Output should include: set-cookie: my-sticky-cookie=<hash>; ...
 
 # Subsequent requests with the cookie go to the same pod
 curl -b "my-sticky-cookie=<hash>" https://my-app-prod.apps.CAPTAIN_DOMAIN

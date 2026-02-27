@@ -27,6 +27,6 @@ title: "<Display Title>"
 
 ## Notes
 
-- No tabs, no YAML configuration blocks
+- No tabs. May include illustrative YAML snippets to explain concepts, but not full deployment configurations
 - Can include tables, diagrams (Mermaid not currently enabled), and links
 - Link to related guides using relative paths: `[Basic IngressRoute](./traefik-basic-ingressroute)`

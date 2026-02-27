@@ -1,6 +1,6 @@
 # Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ### Installation
 
@@ -48,7 +48,7 @@ $ docker build -f Dockerfile.dev -t glueops-dev:dev .
 $ docker run -p 8080:80 -v $(pwd):/app -v /app/node_modules glueops-dev:dev
 ```
 
-The dev server will be available at `http://localhost` with live reload — edits to local files are reflected immediately.
+The dev server will be available at `http://localhost:8080` with live reload — edits to local files are reflected immediately.
 
 > **Note:** The `-v /app/node_modules` anonymous volume prevents your local `node_modules` from overwriting the container's installed dependencies.
 
