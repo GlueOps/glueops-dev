@@ -117,11 +117,12 @@ The site has a dynamic domain replacement feature that lets readers type their c
 | `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) | CodeBlock swizzle replaces it reactively |
 | `<CaptainDomain />` | Inline prose text (bare domain names, not clickable) | MDX component renders the current domain |
 | `<CaptainDomainLink to="https://sub.{domain}" />` | `https://` URLs in prose that readers should visit | Clickable link when domain is customized, styled text with tooltip when default |
+| `<CaptainDomainPart segment="cluster\|tenant\|tld" />` | Inline prose — individual segment of the captain domain | MDX component splits the domain and renders the requested segment (`cluster`, `tenant`, or `tld`) |
 | `{{ .Values.captain_domain }}` | Helm template YAML in code fences | Shown as-is (not replaced) — it's a real Helm expression |
 
 ### File Extension Rule
 
-Any doc file that uses the `<CaptainDomain />` or `<CaptainDomainLink />` JSX components **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` and `<CaptainDomainLink />` require `.mdx`.
+Any doc file that uses the `<CaptainDomain />`, `<CaptainDomainLink />`, or `<CaptainDomainPart />` JSX components **must** use the `.mdx` extension (not `.md`). Plain `.md` files cannot render JSX components. Standard Docusaurus components like `<Tabs>` and `<TabItem>` work in `.md` files — only custom JSX components like `<CaptainDomain />` and `<CaptainDomainLink />` require `.mdx`.
 
 ### Writing Guidelines
 

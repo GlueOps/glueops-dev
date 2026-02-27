@@ -17,6 +17,7 @@ title: "<Display Title>"
 |-------|----------|-------------|
 | `id` | ✅ Yes | Unique identifier used in `sidebars.js`. Must be unique across all docs |
 | `title` | ✅ Yes | Page title shown in sidebar and browser tab |
+| `description` | ❌ Optional | Page meta description. Shown in generated index cards and `<meta>` tags |
 | `type` | ❌ Optional | `tutorial`, `explainer`, etc. Informational only, no rendering effect |
 
 ### ID Naming Conventions
@@ -26,9 +27,10 @@ title: "<Display Title>"
 | Traefik CRD guide | `traefik-<feature>` | `traefik-basic-ingressroute` |
 | Traefik middleware guide | `traefik-middleware-<name>` | `traefik-middleware-headers` |
 | Traefik Ingress guide | `traefik-standard-ingress` | (single page covers all variants) |
+| Traefik Standard Ingress sub-page | `traefik-ingress-<feature>` | `traefik-ingress-letsencrypt` |
 | Traefik TCP guide | `traefik-ingressroutetcp-<variant>` | `traefik-ingressroutetcp-postgres` |
 | Traefik overview | `traefik-overview` | |
-| Deploy guide | `deploy-<topic>` | `deploy-hello-world-to-glueops` |
+| Deploy guide | `<verb>-<topic>` | `deploy-first-app`, `manage-environment-secrets` |
 | Platform admin | `<descriptive-kebab-case>` | `glueops-deployment-configuration` |
 | Top-level | `<short-id>` | `introduction`, `glueops-captain-domain` |
 
