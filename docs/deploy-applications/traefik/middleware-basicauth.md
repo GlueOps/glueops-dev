@@ -187,6 +187,5 @@ stringData:
 - The Secret must be in the same namespace as the Middleware (`nonprod`)
 
 :::caution
-The credentials in this example are stored in plain text in your values file. 
-:::consider using ExternalSecrets resources to pull credentials from our secret store.
+The credentials in this example are stored in plain text in your values file. Consider using ExternalSecrets resources to pull credentials from our secret store.
 :::

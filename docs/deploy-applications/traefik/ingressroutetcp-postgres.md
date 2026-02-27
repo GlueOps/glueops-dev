@@ -62,7 +62,7 @@ customResources:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRouteTCP
     metadata:
-      name: traefik-tcp-postgres
+      name: my-app-tcp-postgres
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -113,7 +113,7 @@ customResourcesMap:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRouteTCP
     metadata:
-      name: traefik-tcp-postgres
+      name: my-app-tcp-postgres
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
