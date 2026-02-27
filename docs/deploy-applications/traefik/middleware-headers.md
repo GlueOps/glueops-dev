@@ -176,7 +176,25 @@ X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 X-Custom-Header: glueops-traefik
+```
+
+### Verify CORS
+
+CORS headers are only returned when the request includes an `Origin` header:
+
+```bash
+curl -I -H "Origin: https://example.com" https://my-app-prod.apps.CAPTAIN_DOMAIN
+```
+
+Expected additional response header:
+```
 Access-Control-Allow-Origin: https://example.com
+```
+
+A request with a non-allowed origin will **not** include the CORS header:
+
+```bash
+curl -I -H "Origin: https://evil.com" https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
 
 ## Available Header Options
