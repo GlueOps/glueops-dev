@@ -48,6 +48,10 @@ curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
 :::
 
+:::info
+`{{ include "app.name" . }}` resolves to `<folder-name>-<env>` — for example, if your app folder is `apps/my-app` and your environment folder is `envs/prod`, the hostname becomes `my-app-prod.apps.CAPTAIN_DOMAIN`. All examples on this page assume the app folder is named `my-app`.
+:::
+
 ---
 
 ## Sticky Sessions
@@ -80,11 +84,11 @@ ingress:
 
 ```bash
 # First request sets a cookie
-curl -v https://my-app-sticky-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep Set-Cookie
+curl -v https://my-app-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep Set-Cookie
 # Output should include: Set-Cookie: my-sticky-cookie=<hash>; ...
 
 # Subsequent requests with the cookie go to the same pod
-curl -b "my-sticky-cookie=<hash>" https://my-app-sticky-prod.apps.CAPTAIN_DOMAIN
+curl -b "my-sticky-cookie=<hash>" https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
 
 ---
@@ -123,8 +127,8 @@ When you specify explicit paths, only those paths will be routed. Requests to ot
 ### Verify
 
 ```bash
-curl https://my-app-paths-prod.apps.CAPTAIN_DOMAIN/api
-curl https://my-app-paths-prod.apps.CAPTAIN_DOMAIN/health
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN/api
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN/health
 ```
 
 ---
@@ -157,7 +161,7 @@ ingress:
 ```bash
 # Both hostnames route to the same service
 curl https://my-app-prod.apps.CAPTAIN_DOMAIN
-curl https://my-app-alt-prod.apps.CAPTAIN_DOMAIN
+curl https://my-app-alt.apps.CAPTAIN_DOMAIN
 ```
 
 ---
@@ -165,6 +169,10 @@ curl https://my-app-alt-prod.apps.CAPTAIN_DOMAIN
 ## Referencing Traefik Middleware from a Standard Ingress
 
 You can use standard `Ingress` for routing while attaching Traefik `Middleware` CRDs via annotations. The middleware is created via `customResources` and referenced using the `traefik.ingress.kubernetes.io/router.middlewares` annotation.
+
+:::warning
+Standard Ingress annotations are **not** processed through Helm's `tpl` function. The namespace prefix in middleware references (e.g., `nonprod-`) must be hardcoded to your actual deployment namespace. If your apps deploy to a different namespace, replace `nonprod` accordingly. IngressRoute CRDs do not have this limitation — middleware references there are resolved by namespace automatically.
+:::
 
 **`envs/prod/values.yaml`**
 ```yaml
@@ -205,7 +213,7 @@ The middleware reference format is **`<namespace>-<middleware-name>@kubernetescr
 ### Verify
 
 ```bash
-curl -I https://my-app-mw-prod.apps.CAPTAIN_DOMAIN
+curl -I https://my-app-prod.apps.CAPTAIN_DOMAIN
 # Response headers should include:
 # X-Frame-Options: DENY
 # X-Content-Type-Options: nosniff
@@ -232,7 +240,7 @@ ingress:
   ingressClassName: public-traefik
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: nonprod-traefik-ingress-tls-redirect@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: nonprod-my-app-tls-redirect@kubernetescrd
   entries:
     - name: public
       hosts:
@@ -243,7 +251,7 @@ customResources:
     apiVersion: traefik.io/v1alpha1
     kind: Middleware
     metadata:
-      name: traefik-ingress-tls-redirect
+      name: my-app-tls-redirect
     spec:
       redirectScheme:
         scheme: https
@@ -256,12 +264,12 @@ The middleware reference format is `<namespace>-<middleware-name>@kubernetescrd`
 
 ```bash
 # HTTP → should redirect to HTTPS (301)
-curl -D- -o /dev/null http://my-app-tls-prod.apps.CAPTAIN_DOMAIN
+curl -D- -o /dev/null http://my-app-prod.apps.CAPTAIN_DOMAIN
 # HTTP/1.1 301 Moved Permanently
-# Location: https://my-app-tls-prod.apps.CAPTAIN_DOMAIN/
+# Location: https://my-app-prod.apps.CAPTAIN_DOMAIN/
 
 # HTTPS → serves the app
-curl https://my-app-tls-prod.apps.CAPTAIN_DOMAIN
+curl https://my-app-prod.apps.CAPTAIN_DOMAIN
 ```
 
 ---

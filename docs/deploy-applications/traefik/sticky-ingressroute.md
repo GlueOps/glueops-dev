@@ -40,7 +40,7 @@ customResources:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: traefik-sticky
+      name: my-app-sticky
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -81,7 +81,7 @@ customResourcesMap:
     apiVersion: traefik.io/v1alpha1
     kind: IngressRoute
     metadata:
-      name: traefik-sticky
+      name: my-app-sticky
       annotations:
         kubernetes.io/ingress.class: public-traefik
         external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
@@ -112,24 +112,24 @@ customResourcesMap:
 
 | Resource | Name | Purpose |
 |----------|------|---------|
-| Deployment | `traefik-sticky-prod` | Runs 2 replicas of the application |
-| Service | `traefik-sticky-prod` | ClusterIP service for internal routing |
-| IngressRoute | `traefik-sticky` | Routes traffic with cookie-based pod affinity |
+| Deployment | `my-app-prod` | Runs 2 replicas of the application |
+| Service | `my-app-prod` | ClusterIP service for internal routing |
+| IngressRoute | `my-app-sticky` | Routes traffic with cookie-based pod affinity |
 
 ## Verify
 
 ```bash
 # First request — check for the sticky cookie in the response
-curl -v https://traefik-sticky-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep -i set-cookie
+curl -v https://my-app-prod.apps.CAPTAIN_DOMAIN 2>&1 | grep -i set-cookie
 # Output should include: Set-Cookie: my-sticky-cookie=<hash>; ... Secure; HttpOnly; SameSite=None
 
 # Subsequent requests with the cookie go to the same pod
-curl -b "my-sticky-cookie=<hash>" https://traefik-sticky-prod.apps.CAPTAIN_DOMAIN
+curl -b "my-sticky-cookie=<hash>" https://my-app-prod.apps.CAPTAIN_DOMAIN
 # The "Hostname:" line in the whoami response should be the same across multiple requests
 ```
 
 :::note
-The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `traefik-sticky-uat`).
+The `-prod` suffix matches your environment folder name (`envs/prod/`). If you deploy to a different environment like `envs/uat/`, the suffix changes accordingly (e.g., `my-app-uat`).
 :::
 
 ## Key Points
