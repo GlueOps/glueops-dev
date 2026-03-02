@@ -46,6 +46,10 @@ jobs:
             type=ref,event=tag,prefix=
             type=sha,format=short,prefix=
             type=sha,format=long,prefix=
+      - name: Set build metadata
+        id: build_meta
+        run: |
+          echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
@@ -57,3 +61,8 @@ jobs:
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_BRANCH=${{ github.ref_name }}
+            BUILD_TAG=${{ github.ref_type == 'tag' && github.ref_name || '' }}
+            BUILD_SHA=${{ github.sha }}
+            BUILD_TIMESTAMP=${{ steps.build_meta.outputs.BUILD_TIMESTAMP }}
