@@ -94,6 +94,16 @@ html[data-theme="dark"] {
 .footer__links {
   margin-bottom: 4.5rem;
 }
+.footer-version {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  opacity: 0.6;
+  text-decoration: none;
+}
+.footer-version:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
 
 /**
  Captain Domain Input (navbar)

@@ -12,6 +12,24 @@ const getGtagID = () => {
   return trackingID || 'YOUR_DEFAULT_TRACKING_ID';
 };
 
+const buildInfo = {
+  branch: process.env.REACT_APP_BUILD_BRANCH || "",
+  tag: process.env.REACT_APP_BUILD_TAG || "",
+  sha: process.env.REACT_APP_BUILD_SHA || "",
+  timestamp: process.env.REACT_APP_BUILD_TIMESTAMP || "",
+};
+
+const buildRef = buildInfo.tag || buildInfo.branch || "local";
+const buildShaShort = buildInfo.sha ? buildInfo.sha.slice(0, 7) : "dev";
+const buildTimestamp = buildInfo.timestamp || "unknown";
+const buildTimestampUtc =
+  buildTimestamp === "unknown"
+    ? "unknown"
+    : buildTimestamp.endsWith("Z")
+      ? buildTimestamp
+      : `${buildTimestamp}Z`;
+const buildSummary = `${buildRef}@${buildShaShort} | ${buildTimestampUtc}`;
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "GlueOps",
@@ -34,6 +52,15 @@ const config = {
   },
 
   plugins: [],
+
+  customFields: {
+    buildInfo: {
+      ...buildInfo,
+      ref: buildRef,
+      shortSha: buildShaShort,
+      summary: buildSummary,
+    },
+  },
 
   scripts: [
     'https://cdn.glueops.dev/jsscripts/rb2b.js',
@@ -172,7 +199,7 @@ const config = {
           },
           
         ],
-        copyright: `© ${new Date().getFullYear()} GlueOps, LLC.`,
+        copyright: `© ${new Date().getFullYear()} GlueOps, LLC. <a class="footer-version" href="/version">v: ${buildSummary}</a>`,
       },
       prism: {
         theme: lightCodeTheme,
