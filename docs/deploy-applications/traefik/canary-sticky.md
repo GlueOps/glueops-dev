@@ -38,7 +38,7 @@ image:
 ```yaml
 deployment:
   enabled: true
-  replicas: 1
+  replicas: 2
   envVariables:
     - name: WHOAMI_NAME
       value: "canary-v1"
