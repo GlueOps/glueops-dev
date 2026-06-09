@@ -200,7 +200,7 @@ users:
   - name: kubectl-oidc
     user:
       exec:
-        apiVersion: client.authentication.k8s.io/v1beta1
+        apiVersion: client.authentication.k8s.io/v1
         command: kubectl
         args:
           - oidc-login
