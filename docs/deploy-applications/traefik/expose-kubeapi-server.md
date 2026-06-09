@@ -18,6 +18,7 @@ the client must have the following tools installed:
 )
 
 # install kube-oidc-login plugin
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 kubectl krew install oidc-login
 
 ```
