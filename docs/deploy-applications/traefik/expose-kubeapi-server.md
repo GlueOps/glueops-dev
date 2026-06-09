@@ -174,7 +174,7 @@ subsets:
 
 ## Setup config for kubectl access
 
-in the current cluster, run the following and it will create a file `kubeconfig.yaml` and then handle it to the customer.
+In the current cluster, run the following. It will create a file `kubeconfig.yaml`, which you can then hand to the customer.
 
 ```bash
 
