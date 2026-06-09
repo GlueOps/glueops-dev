@@ -1,11 +1,13 @@
 ---
 id: expose-kubeapi-server
-title: Expose kube-api access to the public word with OIDC and restricted ip list
+title: "Expose Kubernetes API access publicly with OIDC and an IP allowlist"
 ---
 
-## Prerequisite
+# Expose Kubernetes API access publicly with OIDC and an IP allowlist
 
-the client must have the following tools installed:
+## Prerequisites
+
+The client must have the following tools installed:
 
 ```bash
 (
