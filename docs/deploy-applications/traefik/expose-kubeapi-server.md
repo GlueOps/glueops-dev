@@ -17,6 +17,7 @@ The client must have the following tools installed:
   KREW="krew-${OS}_${ARCH}" &&
   curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
   tar zxvf "${KREW}.tar.gz" &&
+  ./${KREW} install krew
 )
 
 # install kube-oidc-login plugin
