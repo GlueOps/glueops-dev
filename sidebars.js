@@ -27,6 +27,7 @@ const sidebars = {
       items: [
         "deploy-applications/deploy-first-app",
         "deploy-applications/manage-environment-secrets",
+        "deploy-applications/access-cluster-with-kubectl",
         "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations",
         {
           type: "category",

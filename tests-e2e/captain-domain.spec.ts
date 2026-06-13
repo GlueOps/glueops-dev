@@ -10,7 +10,10 @@ const PAGES = {
   tlsRedirect: '/deploy-applications/traefik/traefik-tls-redirect',
   clusterDomains: '/glueops-captain-domain',
   introduction: '/introduction',
+  accessCluster: '/deploy-applications/access-cluster-with-kubectl',
 };
+
+const DEFAULT_NAMESPACE = DEFAULT_DOMAIN.split('.')[0]; // first label, e.g. "nonprod"
 
 async function gotoAndWait(page, path: string) {
   await page.goto(`${BASE_URL}${path}`, { waitUntil: 'networkidle', timeout: 60000 });
@@ -225,6 +228,58 @@ test.describe('Captain Domain Feature', () => {
         expect(text, `Raw sentinel found on ${path}`).not.toContain('CAPTAIN_DOMAIN');
       }
     }
+  });
+
+  test('CAPTAIN_NAMESPACE sentinel renders the namespace, not the raw token', async ({ page }) => {
+    await gotoAndWait(page, PAGES.accessCluster);
+    await waitForCodeBlocks(page);
+
+    // No raw CAPTAIN_NAMESPACE (or CAPTAIN_DOMAIN) should remain in any code block
+    await page.waitForFunction(
+      () => {
+        const pres = document.querySelectorAll('pre');
+        for (const pre of pres) {
+          const text = pre.textContent || '';
+          if (text.includes('CAPTAIN_NAMESPACE') || text.includes('CAPTAIN_DOMAIN')) return false;
+        }
+        return pres.length > 0;
+      },
+      { timeout: 15000 }
+    );
+
+    const allText = await page.locator('pre').allTextContents();
+    for (const text of allText) {
+      expect(text, 'Raw CAPTAIN_NAMESPACE sentinel found').not.toContain('CAPTAIN_NAMESPACE');
+    }
+    // The default namespace (first label of the domain) should appear, e.g. "-n nonprod"
+    const hasNamespace = allText.some(t => t.includes(`-n ${DEFAULT_NAMESPACE}`));
+    expect(hasNamespace, `Expected "-n ${DEFAULT_NAMESPACE}" in a code block`).toBe(true);
+  });
+
+  test('CAPTAIN_NAMESPACE updates with a custom domain', async ({ page }) => {
+    await gotoAndWait(page, PAGES.accessCluster);
+    await waitForCodeBlocks(page);
+
+    const input = page.locator('#captain-domain-input');
+    await input.click();
+    await input.fill('staging.acme.onglueops.rocks');
+    await input.press('Enter');
+
+    // Namespace is the first label -> "staging"
+    await page.waitForFunction(
+      () => {
+        const pres = document.querySelectorAll('pre');
+        for (const pre of pres) {
+          if ((pre.textContent || '').includes('-n staging')) return true;
+        }
+        return false;
+      },
+      { timeout: 10000 }
+    );
+
+    const allText = await page.locator('pre').allTextContents();
+    expect(allText.some(t => t.includes('-n staging'))).toBe(true);
+    expect(allText.some(t => t.includes('-n nonprod'))).toBe(false);
   });
 
   test('inline <CaptainDomain /> in prose updates reactively', async ({ page }) => {

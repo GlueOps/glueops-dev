@@ -189,6 +189,23 @@ html[data-theme="dark"] {
   padding: 0.1em 0.3em;
 }
 
+/* When the inline domain sits inside a <code> chip (e.g. team names like
+   <code><CaptainDomain />-kubectl-reader</code>), blend it into the chip
+   instead of rendering a chip-within-a-chip. The custom-domain highlight
+   still applies via .captain-domain-custom. */
+code .captain-domain-inline {
+  background: transparent;
+  font-size: 1em;
+  padding: 0;
+}
+
+code .captain-domain-custom {
+  background: rgba(233, 171, 23, 0.12);
+  border: none;
+  border-radius: 0;
+  padding: 0 0.15em;
+}
+
 /**
  Captain Domain link (CaptainDomainLink component)
  */

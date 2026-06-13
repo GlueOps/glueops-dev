@@ -111,7 +111,7 @@ Visit <CaptainDomainLink to="https://hello-world-prod.apps.{domain}/?env=true" /
 - `SECRET_MESSAGE=This value came from your Secret Store!` — injected via ExternalSecret
 
 :::tip
-If the secret doesn't appear immediately, give it a moment — the ExternalSecret controller refreshes every few seconds. You can also check the ExternalSecret resource status in the ArgoCD dashboard.
+If the secret doesn't appear immediately, give it a moment — the ExternalSecret controller refreshes every few seconds. You can also check the ExternalSecret resource status in the ArgoCD dashboard, or with `kubectl get externalsecret` in your namespace (see [Access Your Cluster with kubectl](access-cluster-with-kubectl)).
 :::
 
 ## Key concepts
