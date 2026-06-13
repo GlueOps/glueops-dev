@@ -1,0 +1,118 @@
+---
+id: access-cluster-with-kubectl
+title: Access Your Cluster with kubectl
+type: tutorial
+---
+
+# Access Your Cluster with kubectl
+
+You can connect to your GlueOps environment with `kubectl` using your GitHub identity — no certificates or passwords to manage. Sign-in happens through your browser, and access is scoped to your team's environment namespace at one of three permission tiers.
+
+## Prerequisites
+
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed on your machine.
+- [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) — the plugin manager for kubectl.
+- [oidc-login](https://github.com/int128/kubelogin#setup) — the kubectl plugin that handles the browser sign-in.
+- Membership in one of your organization's kubectl GitHub teams (see [Access tiers](#access-tiers) below). Your Platform Administrator manages team membership.
+- Your kubeconfig, available from your cluster information page: <CaptainDomainLink to="https://cluster-info.{domain}" />
+
+:::tip
+If the domain above doesn't look right, update your **Captain Domain** in the top navigation bar.
+:::
+
+## 1. Create your kubeconfig
+
+Open your cluster information page at <CaptainDomainLink to="https://cluster-info.{domain}" /> and copy the kubeconfig shown there. It comes with the cluster's certificate authority and sign-in configuration already embedded — no editing required.
+
+Paste it into kubectl's default config file:
+
+```bash
+mkdir -p ~/.kube
+# paste the copied kubeconfig into this file with your editor:
+nano ~/.kube/config
+```
+
+kubectl picks this file up automatically — no environment variables needed.
+
+:::caution
+If you already have a `~/.kube/config` for other clusters, don't overwrite it — merge the new cluster, context, and user entries into your existing file instead.
+:::
+
+## 2. Connect and sign in
+
+Run any command against your environment namespace — that's the first part of your Captain Domain, so for <CaptainDomain /> it is <CaptainDomainPart segment="cluster" />:
+
+```bash
+kubectl get pods -n CAPTAIN_NAMESPACE
+```
+
+The first time, kubectl starts a device sign-in flow:
+
+1. Your terminal prints a verification URL and a one-time code.
+2. Open the URL in your browser, enter the code, and sign in with GitHub.
+3. Back in your terminal, the command completes and prints your pods.
+
+:::note
+Your token is cached after sign-in, so the browser step only happens occasionally — not on every command.
+:::
+
+To avoid typing `-n <namespace>` on every command, set it as your default once:
+
+```bash
+kubectl config set-context --current --namespace=CAPTAIN_NAMESPACE
+```
+
+## Access tiers
+
+Your permissions depend on which GitHub team you belong to. There are three tiers, each including everything from the tier above it:
+
+| Tier | GitHub team | What you can do |
+|---|---|---|
+| **Reader** | <code><CaptainDomain />-kubectl-reader</code> | View pods, logs, services, deployments, ingresses, and ExternalSecrets status. No access to secret values. |
+| **Debugger** | <code><CaptainDomain />-kubectl-debugger</code> | Everything in Reader, plus: exec into pods, port-forward, attach, restart deployments, and delete stuck pods. |
+| **Operator** | <code><CaptainDomain />-kubectl-operator</code> | Everything in Debugger, plus: delete any resource in your namespace. |
+
+To see which groups you signed in with, run `kubectl auth whoami`. To check whether your tier allows a specific action, run `kubectl auth can-i <verb> <resource> -n <namespace>`.
+
+:::note
+The platform is GitOps-managed: you can't create or apply resources with kubectl. Deleting a resource causes ArgoCD to recreate it from your deployment-configurations repository — that's the intended way to force a clean resync.
+:::
+
+## Your access is namespace-scoped
+
+Every tier grants access **only within your environment namespace**. Commands that list across the cluster will be denied:
+
+:::caution
+`kubectl get namespaces`, `kubectl get pods -A`, and node-level views return `Forbidden`. This is by design, not an error — always work within your namespace with `-n <namespace>` or a default namespace set.
+:::
+
+## Troubleshooting
+
+### `Error from server (Forbidden)`
+
+In order of likelihood:
+
+1. Missing or wrong `-n <namespace>` — you only have access to your own environment namespace.
+2. The action needs a higher tier — check the [Access tiers](#access-tiers) table and verify with `kubectl auth can-i <verb> <resource> -n <namespace>`.
+3. You're not in a kubectl GitHub team yet — contact your Platform Administrator.
+
+### Device code expired or browser window closed
+
+Just rerun your kubectl command — a fresh code is issued each time.
+
+### Signed in but permissions seem stale
+
+Tokens are cached locally. After your team membership changes, clear the cache and sign in again:
+
+```bash
+rm -rf ~/.kube/cache/oidc-login
+```
+
+### Connection times out before any sign-in prompt
+
+API access is restricted to an IP allowlist. If you're connecting from a new network or VPN and the connection hangs without ever showing a sign-in prompt, ask your Platform Administrator to add your IP address.
+
+## Next steps
+
+- [Deploy Your First App](deploy-first-app) — deploy something to inspect with your new access.
+- [Add Secrets](manage-environment-secrets) — manage sensitive configuration the supported way.
