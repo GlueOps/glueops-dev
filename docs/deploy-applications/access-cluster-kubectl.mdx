@@ -12,7 +12,7 @@ You can connect to your GlueOps environment with `kubectl` using your GitHub ide
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed on your machine.
 - [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) — the plugin manager for kubectl.
-- [oidc-login](https://github.com/int128/kubelogin#setup) — the kubectl plugin that handles the browser sign-in.
+- [oidc-login](https://github.com/int128/kubelogin#setup) — the kubectl credential plugin that handles the browser sign-in. Install it with krew (`kubectl krew install oidc-login`), and make sure `~/.krew/bin` is on your `PATH` so kubectl can find it.
 - Membership in one of your organization's kubectl GitHub teams (see [Access tiers](#access-tiers) below). Your Platform Administrator manages team membership.
 - Your kubeconfig, available from your cluster information page: <CaptainDomainLink to="https://cluster-info.{domain}" />
 
@@ -48,8 +48,8 @@ kubectl get pods -n CAPTAIN_NAMESPACE
 
 The first time, kubectl starts a device sign-in flow:
 
-1. Your terminal prints a verification URL and a one-time code.
-2. Open the URL in your browser, enter the code, and sign in with GitHub.
+1. Your terminal prints a verification URL and a one-time code (your browser may open automatically).
+2. In the browser, enter the code if prompted and sign in with GitHub.
 3. Back in your terminal, the command completes and prints your pods.
 
 :::note
@@ -105,12 +105,12 @@ Just rerun your kubectl command — a fresh code is issued each time.
 Tokens are cached locally. After your team membership changes, clear the cache and sign in again:
 
 ```bash
-rm -rf ~/.kube/cache/oidc-login
+kubectl oidc-login clean
 ```
 
 ### Connection times out before any sign-in prompt
 
-API access is restricted to an IP allowlist. If you're connecting from a new network or VPN and the connection hangs without ever showing a sign-in prompt, ask your Platform Administrator to add your IP address.
+API access is restricted to an IP allowlist. If you're connecting from a new network or VPN and the connection hangs or is refused without ever showing a sign-in prompt, ask your Platform Administrator to add your IP address.
 
 ## Next steps
 
