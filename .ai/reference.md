@@ -216,7 +216,7 @@ All Traefik guide pages follow this structure:
 3. **Prerequisites** — `base/base-values.yaml` code block
 4. **Configuration** — tabbed `customResources` (list) vs `customResourcesMap` (map) examples
 5. **What Gets Created** or **How It Works** — table or bullet list
-6. **Verify** — `curl` commands (do not use `kubectl` — platform users do not have kubectl access; for certificate or TCP apps, mention the ArgoCD dashboard for resource status)
+6. **Verify** — `curl` commands are the primary check. `kubectl` is also acceptable when scoped to the reader's own environment namespace (e.g. `kubectl get pods -n CAPTAIN_NAMESPACE`), since developers now have namespace-scoped cluster access (see the "Access Your Cluster with kubectl" guide). Avoid cluster-wide commands (`-A`, `get namespaces`, node views) — RBAC forbids them. For certificate or TCP apps, the ArgoCD dashboard is also a good source for resource status.
 7. **Key Points** — bullet list of important takeaways
 8. **Admonitions** — `:::info`, `:::caution`, `:::warning` at the end
 
