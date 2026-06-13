@@ -261,7 +261,7 @@ curl https://{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}
 
 ## Captain Domain — Dynamic Domain Replacement
 
-The site replaces domain references dynamically so readers see their own cluster domain. There are **three patterns** depending on context:
+The site replaces domain references dynamically so readers see their own cluster domain. Choose the pattern that fits the context:
 
 | Pattern | Where to use | Handled by |
 |---------|--------------|-----------|

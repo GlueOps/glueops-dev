@@ -201,6 +201,8 @@ code .captain-domain-inline {
 
 code .captain-domain-custom {
   background: rgba(233, 171, 23, 0.12);
+  border: none;
+  border-radius: 0;
   padding: 0 0.15em;
 }
 
