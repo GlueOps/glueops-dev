@@ -6,7 +6,7 @@ type: tutorial
 
 # Access Your Cluster with kubectl
 
-You can connect to your GlueOps environment with `kubectl` using your GitHub identity — no certificates or passwords to manage. Sign-in happens through your browser, and access is scoped to your team's environment namespace at one of three permission tiers.
+You can connect to your GlueOps environment with `kubectl` using your GitHub identity — no certificates or passwords to manage. Sign-in happens through your browser, and access is scoped to your team's environment namespace at one of four permission tiers.
 
 ## Prerequisites
 
@@ -64,12 +64,13 @@ kubectl config set-context --current --namespace=CAPTAIN_NAMESPACE
 
 ## Access tiers
 
-Your permissions depend on which GitHub team you belong to. There are three tiers, each including everything from the tier above it:
+Your permissions depend on which GitHub team you belong to. There are four tiers, each including everything from the tier above it:
 
 | Tier | GitHub team | What you can do |
 |---|---|---|
 | **Reader** | <code><CaptainDomain />-kubectl-reader</code> | View pods, logs, services, deployments, ingresses, and ExternalSecrets status. No access to secret values. |
-| **Debugger** | <code><CaptainDomain />-kubectl-debugger</code> | Everything in Reader, plus: exec into pods, port-forward, attach, restart deployments, and delete stuck pods. |
+| **Reader Plus** | <code><CaptainDomain />-kubectl-reader-plus</code> | Everything in Reader, plus: port-forward to pods. |
+| **Debugger** | <code><CaptainDomain />-kubectl-debugger</code> | Everything in Reader Plus, plus: exec into pods, attach, restart deployments, and delete stuck pods. |
 | **Operator** | <code><CaptainDomain />-kubectl-operator</code> | Everything in Debugger, plus: delete any resource in your namespace. |
 
 To see which groups you signed in with, run `kubectl auth whoami`. To check whether your tier allows a specific action, run `kubectl auth can-i <verb> <resource> -n <namespace>`.
