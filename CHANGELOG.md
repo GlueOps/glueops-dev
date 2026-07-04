@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.24.2](https://github.com/GlueOps/glueops-dev/compare/v3.24.1...v3.24.2) (2026-07-04)
+
+
+### Documentation
+
+* frame the GlueOps Deployment app as the optional happy path ([#511](https://github.com/GlueOps/glueops-dev/issues/511)) ([dc573a8](https://github.com/GlueOps/glueops-dev/commit/dc573a8d1b01a07302ba38ffa4e97ac14bca7ffe))
+
+
+### Miscellaneous Chores
+
+* **fallback:** update docker/setup-qemu-action ([#507](https://github.com/GlueOps/glueops-dev/issues/507)) ([2aacbff](https://github.com/GlueOps/glueops-dev/commit/2aacbff34289b7ca5362a6b817b6c19f6efe424e))
+* lock file maintenance ([#504](https://github.com/GlueOps/glueops-dev/issues/504)) ([b39d6d0](https://github.com/GlueOps/glueops-dev/commit/b39d6d01f361b4ad704664c46062b5842d566810))
+* **patch:** update react to 19.2.7 #patch ([#508](https://github.com/GlueOps/glueops-dev/issues/508)) ([cf18313](https://github.com/GlueOps/glueops-dev/commit/cf18313e702c605867ea04ce0e751b6f5ca6e060))
+
 ## [3.24.1](https://github.com/GlueOps/glueops-dev/compare/v3.24.0...v3.24.1) (2026-06-30)
 
 
