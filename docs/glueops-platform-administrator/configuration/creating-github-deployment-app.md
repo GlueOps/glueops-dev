@@ -14,7 +14,7 @@ This app is only the **write credential** the GlueOps deploy actions use to upda
 :::
 
 :::info
-This app is **separate** from the platform GitHub App you create during cluster onboarding. Do not reuse the platform App's private key in GitHub Actions — keep its blast radius small. This app exists only to let CI update deployment configs.
+This app is **separate** from the platform GitHub App you create during cluster onboarding — it exists only to let CI update deployment configs.
 :::
 
 ## Quick setup (recommended): one-click
@@ -30,10 +30,6 @@ This page always serves the latest app manifest (from the action repo's `main`),
    - Org **variable** `GLUEOPS_DEPLOYMENT_APP_ID`
    - Org **secret** `GLUEOPS_DEPLOYMENT_APP_PRIVATE_KEY`
 3. Click **Install** and **select your `deployment-configurations` repository** — the permissions do nothing until the app is installed there.
-
-:::caution
-Only start setup from the canonical URL above, over HTTPS. A look-alike page could capture the key. The page never sends your key to GlueOps — it stays in your browser and you paste it into your own org secrets.
-:::
 
 Then continue to [Reference them in workflows](#reference-them-in-workflows).
 
