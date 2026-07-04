@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.24.3](https://github.com/GlueOps/glueops-dev/compare/v3.24.2...v3.24.3) (2026-07-04)
+
+
+### Bug Fixes
+
+* remove deleted GitHub-token docs from the sidebar (unbreak the build) ([#512](https://github.com/GlueOps/glueops-dev/issues/512)) ([5368290](https://github.com/GlueOps/glueops-dev/commit/5368290c99af479865c5125134a5ac98a11605e7))
+
 ## [3.24.2](https://github.com/GlueOps/glueops-dev/compare/v3.24.1...v3.24.2) (2026-07-04)
 
 
