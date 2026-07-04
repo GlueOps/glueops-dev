@@ -73,6 +73,38 @@ Your app repos' CD workflows pass these to the deploy action; nothing else to wi
 
 The action mints an installation token scoped to `deployment-configurations`, valid for about an hour.
 
+If you set `CREATE_PR: true` above, also see [Keep deploy PRs tidy](#keep-deploy-prs-tidy-optional) to close superseded deploy PRs automatically.
+
+## Keep deploy PRs tidy (optional)
+
+When the bump action runs with `CREATE_PR: true`, each new version opens a pull request against `deployment-configurations`. As you ship, these stack up — one open PR per unmerged tag, per app and environment. The `github-actions-cleanup-deployment-prs` action closes the superseded ones (same app + environment, older tag) and deletes their branches, leaving only the latest deploy PR for each app/environment.
+
+Add this workflow **in your `deployment-configurations` repo**. It runs on `pull_request`, uses the repo's built-in `GITHUB_TOKEN`, and needs no App or extra secrets:
+
+```yaml
+# .github/workflows/cleanup-deploy-prs.yml
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write        # delete superseded branches
+  pull-requests: write   # close superseded PRs
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GlueOps/github-actions-cleanup-deployment-prs@<commit-sha>
+        with:
+          pr_number: ${{ github.event.pull_request.number }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+:::note Only when you deploy via PRs
+This action is only relevant if the bump action runs with `CREATE_PR: true`. If your CD commits image tags directly to `deployment-configurations`, there are no deploy PRs to clean up and you can skip it. It only ever acts on PRs the bump action opened, matched by a marker it embeds — other pull requests are left untouched.
+:::
+
 ## Updating the app's permissions later
 
 Because each org owns its own app, you make permission changes yourself:
