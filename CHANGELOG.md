@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.25.0](https://github.com/GlueOps/glueops-dev/compare/v3.24.3...v3.25.0) (2026-07-23)
+
+
+### Features
+
+* update node to v24.17.0 #minor ([#522](https://github.com/GlueOps/glueops-dev/issues/522)) ([27e21fb](https://github.com/GlueOps/glueops-dev/commit/27e21fb4e28b32fe8353000d04feda8f76a74cf7))
+* update node to v24.18.0 #minor ([#526](https://github.com/GlueOps/glueops-dev/issues/526)) ([5e4c5f4](https://github.com/GlueOps/glueops-dev/commit/5e4c5f49ae60b2fc83b0d4744a02a57e4b40f331))
+* update npm to 11.17.0 #minor ([#517](https://github.com/GlueOps/glueops-dev/issues/517)) ([62c6057](https://github.com/GlueOps/glueops-dev/commit/62c6057df4e280fb9269b3e305ecc35f5b8b6b8e))
+
+
+### Miscellaneous Chores
+
+* **fallback:** update actions/checkout ([#525](https://github.com/GlueOps/glueops-dev/issues/525)) ([098ac47](https://github.com/GlueOps/glueops-dev/commit/098ac47c384c00f912c8ebda79107af281953ac1))
+* **fallback:** update nginx ([#520](https://github.com/GlueOps/glueops-dev/issues/520)) ([bdffe92](https://github.com/GlueOps/glueops-dev/commit/bdffe927d9d3dccdab2f1ac7fedc19667ed251bc))
+* **fallback:** update node ([#516](https://github.com/GlueOps/glueops-dev/issues/516)) ([da0d667](https://github.com/GlueOps/glueops-dev/commit/da0d6678fa3a30b50cf257bfd7c39acb03a872a9))
+* **fallback:** update node ([#519](https://github.com/GlueOps/glueops-dev/issues/519)) ([161be85](https://github.com/GlueOps/glueops-dev/commit/161be854638e7716c030cd4c82eec7edd00bbae7))
+* lock file maintenance ([#510](https://github.com/GlueOps/glueops-dev/issues/510)) ([f594581](https://github.com/GlueOps/glueops-dev/commit/f594581f02314d23c2383b173197ad260482533a))
+* lock file maintenance ([#518](https://github.com/GlueOps/glueops-dev/issues/518)) ([1bd1887](https://github.com/GlueOps/glueops-dev/commit/1bd188748dd860efe17421e2a6b05d9d748ff979))
+* lock file maintenance ([#523](https://github.com/GlueOps/glueops-dev/issues/523)) ([0d0a349](https://github.com/GlueOps/glueops-dev/commit/0d0a3493b4abf7ec072685f554587d6d2cceeb5d))
+* **patch:** update dataaxiom/ghcr-cleanup-action to v1.2.2 #patch ([#514](https://github.com/GlueOps/glueops-dev/issues/514)) ([3f3ed55](https://github.com/GlueOps/glueops-dev/commit/3f3ed55c2c33235ce3503272f72f834fc0680faa))
+
 ## [3.24.3](https://github.com/GlueOps/glueops-dev/compare/v3.24.2...v3.24.3) (2026-07-04)
 
 
