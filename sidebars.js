@@ -59,6 +59,23 @@ const sidebars = {
             slug: "/traefik-ingress",
           },
         },
+        {
+          type: "category",
+          label: "Custom Domain Certificates",
+          collapsible: true,
+          items: [
+            "deploy-applications/custom-domain-certificates/custom-domains-overview",
+            "deploy-applications/custom-domain-certificates/custom-domains-cert-manager-route53",
+            "deploy-applications/custom-domain-certificates/custom-domains-certbot",
+            "deploy-applications/custom-domain-certificates/custom-domains-waf-cdn",
+          ],
+          link: {
+            type: "generated-index",
+            title: "Custom Domain Certificates",
+            description: "TLS certificates for domains you own — automated with cert-manager, manual with certbot, or fronted by a WAF/CDN.",
+            slug: "/custom-domain-certificates",
+          },
+        },
       ],
       link: {
         type: "generated-index",
