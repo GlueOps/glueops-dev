@@ -11,6 +11,17 @@ Issue a multi-domain (including wildcard) certificate yourself with [certbot](ht
 Certificates issued this way do **not** renew themselves — repeat this process before every expiry. Let's Encrypt certificate lifetimes are moving from 90 days to 45 days during 2026, which doubles the renewal cadence. If you can, prefer the [automated cert-manager approach](/deploy-applications/custom-domain-certificates/custom-domains-cert-manager-route53).
 :::
 
+## Prerequisites
+
+**`base/base-values.yaml`**
+```yaml
+image:
+  registry: docker.io
+  repository: traefik/whoami
+  tag: latest
+  port: 80
+```
+
 ## Step 1 — Issue the certificate
 
 Wildcards require DNS validation, so use the manual DNS-01 flow (certbot will prompt you to create TXT records at your DNS provider):
@@ -39,10 +50,21 @@ In your environment's OpenBao/Vault UI (see [Managing Environment Secrets](/depl
 
 ## Step 3 — Reference it from your application values
 
+**`envs/prod/values.yaml`**
 ```yaml
+deployment:
+  enabled: true
+  replicas: 1
+
+service:
+  enabled: true
+
 externalSecret:
   enabled: true
   secrets:
+    app:                                     # your existing app env secrets — keep as-is
+      dataFrom:
+        key: secret/<app_name>/<environment>
     tls-customer-domain:                     # creates Secret <app-name>-tls-customer-domain
       type: kubernetes.io/tls
       data:

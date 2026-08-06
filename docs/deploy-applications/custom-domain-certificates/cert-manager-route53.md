@@ -15,6 +15,17 @@ This guide uses Route53. The same pattern works for any [DNS provider cert-manag
 2. You store the secret key in your environment's secrets vault.
 3. Your app deploys a namespaced cert-manager `Issuer` and a `Certificate` through the app chart's `customResourcesMap`. cert-manager answers Let's Encrypt's DNS-01 challenges by writing temporary TXT records in your zone, and renews the certificate automatically before expiry.
 
+## Prerequisites
+
+**`base/base-values.yaml`**
+```yaml
+image:
+  registry: docker.io
+  repository: traefik/whoami
+  tag: latest
+  port: 80
+```
+
 ## Step 1 — Create a scoped IAM credential (your AWS account)
 
 Create a policy that can only touch your hosted zone (find your zone ID in the Route53 console):
@@ -42,7 +53,15 @@ In your environment's OpenBao/Vault UI (see [Managing Environment Secrets](/depl
 
 ## Step 3 — Configure your application values
 
+**`envs/prod/values.yaml`**
 ```yaml
+deployment:
+  enabled: true
+  replicas: 1
+
+service:
+  enabled: true
+
 externalSecret:
   enabled: true
   secrets:
