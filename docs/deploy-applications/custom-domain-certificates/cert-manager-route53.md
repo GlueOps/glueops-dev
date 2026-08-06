@@ -108,15 +108,11 @@ ingress:
 When you define an explicit `Certificate` like this, do **not** also set the `cert-manager.io/cluster-issuer` annotation on the ingress — that would create a second, competing certificate request for the same secret.
 :::
 
-## Step 4 — Verify
+## Step 4 — Deploy and verify
 
-```bash
-kubectl get certificate -n <your-namespace>
-# NAME             READY   SECRET                          AGE
-# <app>-customer   True    <app>-tls-customer-domain       3m
-```
-
-First issuance typically completes in 2–5 minutes. Once `READY=True`:
+1. Commit the values change to your deployment-configurations repository and wait for Argo CD to sync the application (or click **Sync** in the Argo CD UI).
+2. In the Argo CD UI, open your application's resource tree. You'll see the `Issuer`, the `Certificate`, and — while issuance is running — its child `CertificateRequest`, `Order`, and `Challenge` resources appear underneath it. First issuance typically completes in 2–5 minutes; the `Certificate` turns **Healthy** when the certificate has been issued.
+3. Check the served certificate:
 
 ```bash
 curl -vI https://www.example.com 2>&1 | grep -E "subject|issuer"
@@ -124,15 +120,12 @@ curl -vI https://www.example.com 2>&1 | grep -E "subject|issuer"
 
 ## Troubleshooting
 
-- **Certificate stays `READY=False`** — inspect the running challenge:
-  ```bash
-  kubectl get challenges -n <your-namespace>
-  kubectl describe challenge <name> -n <your-namespace>
-  ```
-- **`AccessDenied` in the challenge status** — the IAM policy doesn't cover the zone, or the zone ID is wrong.
+If the `Certificate` stays unhealthy, click the `Challenge` resource in the Argo CD resource tree — its status and events tell you what's wrong:
+
+- **`AccessDenied`** — the IAM policy doesn't cover the zone, or the zone ID is wrong.
 - **`Waiting for DNS-01 challenge propagation`** — normal for the first few minutes; cert-manager retries until the TXT record is visible publicly.
 - **CAA errors from Let's Encrypt** — your domain's CAA records don't allow `letsencrypt.org`; check `dig CAA example.com`.
-- **Testing repeatedly?** Switch the Issuer's `server` to the staging endpoint (`https://acme-staging-v02.api.letsencrypt.org/directory`) while iterating. Let's Encrypt production has [rate limits](https://letsencrypt.org/docs/rate-limits/) (e.g. 5 duplicate certificates per week). Staging certificates are not browser-trusted — switch back when done and delete the old secret so a production certificate is issued.
+- **Testing repeatedly?** Switch the Issuer's `server` to the staging endpoint (`https://acme-staging-v02.api.letsencrypt.org/directory`) while iterating. Let's Encrypt production has [rate limits](https://letsencrypt.org/docs/rate-limits/) (e.g. 5 duplicate certificates per week). Staging certificates are not browser-trusted — switch back when done and delete the old secret via the Argo CD UI so a production certificate is issued.
 
 ## Renewal
 

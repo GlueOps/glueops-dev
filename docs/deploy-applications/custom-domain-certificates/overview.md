@@ -13,7 +13,6 @@ Every GlueOps cluster automatically provides TLS for hostnames under your [capta
 |---|---|
 | Your DNS is hosted on Route53 (or another [provider cert-manager supports](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers)) and you can create a narrowly-scoped API credential | [Automated certificates with cert-manager](/deploy-applications/custom-domain-certificates/custom-domains-cert-manager-route53) — fully automated issuance **and renewal** |
 | You want certificates managed outside the platform, or your DNS provider isn't supported | [Manual certificates with certbot](/deploy-applications/custom-domain-certificates/custom-domains-certbot) — you issue and renew; the platform serves what you upload |
-| You also want WAF / DDoS protection / edge caching | [Using a WAF or CDN](/deploy-applications/custom-domain-certificates/custom-domains-waf-cdn) — the provider manages edge certificates for you; combine with either option above for the origin |
 
 A few facts that apply to every approach:
 

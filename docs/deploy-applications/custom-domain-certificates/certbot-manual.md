@@ -71,10 +71,11 @@ ingress:
         - "*.www.example.com"
 ```
 
-## Step 4 — Verify
+## Step 4 — Deploy and verify
+
+Commit the values change to your deployment-configurations repository and wait for Argo CD to sync (or click **Sync** in the Argo CD UI). The `ExternalSecret` appears in your application's resource tree and turns **Healthy** once it has pulled the certificate from the vault. Then check the served certificate:
 
 ```bash
-kubectl get secret <app-name>-tls-customer-domain -n <your-namespace>
 curl -vI https://www.example.com 2>&1 | grep -E "subject|issuer|expire"
 ```
 
