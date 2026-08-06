@@ -45,8 +45,8 @@ Tips:
 In your environment's OpenBao/Vault UI (see [Managing Environment Secrets](/deploy-applications/manage-environment-secrets)), create a secret at a dedicated path:
 
 - Path: `secret/<your-app>-tls`
-- Key `tls_crt`: contents of `fullchain.pem`
-- Key `tls_key`: contents of `privkey.pem`
+- Key `tls.crt`: contents of `fullchain.pem`
+- Key `tls.key`: contents of `privkey.pem`
 
 ## Step 3 — Reference it from your application values
 
@@ -71,11 +71,11 @@ externalSecret:
         "tls.crt":
           remoteRef:
             key: secret/<your-app>-tls
-            property: tls_crt
+            property: tls.crt
         "tls.key":
           remoteRef:
             key: secret/<your-app>-tls
-            property: tls_key
+            property: tls.key
 
 ingress:
   enabled: true
