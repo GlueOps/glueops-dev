@@ -46,12 +46,19 @@ In your environment's OpenBao/Vault UI (see [Managing Environment Secrets](/depl
 externalSecret:
   enabled: true
   secrets:
+    app:                                        # your existing app env secrets — keep as-is
+      dataFrom:
+        key: secret/<app_name>/<environment>
     route53-dns01:                              # creates Secret <app-name>-route53-dns01
       data:
         secret-access-key:
           remoteRef:
             key: secret/<your-app>-route53-dns01
             property: secret_access_key
+
+# Entries under `secrets` are independent — if your app already pulls its
+# environment variables through an entry like `app` above, leave it untouched
+# and add `route53-dns01` alongside it.
 
 customResourcesMap:
   dns01-issuer: |
