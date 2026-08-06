@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.25.1](https://github.com/GlueOps/glueops-dev/compare/v3.25.0...v3.25.1) (2026-08-06)
+
+
+### Bug Fixes
+
+* use tls.crt/tls.key key names consistently in certbot guide ([#541](https://github.com/GlueOps/glueops-dev/issues/541)) ([5521073](https://github.com/GlueOps/glueops-dev/commit/552107324627f0dca39ce83d9853a3412cfbae41))
+
 ## [3.25.0](https://github.com/GlueOps/glueops-dev/compare/v3.24.3...v3.25.0) (2026-08-06)
 
 
