@@ -75,6 +75,23 @@ const sidebars = {
             slug: "/custom-domain-certificates",
           },
         },
+        {
+          type: "category",
+          label: "Private Registry Credentials",
+          collapsible: true,
+          items: [
+            "deploy-applications/private-registries/registry-ecr",
+            "deploy-applications/private-registries/registry-github",
+            "deploy-applications/private-registries/registry-dockerhub",
+            "deploy-applications/private-registries/registry-quay",
+          ],
+          link: {
+            type: "generated-index",
+            title: "Private Registry Credentials",
+            description: "Pull images from private container registries — AWS ECR, GitHub Container Registry, Docker Hub, and Quay.",
+            slug: "/private-registry-credentials",
+          },
+        },
       ],
       link: {
         type: "generated-index",
