@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.26.0](https://github.com/GlueOps/glueops-dev/compare/v3.25.1...v3.26.0) (2026-08-11)
+
+
+### Features
+
+* add Private Registry Credentials documentation ([#548](https://github.com/GlueOps/glueops-dev/issues/548)) ([6e53b09](https://github.com/GlueOps/glueops-dev/commit/6e53b098f9334e3d3c6ac5eefe7c365c03980fcc))
+
+
+### Miscellaneous Chores
+
+* **fallback:** update node ([#539](https://github.com/GlueOps/glueops-dev/issues/539)) ([24e04a6](https://github.com/GlueOps/glueops-dev/commit/24e04a67e8a5f6250e7d51cc7ff1ca2372727c1d))
+* lock file maintenance ([#538](https://github.com/GlueOps/glueops-dev/issues/538)) ([e91c2e2](https://github.com/GlueOps/glueops-dev/commit/e91c2e210cf29f4f725c8856f885b779678bf13d))
+* **patch:** update @docusaurus/core to 3.10.2 #patch ([#545](https://github.com/GlueOps/glueops-dev/issues/545)) ([a3993ef](https://github.com/GlueOps/glueops-dev/commit/a3993ef3ae887823028d1e31a6adb7b3d4759864))
+
 ## [3.25.1](https://github.com/GlueOps/glueops-dev/compare/v3.25.0...v3.25.1) (2026-08-06)
 
 
