@@ -186,6 +186,8 @@ Same as the per-app pattern, but scope the pull actions to **every** repository 
 }
 ```
 
+Attach it to a dedicated IAM user (e.g. `image-pull-cluster`) and create an access key.
+
 ### Step 2 — Upload the key pair to your vault
 
 Store the AWS keys once, at a shared path:
@@ -311,6 +313,8 @@ Use the same dedicated `aws-ecr-iam` app, but render **one chain per credential*
 - **`vaultPath` = account** — environments that share an AWS account point at the **same** `vaultPath` (they still each get their own distinctly-named secret); environments on different accounts point at different paths.
 - **N = 1 is the [shared](#one-shared-pull-secret-for-the-cluster) pattern** — if a namespace needs just one credential, use a single fixed `ecr-regcred` instead of this.
 :::
+
+**IAM:** create one scoped credential **per account** — the same `ecr:GetAuthorizationToken` + repository-pull policy shown above — each attached to its own dedicated IAM user (e.g. `image-pull-nonprod`) with an access key.
 
 **Vault:** one path per AWS account, e.g. `secret/aws-ecr-iam/nonprod/creds` and `secret/aws-ecr-iam/prod/creds`, each with `access_key_id` and `secret_access_key`. Environments sharing an account reuse the same path.
 
