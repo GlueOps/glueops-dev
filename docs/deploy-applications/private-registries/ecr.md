@@ -26,8 +26,8 @@ Pick the pattern that matches how your cluster is laid out:
 | Pattern | Use when | Pull secret |
 |---------|----------|-------------|
 | [Per-app pull secret](#per-app-pull-secret) | One app (or a few) pulls from ECR and each app manages its own credential | `<app-name>-registry-cred`, defined inside the app |
-| [One shared pull secret for the cluster](#one-shared-pull-secret-for-the-cluster) | Many apps share a namespace (or a single AWS account / ECR serves every app) | one `ecr-regcred`, created once per namespace by a dedicated app |
-| [One pull secret per environment](#one-pull-secret-per-environment) | Each environment is a **separate namespace** with its own AWS account / ECR | one `ecr-regcred` per environment namespace |
+| [One shared pull secret for the cluster](#one-shared-pull-secret-for-the-cluster) | Every app on the cluster pulls from a **single** AWS account / ECR | one `ecr-regcred`, created once by a dedicated app |
+| [Multiple pull secrets in one namespace](#multiple-pull-secrets-in-one-namespace) | A cluster needs more than one credential — multiple AWS accounts, or a separate secret per environment | a distinctly-named `ecr-regcred-<name>` per credential, all in one namespace |
 
 All three use the same `ECRAuthorizationToken` → ExternalSecret chain; they differ only in **who owns the pull secret** and **how many** there are.
 
@@ -158,7 +158,7 @@ See [Troubleshooting](#troubleshooting) if the pod shows `ImagePullBackOff`.
 
 ## One shared pull secret for the cluster
 
-When many apps share a namespace — or a single AWS account / ECR serves every app — you don't want each app carrying its own credential. Instead, a **dedicated, workload-less app** creates exactly one pull secret named `ecr-regcred` per namespace, and every other app references it by that fixed name.
+When all apps share a single AWS account / ECR serves every app — you don't want each app carrying its own credential. Instead, a **dedicated, workload-less app** creates exactly one pull secret named `ecr-regcred` for the cluster, and every other app references it by that fixed name.
 
 **Design:** an app `apps/aws-ecr-iam/` that runs no workloads. Its only job is to render the full chain once per namespace:
 
@@ -298,17 +298,21 @@ image:
   pullSecrets: ecr-regcred
 ```
 
-Any workload in a namespace that contains a secret named `ecr-regcred` now pulls private ECR images with no further configuration. Individual apps can still override `image.pullSecrets` if they need a different credential.
+Any workload in the cluster that contains a secret named `ecr-regcred` now pulls private ECR images with no further configuration. Individual apps can still override `image.pullSecrets` if they need a different credential.
 
-## One pull secret per environment
+## Multiple pull secrets in one namespace
 
-When each environment is a **separate namespace (or cluster) with its own AWS account / ECR**, `prod` and `stage` need *different* credentials. Use the same dedicated-app design as above, but move the per-environment scalars — the vault path and region — into each environment's values file so the chain stays DRY in `base`.
+A single cluster (one namespace) can hold **more than one** ECR pull secret. You need this when the cluster pulls from **multiple AWS accounts**, and you may *choose* it when you want a **separate credential per environment** even if they share an account. Because Secrets are namespace-scoped by name, the only hard rule is that each pull secret has a **distinct name**; every app then selects the one it needs with `image.pullSecrets`.
 
-:::warning Requires isolated namespaces
-This pattern only works when each environment's release lands in **its own namespace** — which in GlueOps normally means each environment is a **separate cluster with its own captain domain**, so its namespace is that domain's first label (`prod`, `stage`, …). If two environments resolve to the **same** namespace, both releases write the same fixed-name `ecr-regcred` and will fight over ownership. In that case use the [shared](#one-shared-pull-secret-for-the-cluster) pattern instead.
+Use the same dedicated `aws-ecr-iam` app, but render **one chain per credential**, keyed by a name you choose. The `vaultPath` picks which AWS account the credential comes from; the `name` is just a unique label within the namespace. Keep the chain DRY in `base` and supply `name`, `region`, and `vaultPath` from each environment's values file.
+
+:::note Distinct names; `vaultPath` selects the account
+- **Distinct names, one namespace** — parameterize with `.Values.ecr.name` (below) so each release produces `ecr-regcred-<name>`. Two chains writing the **same** name would fight over one secret.
+- **`vaultPath` = account** — environments that share an AWS account point at the **same** `vaultPath` (they still each get their own distinctly-named secret); environments on different accounts point at different paths.
+- **N = 1 is the [shared](#one-shared-pull-secret-for-the-cluster) pattern** — if a namespace needs just one credential, use a single fixed `ecr-regcred` instead of this.
 :::
 
-**Vault:** per-environment paths, e.g. `secret/aws-ecr-iam/prod/creds` and `secret/aws-ecr-iam/stage/creds`, each with `access_key_id` and `secret_access_key`.
+**Vault:** one path per AWS account, e.g. `secret/aws-ecr-iam/nonprod/creds` and `secret/aws-ecr-iam/prod/creds`, each with `access_key_id` and `secret_access_key`. Environments sharing an account reuse the same path.
 
 **`apps/aws-ecr-iam/base/base-values.yaml`** — the chain, parameterized with `.Values.ecr.*`:
 
@@ -329,7 +333,7 @@ customResourcesMap:
     apiVersion: external-secrets.io/v1
     kind: ExternalSecret
     metadata:
-      name: aws-ecr-iam-creds
+      name: aws-ecr-iam-creds-{{ .Values.ecr.name }}
       namespace: {{ include "app.namespace" $ }}
     spec:
       refreshInterval: 1h
@@ -337,7 +341,7 @@ customResourcesMap:
         kind: ClusterSecretStore
         name: vault-backend
       target:
-        name: aws-ecr-iam-creds
+        name: aws-ecr-iam-creds-{{ .Values.ecr.name }}
         creationPolicy: Owner
       data:
         - secretKey: access_key_id
@@ -352,28 +356,28 @@ customResourcesMap:
     apiVersion: generators.external-secrets.io/v1alpha1
     kind: ECRAuthorizationToken
     metadata:
-      name: ecr-regcred-token
+      name: ecr-regcred-token-{{ .Values.ecr.name }}
       namespace: {{ include "app.namespace" $ }}
     spec:
       region: {{ .Values.ecr.region }}
       auth:
         secretRef:
           accessKeyIDSecretRef:
-            name: aws-ecr-iam-creds
+            name: aws-ecr-iam-creds-{{ .Values.ecr.name }}
             key: access_key_id
           secretAccessKeySecretRef:
-            name: aws-ecr-iam-creds
+            name: aws-ecr-iam-creds-{{ .Values.ecr.name }}
             key: secret_access_key
   ecr-pull-secret: |
     apiVersion: external-secrets.io/v1
     kind: ExternalSecret
     metadata:
-      name: ecr-regcred
+      name: ecr-regcred-{{ .Values.ecr.name }}
       namespace: {{ include "app.namespace" $ }}
     spec:
       refreshInterval: 6h
       target:
-        name: ecr-regcred
+        name: ecr-regcred-{{ .Values.ecr.name }}
         creationPolicy: Owner
         template:
           type: kubernetes.io/dockerconfigjson
@@ -393,30 +397,36 @@ customResourcesMap:
             generatorRef:
               apiVersion: generators.external-secrets.io/v1alpha1
               kind: ECRAuthorizationToken
-              name: ecr-regcred-token
+              name: ecr-regcred-token-{{ .Values.ecr.name }}
 ```
 
-**`apps/aws-ecr-iam/envs/prod/values.yaml`**
+**`apps/aws-ecr-iam/envs/uat/values.yaml`** — `name` suffixes every resource, so this produces `ecr-regcred-uat`:
 
 ```yaml
 ecr:
-  region: YOUR_PROD_REGION
-  vaultPath: secret/aws-ecr-iam/prod/creds
+  name: uat
+  region: YOUR_REGION
+  vaultPath: secret/aws-ecr-iam/nonprod/creds
 ```
 
-**`apps/aws-ecr-iam/envs/stage/values.yaml`**
+**`apps/aws-ecr-iam/envs/test/values.yaml`** — produces `ecr-regcred-test` from the **same** account (shared creds, separate secret):
 
 ```yaml
 ecr:
-  region: YOUR_STAGE_REGION
-  vaultPath: secret/aws-ecr-iam/stage/creds
+  name: test
+  region: YOUR_REGION
+  vaultPath: secret/aws-ecr-iam/nonprod/creds
 ```
 
-:::note Two templating layers
-`{{ .Values.ecr.region }}` and `{{ .Values.ecr.vaultPath }}` are resolved by **Helm** at render time (the chart runs `tpl` over `customResourcesMap`). The `.dockerconfigjson` block stays wrapped in a Helm raw string so its `{{ }}` reach **external-secrets** untouched. Both live in the same block without interfering.
+:::tip One regcred or many?
+`uat` and `test` share an account here, so giving them separate secrets is a **choice**, not a requirement — they could instead share a single one (the [shared](#one-shared-pull-secret-for-the-cluster) pattern). And an environment on a **separate cluster** (its own namespace and account — e.g. an isolated `prod`) just uses the shared pattern there with a plain `ecr-regcred`; distinct names are only needed when several credentials live in the **same** namespace.
 :::
 
-Then reference `ecr-regcred` from every app exactly as in the [shared pattern](#one-shared-pull-secret-for-the-cluster) — set `image.pullSecrets: ecr-regcred` in `common/common-values.yaml`.
+:::note Two templating layers
+`{{ .Values.ecr.name }}`, `{{ .Values.ecr.region }}`, and `{{ .Values.ecr.vaultPath }}` are resolved by **Helm** at render time (the chart runs `tpl` over `customResourcesMap`). The `.dockerconfigjson` block stays wrapped in a Helm raw string so its `{{ }}` reach **external-secrets** untouched. Both live in the same block without interfering.
+:::
+
+Then point each app at the credential it needs — set `image.pullSecrets: ecr-regcred-<name>` (e.g. `ecr-regcred-uat`) in that app's values, rather than the cluster-wide `common/common-values.yaml`.
 
 ## Troubleshooting
 
@@ -425,7 +435,7 @@ If the pod shows **`ImagePullBackOff`**, or the pull-secret ExternalSecret is un
 - `AccessDenied` / `UnrecognizedClientException` on the ExternalSecret — the IAM key pair is wrong, or the policy is missing `ecr:GetAuthorizationToken`.
 - Pod pulls fail with `403 Forbidden` — the policy's repository ARN doesn't cover the image you're pulling.
 - `SecretSyncedError` mentioning template — the double-brace escaping was altered; restore it exactly.
-- `pull secret ... not found` — `image.pullSecrets` doesn't match the pull secret's name (`<app-name>-registry-cred` for the per-app pattern, `ecr-regcred` for the shared and per-environment patterns).
+- `pull secret ... not found` — `image.pullSecrets` doesn't match the pull secret's name (`<app-name>-registry-cred` for the per-app pattern, `ecr-regcred` for the shared pattern, `ecr-regcred-<name>` when a namespace holds multiple secrets).
 
 :::caution One owner per secret
 Exactly one source of truth may manage a given pull secret. When migrating away from a separate config repo, remove that repo's `ecr-regcred` definition in the same window you introduce this one, or external-secrets and Argo CD will contend for ownership. A brief image-pull blip is expected while the secret is (re)generated.
