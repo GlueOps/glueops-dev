@@ -16,7 +16,7 @@ Deploy applications whose images live in a **private Amazon ECR** repository. EC
 The token generator and the pull-secret ExternalSecret are always deployed through the chart's **`customResourcesMap`** passthrough (not the built-in `externalSecret:` block). The built-in block prefixes secret names (`<app-name>-<key>`) and produces `Opaque` secrets — but a Kubernetes image pull secret must have a **fixed name** and the **`kubernetes.io/dockerconfigjson`** type, which only the raw manifest gives you.
 
 :::note Which namespace?
-The `namespace: {{ include "app.namespace" $ }}` field in the manifests below resolves to your environment's namespace automatically — the **first label of your cluster's [captain domain](/glueops-captain-domain)** (the namespace is `prod` on a cluster reached at `prod.<tenant>.onglueops.com`, `nonprod` at `nonprod.<tenant>.onglueops.com`, and so on). It is never hardcoded to `prod` — leave the `include` expression as-is and it works on every cluster.
+The `namespace: {{ include "app.namespace" $ }}` field in the manifests below resolves to your environment's namespace automatically — the **first label of your cluster's [captain domain](/glueops-captain-domain)** (for example, `prod` or `nonprod`). It is never hardcoded — leave the `include` expression as-is and it works on every cluster.
 :::
 
 ## Choosing a pattern
