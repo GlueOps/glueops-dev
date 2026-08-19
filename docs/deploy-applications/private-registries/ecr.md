@@ -158,7 +158,7 @@ See [Troubleshooting](#troubleshooting) if the pod shows `ImagePullBackOff`.
 
 ## One shared pull secret for the cluster
 
-When all apps share a single AWS account / ECR serves every app — you don't want each app carrying its own credential. Instead, a **dedicated, workload-less app** creates exactly one pull secret named `ecr-regcred` for the cluster, and every other app references it by that fixed name.
+When every app on the cluster pulls from a **single** AWS account / ECR, you don't want each app carrying its own credential. Instead, a **dedicated, workload-less app** creates exactly one pull secret named `ecr-regcred` for the cluster, and every other app references it by that fixed name.
 
 **Design:** an app `apps/aws-ecr-iam/` that runs no workloads. Its only job is to render the full chain once per namespace:
 
