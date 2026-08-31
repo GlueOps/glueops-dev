@@ -43,6 +43,7 @@ const sidebars = {
             "deploy-applications/traefik/traefik-middleware-ip-allowlist",
             "deploy-applications/traefik/traefik-middleware-ratelimit",
             "deploy-applications/traefik/traefik-middleware-basicauth",
+            "deploy-applications/traefik/traefik-middleware-forwardauth-github",
             "deploy-applications/traefik/traefik-canary-cookie",
             "deploy-applications/traefik/traefik-sticky-ingressroute",
             "deploy-applications/traefik/traefik-canary-sticky",
