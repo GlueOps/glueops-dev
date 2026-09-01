@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.27.0](https://github.com/GlueOps/glueops-dev/compare/v3.26.0...v3.27.0) (2026-09-01)
+
+
+### Features
+
+* **traefik:** add Login with GitHub (forward auth) guide ([#569](https://github.com/GlueOps/glueops-dev/issues/569)) ([0502f60](https://github.com/GlueOps/glueops-dev/commit/0502f60933faa2b7d1cee742e616103cd839dac4))
+* update docker/login-action to v4.5.0 #minor ([#554](https://github.com/GlueOps/glueops-dev/issues/554)) ([611a631](https://github.com/GlueOps/glueops-dev/commit/611a631eefe3fd2fc3c11b819846c26f3b243b3a))
+* update docker/login-action to v4.6.0 #minor ([#565](https://github.com/GlueOps/glueops-dev/issues/565)) ([582a7dd](https://github.com/GlueOps/glueops-dev/commit/582a7dd068953ca86ea8a181d20cefd9384cec0c))
+* update npm to 11.19.0 #minor ([#567](https://github.com/GlueOps/glueops-dev/issues/567)) ([46a4707](https://github.com/GlueOps/glueops-dev/commit/46a4707c72f24d15aa2cb41bddeaa24712275afd))
+
+
+### Miscellaneous Chores
+
+* **fallback:** update nginx ([#550](https://github.com/GlueOps/glueops-dev/issues/550)) ([3a69ffd](https://github.com/GlueOps/glueops-dev/commit/3a69ffde46fc58696cf3afa0dbd7631f84b7f9f2))
+* **fallback:** update node ([#559](https://github.com/GlueOps/glueops-dev/issues/559)) ([f4dfea9](https://github.com/GlueOps/glueops-dev/commit/f4dfea9ff92eb0ea02d6a296d9867c362a4cdfb8))
+* **fallback:** update node ([#564](https://github.com/GlueOps/glueops-dev/issues/564)) ([65b446e](https://github.com/GlueOps/glueops-dev/commit/65b446ec2714e2738d6f85448240d6ffbd41264b))
+* lock file maintenance ([#547](https://github.com/GlueOps/glueops-dev/issues/547)) ([85d2469](https://github.com/GlueOps/glueops-dev/commit/85d24690f558d19d75ba9c7d404f7681f8c2da5e))
+* lock file maintenance ([#553](https://github.com/GlueOps/glueops-dev/issues/553)) ([38c1ae5](https://github.com/GlueOps/glueops-dev/commit/38c1ae55c42d336505561dfc0219445d2c01c123))
+* lock file maintenance ([#555](https://github.com/GlueOps/glueops-dev/issues/555)) ([730027b](https://github.com/GlueOps/glueops-dev/commit/730027b5d9220091ee8b38438471b36c30f3293d))
+* lock file maintenance ([#557](https://github.com/GlueOps/glueops-dev/issues/557)) ([196cc61](https://github.com/GlueOps/glueops-dev/commit/196cc61280e8ebe437974f4de3bb308894e68b71))
+* lock file maintenance ([#561](https://github.com/GlueOps/glueops-dev/issues/561)) ([601f1e3](https://github.com/GlueOps/glueops-dev/commit/601f1e3a3da3e0134e0f94339e8576381cd2f6c4))
+* lock file maintenance ([#563](https://github.com/GlueOps/glueops-dev/issues/563)) ([d708fbf](https://github.com/GlueOps/glueops-dev/commit/d708fbf40cff3cc721c93744153a0acedff609cd))
+* lock file maintenance ([#566](https://github.com/GlueOps/glueops-dev/issues/566)) ([f911cfb](https://github.com/GlueOps/glueops-dev/commit/f911cfbdf22cd246ee50af422b02febdd1f4bf35))
+* **patch:** update docker/login-action to v4.5.1 #patch ([#556](https://github.com/GlueOps/glueops-dev/issues/556)) ([bdf130c](https://github.com/GlueOps/glueops-dev/commit/bdf130c183603cda79f13ba8085aedb895649dc4))
+* **patch:** update docker/login-action to v4.5.2 #patch ([#562](https://github.com/GlueOps/glueops-dev/issues/562)) ([374194e](https://github.com/GlueOps/glueops-dev/commit/374194e78426a87346c1fd016c9f22af1b4d4771))
+* **patch:** update node to v24.18.1 #patch ([#560](https://github.com/GlueOps/glueops-dev/issues/560)) ([1ed06c9](https://github.com/GlueOps/glueops-dev/commit/1ed06c951d38434c51c3a1099346194710a8ccd8))
+* **patch:** update react to 19.2.8 #patch ([#551](https://github.com/GlueOps/glueops-dev/issues/551)) ([edbdf66](https://github.com/GlueOps/glueops-dev/commit/edbdf66fbd796cfa5c35e6886a53962894e95b8a))
+
 ## [3.26.0](https://github.com/GlueOps/glueops-dev/compare/v3.25.1...v3.26.0) (2026-08-11)
 
 
