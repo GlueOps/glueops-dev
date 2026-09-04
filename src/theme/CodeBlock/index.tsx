@@ -1,17 +1,11 @@
 import React from 'react';
 import OriginalCodeBlock from '@theme-original/CodeBlock';
 import { useCaptainDomain } from '@site/src/contexts/CaptainDomainContext';
-
-const SENTINEL = 'CAPTAIN_DOMAIN';
-// First label of the captain domain is the environment namespace
-// (e.g. "nonprod" in nonprod.tenant.onglueops.com).
-const NAMESPACE_SENTINEL = 'CAPTAIN_NAMESPACE';
+import { replaceCaptainSentinels } from '@site/src/utils/captainDomain';
 
 function replaceDomain(content: unknown, captainDomain: string): unknown {
   if (typeof content === 'string') {
-    return content
-      .replaceAll(NAMESPACE_SENTINEL, captainDomain.split('.')[0] || '')
-      .replaceAll(SENTINEL, captainDomain);
+    return replaceCaptainSentinels(content, captainDomain);
   }
   return content;
 }

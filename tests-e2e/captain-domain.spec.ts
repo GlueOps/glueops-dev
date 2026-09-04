@@ -11,6 +11,7 @@ const PAGES = {
   clusterDomains: '/glueops-captain-domain',
   introduction: '/introduction',
   accessCluster: '/deploy-applications/access-cluster-with-kubectl',
+  forwardAuthGithub: '/deploy-applications/traefik/traefik-middleware-forwardauth-github',
 };
 
 const DEFAULT_NAMESPACE = DEFAULT_DOMAIN.split('.')[0]; // first label, e.g. "nonprod"
@@ -299,5 +300,48 @@ test.describe('Captain Domain Feature', () => {
 
     // The prose span should now show the custom domain
     await expect(proseSpan).toHaveText('staging.myorg.onglueops.rocks');
+  });
+
+  test('inline code spans replace the CAPTAIN_DOMAIN sentinel', async ({ page }) => {
+    await gotoAndWait(page, PAGES.forwardAuthGithub);
+
+    // Inline code is <code> outside a <pre>; those are handled by CaptainDomainCode
+    const inlineCode = page.locator('code:not(pre code)');
+    await expect.poll(async () => inlineCode.count(), { timeout: 15000 }).toBeGreaterThan(0);
+
+    const texts = await inlineCode.allTextContents();
+    for (const text of texts) {
+      expect(text, 'Raw sentinel found in inline code').not.toContain('CAPTAIN_DOMAIN');
+      expect(text, 'Raw sentinel found in inline code').not.toContain('CAPTAIN_NAMESPACE');
+    }
+    expect(texts.some((t) => t.includes(DEFAULT_DOMAIN))).toBe(true);
+    expect(texts.some((t) => t.includes(`-n ${DEFAULT_NAMESPACE}`))).toBe(true);
+  });
+
+  test('inline code spans update with a custom domain', async ({ page }) => {
+    await gotoAndWait(page, PAGES.forwardAuthGithub);
+
+    const input = page.locator('#captain-domain-input');
+    await input.click();
+    await input.fill('staging.acme.onglueops.rocks');
+    await input.press('Enter');
+
+    const inlineCode = page.locator('code:not(pre code)');
+    await expect
+      .poll(async () => (await inlineCode.allTextContents()).some((t) => t.includes('staging.acme.onglueops.rocks')), {
+        timeout: 10000,
+      })
+      .toBe(true);
+
+    const texts = await inlineCode.allTextContents();
+    expect(texts.some((t) => t.includes('-n staging'))).toBe(true);
+    expect(texts.some((t) => t.includes(DEFAULT_DOMAIN))).toBe(false);
+  });
+
+  test('inline Helm expressions are NOT replaced', async ({ page }) => {
+    await gotoAndWait(page, PAGES.forwardAuthGithub);
+
+    const texts = await page.locator('code:not(pre code)').allTextContents();
+    expect(texts.some((t) => t.includes('.Values.captain_domain'))).toBe(true);
   });
 });
