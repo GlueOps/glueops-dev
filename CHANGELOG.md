@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.29.0](https://github.com/GlueOps/glueops-dev/compare/v3.28.0...v3.29.0) (2026-09-04)
+
+
+### Features
+
+* **captain-domain:** populate CAPTAIN_DOMAIN in inline code ([#575](https://github.com/GlueOps/glueops-dev/issues/575)) ([b28950d](https://github.com/GlueOps/glueops-dev/commit/b28950df96dc665ed9e6f7ae700c07a2980ffeea))
+* update node to v24.19.0 #minor ([#572](https://github.com/GlueOps/glueops-dev/issues/572)) ([228ab27](https://github.com/GlueOps/glueops-dev/commit/228ab2772a0abd7cb207d57c853139abd7ea68be))
+
+
+### Miscellaneous Chores
+
+* lock file maintenance ([#568](https://github.com/GlueOps/glueops-dev/issues/568)) ([0c8d1ac](https://github.com/GlueOps/glueops-dev/commit/0c8d1ac3376164ec17e65ddc250bf274d5f0af48))
+
 ## [3.28.0](https://github.com/GlueOps/glueops-dev/compare/v3.27.1...v3.28.0) (2026-09-01)
 
 
