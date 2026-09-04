@@ -2,6 +2,7 @@ import React from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
 import { useCaptainDomain } from '@site/src/contexts/CaptainDomainContext';
 import CaptainDomainLink from '@site/src/components/CaptainDomainLink';
+import CaptainDomainCode from '@site/src/components/CaptainDomainCode';
 
 function CaptainDomain() {
   const { captainDomain, isDefault } = useCaptainDomain();
@@ -35,6 +36,7 @@ function CaptainDomainPart({ segment }: { segment: 'cluster' | 'tenant' | 'tld' 
 
 export default {
   ...MDXComponents,
+  code: CaptainDomainCode,
   CaptainDomain,
   CaptainDomainPart,
   CaptainDomainLink,

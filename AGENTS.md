@@ -106,6 +106,8 @@ The site has a dynamic domain replacement feature that lets readers type their c
 | Navbar Input | `src/theme/NavbarItem/CaptainDomainInput.tsx` | Text input widget in the navbar |
 | Navbar Registration | `src/theme/NavbarItem/ComponentTypes.tsx` | Registers `custom-captainDomainInput` navbar item type |
 | CodeBlock Swizzle | `src/theme/CodeBlock/index.tsx` | Replaces `CAPTAIN_DOMAIN` sentinel in code fences |
+| Inline Code Component | `src/components/CaptainDomainCode.tsx` | Replaces the same sentinels in inline `code` spans (prose, tables, admonitions) |
+| Sentinel Helper | `src/utils/captainDomain.ts` | Shared sentinel constants and replacement used by both |
 | MDX Component | `src/theme/MDXComponents.tsx` | Exports `<CaptainDomain />` for prose usage and `<CaptainDomainLink />` for clickable domain URLs |
 | MDX Link Component | `src/components/CaptainDomainLink.tsx` | Renders clickable `<a>` when domain is customized, styled text with tooltip when default |
 | Styles | `src/css/custom.css` | Styles for navbar widget, inline component, and link component |
@@ -114,7 +116,8 @@ The site has a dynamic domain replacement feature that lets readers type their c
 
 | Pattern | Where to use | How it works |
 |---------|--------------||--------------|
-| `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) | CodeBlock swizzle replaces it reactively |
+| `CAPTAIN_DOMAIN` | Inside code fences (` ``` `) **and inline code spans** | CodeBlock swizzle (fences) and `CaptainDomainCode` (inline) replace it reactively |
+| `CAPTAIN_NAMESPACE` | Same places — renders the environment namespace (first label of the domain) | Replaced reactively alongside `CAPTAIN_DOMAIN` |
 | `<CaptainDomain />` | Inline prose text (bare domain names, not clickable) | MDX component renders the current domain |
 | `<CaptainDomainLink to="https://sub.{domain}" />` | `https://` URLs in prose that readers should visit | Clickable link when domain is customized, styled text with tooltip when default |
 | `<CaptainDomainPart segment="cluster\|tenant\|tld" />` | Inline prose — individual segment of the captain domain | MDX component splits the domain and renders the requested segment (`cluster`, `tenant`, or `tld`) |
@@ -126,7 +129,8 @@ Any doc file that uses the `<CaptainDomain />`, `<CaptainDomainLink />`, or `<Ca
 
 ### Writing Guidelines
 
-- **Code fences:** Write `CAPTAIN_DOMAIN` as a raw sentinel. The swizzled CodeBlock replaces it with the user's domain automatically.
+- **Code fences and inline code:** Write `CAPTAIN_DOMAIN` (or `CAPTAIN_NAMESPACE`) as a raw sentinel. It is replaced with the reader's domain in both fenced blocks and inline backticks, including inside tables and admonition titles.
+- **Referring to the sentinel itself:** Because inline code is replaced too, do not put the raw token in backticks when writing *about* it in a doc page — it will render as a domain. Word the sentence to avoid it (e.g. "write the domain out in full").
 - **Prose text (domain names):** Use `<CaptainDomain />`. Example: `Your domain is <CaptainDomain />.`
 - **Prose text (clickable URLs):** Use `<CaptainDomainLink to="https://sub.{domain}/path" />` for any `https://` URL the reader should visit. Optional `children` override the link text: `<CaptainDomainLink to="https://argocd.{domain}">ArgoCD dashboard</CaptainDomainLink>`.
 - **Helm templates:** Use `{{ .Values.captain_domain }}` — this is a real Helm expression and must not be replaced.

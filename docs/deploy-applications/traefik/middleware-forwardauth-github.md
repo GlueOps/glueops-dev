@@ -27,7 +27,7 @@ The session lives in a cookie scoped to a parent domain, which is why one auth p
 - Permission to create an OAuth App in your GitHub organization.
 - Write access to your environment's secret store — see [Manage Environment Secrets](../manage-environment-secrets).
 
-Throughout this guide, `CAPTAIN_DOMAIN` is your [captain domain](../../glueops-captain-domain) and `CAPTAIN_NAMESPACE` is your environment namespace — the first label of your captain domain. For `nonprod.example.onglueops.com`, the namespace is `nonprod`.
+Domains and namespaces throughout this guide fill in from the **Captain Domain** box in the navigation bar. Set it to your [captain domain](../../glueops-captain-domain) and every example below matches your environment. Your environment namespace is the first label of that domain — for `nonprod.example.onglueops.com`, the namespace is `nonprod`.
 
 ## Step 1 — Register a GitHub OAuth App
 
@@ -313,7 +313,7 @@ customResourcesMap:
 </TabItem>
 </Tabs>
 
-:::warning Replace `CAPTAIN_DOMAIN` literally in the environment variables
+:::warning Write the domain out in full in the environment variables
 Values under `deployment.envVariables` are **not** template-rendered, unlike `ingress` hostnames and `customResources`, which are. Writing `{{ .Values.captain_domain }}` in an environment variable passes that text to oauth2-proxy unchanged, and every login silently redirect-loops. Type the domain out in full, and check it matches the ingress hostname above it.
 :::
 
