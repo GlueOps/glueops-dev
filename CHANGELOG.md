@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.30.0](https://github.com/GlueOps/glueops-dev/compare/v3.29.0...v3.30.0) (2026-09-18)
+
+
+### Features
+
+* update docker/setup-buildx-action to v4.3.0 #minor ([#576](https://github.com/GlueOps/glueops-dev/issues/576)) ([6efbe05](https://github.com/GlueOps/glueops-dev/commit/6efbe05b30dc375c2fb2976e27c5eadb805d1f48))
+
 ## [3.29.0](https://github.com/GlueOps/glueops-dev/compare/v3.28.0...v3.29.0) (2026-09-04)
 
 
