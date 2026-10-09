@@ -37,6 +37,7 @@ const sidebars = {
             "deploy-applications/traefik/traefik-overview",
             "deploy-applications/traefik/traefik-standard-ingress",
             "deploy-applications/traefik/traefik-basic-ingressroute",
+            "deploy-applications/traefik/expose-kubeapi-server",
             "deploy-applications/traefik/traefik-path-routing",
             "deploy-applications/traefik/traefik-multiple-ingressroutes",
             "deploy-applications/traefik/traefik-middleware-headers",
