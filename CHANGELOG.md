@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.30.0](https://github.com/GlueOps/glueops-dev/compare/v3.29.0...v3.30.0) (2026-10-09)
+
+
+### Features
+
+* update docker/setup-buildx-action to v4.3.0 #minor ([#576](https://github.com/GlueOps/glueops-dev/issues/576)) ([6efbe05](https://github.com/GlueOps/glueops-dev/commit/6efbe05b30dc375c2fb2976e27c5eadb805d1f48))
+* update node to v24.20.0 #minor ([#578](https://github.com/GlueOps/glueops-dev/issues/578)) ([f53d03d](https://github.com/GlueOps/glueops-dev/commit/f53d03d6defbfec9864d3d65ad978078282fa463))
+* update node to v24.21.0 #minor ([#580](https://github.com/GlueOps/glueops-dev/issues/580)) ([4af9572](https://github.com/GlueOps/glueops-dev/commit/4af9572931e32e8a898229bc0f2479e9e816b48f))
+
+
+### Miscellaneous Chores
+
+* **lockfile:** update react-lockfile #patch ([#581](https://github.com/GlueOps/glueops-dev/issues/581)) ([c0db241](https://github.com/GlueOps/glueops-dev/commit/c0db24117a127bfd0d901502aa1b9e8a6c4b9c17))
+* **patch:** update npm to 11.19.1 #patch ([#579](https://github.com/GlueOps/glueops-dev/issues/579)) ([7d6049b](https://github.com/GlueOps/glueops-dev/commit/7d6049b5bca56c9e3cf53fbae9d91d4ccecf3aae))
+
 ## [3.29.0](https://github.com/GlueOps/glueops-dev/compare/v3.28.0...v3.29.0) (2026-09-04)
 
 
