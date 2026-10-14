@@ -34,7 +34,7 @@ const buildSummary = `${buildRef}@${buildShaShort} | ${buildTimestampUtc}`;
 const config = {
   title: "GlueOps",
   tagline: "Dataops and Devops platform",
-  url: process.env.CONFIG_URL || "https://localhost/",
+  url: process.env.CONFIG_URL || "https://docs.glueops.dev",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
