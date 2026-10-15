@@ -36,7 +36,7 @@ There are two Dockerfiles for different purposes. Both expose port 80.
 
 - **`Dockerfile`** — Multi-stage build. Stage 1 installs dependencies and runs `yarn build` to produce static HTML. Stage 2 copies the output into an nginx container with `nginx.conf` for serving. This is what CI builds and deploys.
 - **`Dockerfile.dev`** — Single-stage build. Runs the Docusaurus dev server (`yarn start`) for local development with hot module reloading. Mount your source code as a volume for live reload.
-- **`nginx.conf`** — Nginx server config used by the production container. Includes `try_files` fallback for client-side routing, gzip compression, and static asset caching.
+- **`nginx.conf`** — Nginx server config used by the production container. Serves each route's own built HTML file (`/foo` → `foo.html`, a real 404 for anything else), redirects `/foo/` to `/foo`, emits relative redirects so https is kept behind the ingress, gzip compression, and static asset caching. Every URL in `sitemap.xml` should answer 200 from the production image.
 
 ## Adding a New Documentation Page — Checklist
 
