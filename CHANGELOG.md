@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.31.0](https://github.com/GlueOps/glueops-dev/compare/v3.30.0...v3.31.0) (2026-10-16)
+
+
+### Features
+
+* update docker/build-push-action to v7.4.0 #minor ([#583](https://github.com/GlueOps/glueops-dev/issues/583)) ([666a55e](https://github.com/GlueOps/glueops-dev/commit/666a55ef2342e3a9e0e6ecdd364775c5c739d3ba))
+* update docker/setup-buildx-action to v4.4.0 #minor ([#586](https://github.com/GlueOps/glueops-dev/issues/586)) ([11fa02b](https://github.com/GlueOps/glueops-dev/commit/11fa02bff9f2de99688ee3433af3e2f34cd2c18c))
+
+
+### Miscellaneous Chores
+
+* **patch:** update docker/setup-buildx-action to v4.4.1 #patch ([#587](https://github.com/GlueOps/glueops-dev/issues/587)) ([57e241b](https://github.com/GlueOps/glueops-dev/commit/57e241b489738355db759f2ee8718c3491f5586d))
+
 ## [3.30.0](https://github.com/GlueOps/glueops-dev/compare/v3.29.0...v3.30.0) (2026-10-15)
 
 
