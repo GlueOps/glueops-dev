@@ -14,7 +14,7 @@ ENV REACT_APP_BUILD_SHA=$BUILD_SHA
 ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 RUN yarn build
 
-FROM nginx:alpine-slim@sha256:21b879af516e3db2304ed74fac51f9f058a619416c3600a21387fa7f7d6930d7
+FROM nginx:alpine-slim@sha256:858c48843bd53b3f72487a2156071c63954b8e3de4882aeb11efcd92717dd261
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
