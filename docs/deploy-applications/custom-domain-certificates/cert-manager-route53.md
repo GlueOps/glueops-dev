@@ -7,7 +7,7 @@ title: "Automated Certificates with cert-manager (Route53)"
 
 Issue and **automatically renew** Let's Encrypt certificates — including wildcards — for a domain whose DNS is hosted in your own AWS Route53 account. Everything runs inside your application's namespace using the standard app Helm chart: no platform changes, and your AWS credential is only readable by your own workloads.
 
-This guide uses Route53. The same pattern works for any [DNS provider cert-manager supports natively](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers) — only the `solvers` block of the Issuer changes. Providers that require a cert-manager *webhook* (GoDaddy, OVH, and others) need a cluster-level component: [contact GlueOps](https://www.glueops.dev/contact-us) if you need one of those.
+This guide uses Route53. The same pattern works for any [DNS provider cert-manager supports natively](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers) — only the `solvers` block of the Issuer changes. Providers that require a cert-manager *webhook* (GoDaddy, OVH, and others) need a cluster-level component: [contact GlueOps](https://www.glueops.dev/#contact) if you need one of those.
 
 ## How it works
 
