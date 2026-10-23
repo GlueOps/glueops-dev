@@ -4,14 +4,6 @@
 const lightCodeTheme = require('prism-react-renderer').themes.github;
 const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 
-const getGtagID = () => {
-  // Get the tracking ID from the environment variable
-  const trackingID = process.env.GTAG_ID;
-
-  // Use the tracking ID
-  return trackingID || 'YOUR_DEFAULT_TRACKING_ID';
-};
-
 const buildInfo = {
   branch: process.env.REACT_APP_BUILD_BRANCH || "",
   tag: process.env.REACT_APP_BUILD_TAG || "",
@@ -62,10 +54,6 @@ const config = {
     },
   },
 
-  scripts: [
-    'https://cdn.glueops.dev/jsscripts/rb2b.js',
-  ],
-
   presets: [
     [
       "classic",
@@ -78,6 +66,7 @@ const config = {
           editUrl: "https://github.com/GlueOps/glueops-dev/blob/main",
           sidebarCollapsed: false,
         },
+        blog: false,
         theme: {
           customCss: [require.resolve("./src/css/custom.css"), require.resolve("./src/css/helpers.css")],
         },
@@ -86,10 +75,6 @@ const config = {
           priority: 0.5,
           ignorePatterns: ["/tags/**"],
           filename: "sitemap.xml",
-        },
-        gtag: {
-          trackingID: getGtagID(),
-          anonymizeIP: true,
         },
       }),
     ],
