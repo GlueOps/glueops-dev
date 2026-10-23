@@ -1,5 +1,37 @@
 # Changelog
 
+## [3.31.0](https://github.com/GlueOps/glueops-dev/compare/v3.30.0...v3.31.0) (2026-10-23)
+
+
+### Features
+
+* update docker/build-push-action to v7.4.0 #minor ([#583](https://github.com/GlueOps/glueops-dev/issues/583)) ([666a55e](https://github.com/GlueOps/glueops-dev/commit/666a55ef2342e3a9e0e6ecdd364775c5c739d3ba))
+* update docker/setup-buildx-action to v4.4.0 #minor ([#586](https://github.com/GlueOps/glueops-dev/issues/586)) ([11fa02b](https://github.com/GlueOps/glueops-dev/commit/11fa02bff9f2de99688ee3433af3e2f34cd2c18c))
+* update mcr.microsoft.com/playwright to v1.59.1 #minor ([#590](https://github.com/GlueOps/glueops-dev/issues/590)) ([9156bb6](https://github.com/GlueOps/glueops-dev/commit/9156bb6e269e89cedf17bf7bf65aeffd0d430f77))
+* update mcr.microsoft.com/playwright to v1.60.0 #minor ([#591](https://github.com/GlueOps/glueops-dev/issues/591)) ([7ab1c37](https://github.com/GlueOps/glueops-dev/commit/7ab1c376a7f35eee7a0deb57755eafc84771f52d))
+* update mcr.microsoft.com/playwright to v1.61.1 #minor ([#592](https://github.com/GlueOps/glueops-dev/issues/592)) ([4ba0191](https://github.com/GlueOps/glueops-dev/commit/4ba01919fcced5a4760540b7972540f686488e79))
+* update mcr.microsoft.com/playwright to v1.62.1 #minor ([#593](https://github.com/GlueOps/glueops-dev/issues/593)) ([dcf468f](https://github.com/GlueOps/glueops-dev/commit/dcf468fbb4d782cec456dc1625e4d117981bacec))
+* update mcr.microsoft.com/playwright to v1.63.0 #minor ([#594](https://github.com/GlueOps/glueops-dev/issues/594)) ([0719707](https://github.com/GlueOps/glueops-dev/commit/07197072ba514b24e567ab2c11e41797b9b6ac9d))
+* update mcr.microsoft.com/playwright to v1.64.1 #minor ([#595](https://github.com/GlueOps/glueops-dev/issues/595)) ([ed0f777](https://github.com/GlueOps/glueops-dev/commit/ed0f777c0f39381664392c99469b399fbc21339c))
+* update npm to 11.20.0 #minor ([#601](https://github.com/GlueOps/glueops-dev/issues/601)) ([2db5eb0](https://github.com/GlueOps/glueops-dev/commit/2db5eb01cbfb86a8c1284029b2c7e8a518ccf3b8))
+
+
+### Miscellaneous Chores
+
+* **fallback:** update docker/setup-qemu-action ([#585](https://github.com/GlueOps/glueops-dev/issues/585)) ([41bd3e2](https://github.com/GlueOps/glueops-dev/commit/41bd3e2dabaa44d19cb084fcca96c0f715f33995))
+* **fallback:** update mcr.microsoft.com/playwright ([#603](https://github.com/GlueOps/glueops-dev/issues/603)) ([813850b](https://github.com/GlueOps/glueops-dev/commit/813850bc7af8b64672ee71869959041c83fa0d2d))
+* **fallback:** update nginx ([#588](https://github.com/GlueOps/glueops-dev/issues/588)) ([44a8f36](https://github.com/GlueOps/glueops-dev/commit/44a8f36a8e1de4093964da987692e72030790b32))
+* **fallback:** update nginx ([#599](https://github.com/GlueOps/glueops-dev/issues/599)) ([8cfbb7a](https://github.com/GlueOps/glueops-dev/commit/8cfbb7a87bed40b517f6061dc92dc9a6d957f42f))
+* **fallback:** update node ([#589](https://github.com/GlueOps/glueops-dev/issues/589)) ([bd9614e](https://github.com/GlueOps/glueops-dev/commit/bd9614e862dc427ee5bae5ad34ba65c4cf039b1f))
+* lock file maintenance ([#574](https://github.com/GlueOps/glueops-dev/issues/574)) ([9c75455](https://github.com/GlueOps/glueops-dev/commit/9c754553ae9104e32fc5132e455d486acb47a96e))
+* lock file maintenance ([#596](https://github.com/GlueOps/glueops-dev/issues/596)) ([00398d1](https://github.com/GlueOps/glueops-dev/commit/00398d12013e92e671d0c45cdd360ca5ebfb4e83))
+* lock file maintenance ([#597](https://github.com/GlueOps/glueops-dev/issues/597)) ([4c59f8e](https://github.com/GlueOps/glueops-dev/commit/4c59f8ec7245d98edf948ed8593adc8c720e34ef))
+* lock file maintenance ([#598](https://github.com/GlueOps/glueops-dev/issues/598)) ([9387923](https://github.com/GlueOps/glueops-dev/commit/93879233136f8593de4e7f7612f6c6576a2e7687))
+* lock file maintenance ([#600](https://github.com/GlueOps/glueops-dev/issues/600)) ([83e4e92](https://github.com/GlueOps/glueops-dev/commit/83e4e9287c364120947fff388f59408c7ad67b50))
+* lock file maintenance ([#602](https://github.com/GlueOps/glueops-dev/issues/602)) ([d095ac1](https://github.com/GlueOps/glueops-dev/commit/d095ac1a071677dd0d4f0ee67b893d2d07becf53))
+* lock file maintenance ([#604](https://github.com/GlueOps/glueops-dev/issues/604)) ([9e3e069](https://github.com/GlueOps/glueops-dev/commit/9e3e06983d9f4d9f294bf64543b6b6a627d65f41))
+* **patch:** update docker/setup-buildx-action to v4.4.1 #patch ([#587](https://github.com/GlueOps/glueops-dev/issues/587)) ([57e241b](https://github.com/GlueOps/glueops-dev/commit/57e241b489738355db759f2ee8718c3491f5586d))
+
 ## [3.30.0](https://github.com/GlueOps/glueops-dev/compare/v3.29.0...v3.30.0) (2026-10-15)
 
 
