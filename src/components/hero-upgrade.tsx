@@ -11,7 +11,7 @@ import clsx from "clsx";
 import styles from "./hero-upgrade.module.css";
 import { logEvent } from "../../analytics/analytics.js";
 
-export default function HeroUpgrade(): JSX.Element {
+export default function HeroUpgrade(): React.JSX.Element {
 
 
   return (

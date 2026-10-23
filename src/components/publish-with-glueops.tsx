@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./publish-with-glueops.module.css";
 import { logEvent } from "../../analytics/analytics.js";
 
-export default function PublishWithGlueops(): JSX.Element {
+export default function PublishWithGlueops(): React.JSX.Element {
   return (
     <section className="padding-vert--xl container">
       <div className={clsx("row row--no-gutters shadow--md", styles.item)}>

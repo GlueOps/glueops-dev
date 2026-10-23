@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
 import { useCaptainDomain } from '@site/src/contexts/CaptainDomainContext';
 import { replaceCaptainSentinels } from '@site/src/utils/captainDomain';
@@ -25,7 +25,7 @@ function isInlineCode(children: ReactNode): boolean {
  * `code` spans, so prose, tables and admonitions track the reader's domain the
  * same way code fences do.
  */
-export default function CaptainDomainCode(props) {
+export default function CaptainDomainCode(props: ComponentProps<typeof OriginalCode>) {
   const { captainDomain } = useCaptainDomain();
 
   if (!isInlineCode(props.children)) {
