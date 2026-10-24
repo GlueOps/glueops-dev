@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.31.1](https://github.com/GlueOps/glueops-dev/compare/v3.31.0...v3.31.1) (2026-10-24)
+
+
+### Miscellaneous Chores
+
+* **fallback:** update nginx ([#618](https://github.com/GlueOps/glueops-dev/issues/618)) ([2712654](https://github.com/GlueOps/glueops-dev/commit/271265425753ce8dd0a70ff2bb01772a10e1a0a9))
+* lock file maintenance ([#608](https://github.com/GlueOps/glueops-dev/issues/608)) ([4b5f14f](https://github.com/GlueOps/glueops-dev/commit/4b5f14f38ece3047ce16998324f561122028d1f9))
+* lock file maintenance ([#610](https://github.com/GlueOps/glueops-dev/issues/610)) ([ef81777](https://github.com/GlueOps/glueops-dev/commit/ef8177796e303321bee142ce9bdb0f5a9c1caab5))
+* lock file maintenance ([#611](https://github.com/GlueOps/glueops-dev/issues/611)) ([155a2d2](https://github.com/GlueOps/glueops-dev/commit/155a2d23f0857d5ad1a94649f8607b0b29a22ddc))
+* lock file maintenance ([#612](https://github.com/GlueOps/glueops-dev/issues/612)) ([3c5956a](https://github.com/GlueOps/glueops-dev/commit/3c5956a8f19c2b971a674bd163e78372b56cb50e))
+* lock file maintenance ([#613](https://github.com/GlueOps/glueops-dev/issues/613)) ([b81df65](https://github.com/GlueOps/glueops-dev/commit/b81df6518e4f30d1c7e3d5a5a48aa53806b1f81b))
+* lock file maintenance ([#614](https://github.com/GlueOps/glueops-dev/issues/614)) ([5ad935b](https://github.com/GlueOps/glueops-dev/commit/5ad935b11819c0c872dfd57649ed2e49dca68903))
+* lock file maintenance ([#615](https://github.com/GlueOps/glueops-dev/issues/615)) ([5a929a7](https://github.com/GlueOps/glueops-dev/commit/5a929a7a4f9be96fe736947efd0f734d3aaafeb6))
+* lock file maintenance ([#616](https://github.com/GlueOps/glueops-dev/issues/616)) ([a60107b](https://github.com/GlueOps/glueops-dev/commit/a60107bacb4c16088b4346030d63cfe205fcabda))
+* lock file maintenance ([#617](https://github.com/GlueOps/glueops-dev/issues/617)) ([750abc5](https://github.com/GlueOps/glueops-dev/commit/750abc5af0bccb7d2e4d4303654b5905b5dcd9a9))
+
 ## [3.31.0](https://github.com/GlueOps/glueops-dev/compare/v3.30.0...v3.31.0) (2026-10-23)
 
 
