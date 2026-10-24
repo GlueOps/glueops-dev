@@ -5,7 +5,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import Head from "@docusaurus/Head";
 
-export default function Upgrade(): JSX.Element {
+export default function Upgrade(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout title="Upgrade" description="GlueOps simplifies and optimizes your business’s DevOps and DataOps, allowing for efficient management and operation.">
