@@ -15,7 +15,8 @@ import styles from "./about-glueops.module.css";
 interface Callout {
   title: string;
   text: string;
-  icon: (props: React.ComponentProps<"svg">) => JSX.Element;
+  link?: string;
+  icon: (props: React.ComponentProps<"svg">) => React.ReactNode;
 }
 
 const callouts: Callout[] = [
@@ -66,7 +67,7 @@ const callouts: Callout[] = [
   },
 ];
 
-function Callout(props: Callout): JSX.Element {
+function Callout(props: Callout): React.JSX.Element {
   return (
     <div className={clsx("margin-top--xl card shadow--lw", styles.callout)}>
       <div className="card__header">
@@ -88,7 +89,7 @@ function Callout(props: Callout): JSX.Element {
   );
 }
 
-export default function AboutGlueops(): JSX.Element {
+export default function AboutGlueops(): React.JSX.Element {
   return (
     <section className="padding-vert--xl container">
       <div className={clsx("row margin-bottom--xl", styles.hero)}>

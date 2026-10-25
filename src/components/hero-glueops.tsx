@@ -7,7 +7,7 @@ import styles from "./hero-glueops.module.css";
 import { logEvent } from "../../analytics/analytics.js";
 
 
-export default function HeroGlueops(): JSX.Element {
+export default function HeroGlueops(): React.JSX.Element {
 
   return (
     <section className="padding-vert--xl">

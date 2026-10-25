@@ -12,7 +12,7 @@ type BuildInfo = {
   summary?: string;
 };
 
-export default function Version(): JSX.Element {
+export default function Version(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   const buildInfo = (siteConfig.customFields?.buildInfo || {}) as BuildInfo;
   const branch = buildInfo.branch || "none";
