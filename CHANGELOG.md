@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.31.2](https://github.com/GlueOps/glueops-dev/compare/v3.31.1...v3.31.2) (2026-10-25)
+
+
+### Miscellaneous Chores
+
+* lock file maintenance ([#621](https://github.com/GlueOps/glueops-dev/issues/621)) ([001bb59](https://github.com/GlueOps/glueops-dev/commit/001bb59ec85b8f744714c34b98cfe315983846b6))
+
 ## [3.31.1](https://github.com/GlueOps/glueops-dev/compare/v3.31.0...v3.31.1) (2026-10-25)
 
 
