@@ -29,7 +29,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.2",
     "@types/react-copy-to-clipboard": "5.0.7",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "browserslist": {
     "production": [
