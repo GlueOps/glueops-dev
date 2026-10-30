@@ -268,7 +268,7 @@ Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) 
 |---|---|---|
 | Deployment + Service | `traefik-cloudfront-verifier-<env>` | nginx that answers `200` or `403`; 2 replicas, never on the same node |
 | PodDisruptionBudget | `traefik-cloudfront-verifier-<env>` | Keeps one verifier running during node maintenance |
-| ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | Startup script that checks the values and writes the nginx config |
+| ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | nginx main config (4 workers) and the startup script that checks the values and writes the server config |
 | ExternalSecret | `traefik-cloudfront-verifier-<env>-origin-verify` | Injects `ORIGIN_VERIFY_SECRETS` as an environment variable |
 | Middleware | `traefik-cloudfront-origin-verify` | forwardAuth to the verifier; forwards only `X-Origin-Verify` |
 | Middleware | `traefik-cloudfront-strip-header` | Removes the header before your app |
