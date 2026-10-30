@@ -199,8 +199,6 @@ customResources:
 </TabItem>
 <TabItem value="map" label="customResourcesMap (map)">
 
-`customResourcesMap` needs `app` chart 0.10.0 or later. Older charts ignore it without an error, so the middlewares are never created.
-
 **`envs/prod/values.yaml`**
 ```yaml
 deployment:
