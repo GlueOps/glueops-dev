@@ -36,16 +36,16 @@ Generate a random value:
 openssl rand -hex 32
 ```
 
-In your secret store, create the path `traefik-cloudfront-verifier/<environment>` with one key:
+In your secret store, create the path `traefik-cloudfront-verifier/<environment>` with one key. Its value is a JSON array of accepted values:
 
 ```
-ORIGIN_VERIFY_SECRET   <output of the command above>
+ORIGIN_VERIFY_SECRETS   ["<output of the command above>"]
 ```
 
-You'll paste the same value into CloudFront in Step 4. A second, optional key, `ORIGIN_VERIFY_SECRET_PREVIOUS`, is only used while [rotating the secret](#rotating-the-secret).
+You'll paste the same value (without the brackets and quotes) into CloudFront in Step 4. The array holds a second value only while [rotating the secret](#rotating-the-secret).
 
 :::warning
-Use letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the value is empty or contains any other character, including a trailing newline or space.
+Each value must be letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start unless the key is a JSON array of one or more such strings — an empty array, an empty string, or any other character stops it.
 :::
 
 ## Step 2 — Deploy the verifier
@@ -72,10 +72,6 @@ import TabItem from '@theme/TabItem';
 deployment:
   enabled: true
   replicas: 2
-  envVariables:
-    # Without this, envsubst would also replace nginx's own $variables if an env var shares the name.
-    - name: NGINX_ENVSUBST_FILTER
-      value: "^ORIGIN_VERIFY_"
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -104,7 +100,7 @@ deployment:
     - name: nginx
       configMap:
         name: '{{ include "app.name" . }}-nginx'
-        # Required: the entrypoint skips a non-executable guard, leaving guessable ${...} placeholders.
+        # Required: the entrypoint skips non-executable scripts, and nginx would then start with no config.
         defaultMode: 0755
     - name: confd
       emptyDir: {}
@@ -112,11 +108,8 @@ deployment:
       emptyDir: {}
   volumeMounts:
     - name: nginx
-      mountPath: /etc/nginx/templates
-      readOnly: true
-    - name: nginx
-      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.envsh
-      subPath: 05-require-origin-verify-secret.envsh
+      mountPath: /docker-entrypoint.d/05-origin-verify.sh
+      subPath: 05-origin-verify.sh
     - name: confd
       mountPath: /etc/nginx/conf.d
     - name: tmp
@@ -129,11 +122,9 @@ podDisruptionBudget:
   enabled: true
   minAvailable: 1
 
-# Expected header value. Write it to the secret store first, e.g.:
-#   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
-# Every key at this path becomes an env var in the verifier container. During a rotation, also
-# set ORIGIN_VERIFY_SECRET_PREVIOUS to the old value so both are accepted.
-# Values are read at startup: after changing them (or the nginx config below), run
+# Accepted header values, as a JSON array of letters-and-digits strings. Write it to the secret store first, e.g.:
+#   vault kv put secret/traefik-cloudfront-verifier/prod 'ORIGIN_VERIFY_SECRETS=["<openssl rand -hex 32>"]'
+# List two values during a rotation. Values are read at startup: after changing them, run
 #   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
 externalSecret:
   enabled: true
@@ -147,29 +138,30 @@ configMap:
   configs:
     nginx:
       data: |-
-        # Sourced before envsubst. An unset value would leave a literal "${...}" in the config as a guessable value,
-        # so PREVIOUS defaults to the current value when no rotation is in progress.
-        05-require-origin-verify-secret.envsh: |
-          case "$ORIGIN_VERIFY_SECRET" in
-            "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
-          esac
-          export ORIGIN_VERIFY_SECRET_PREVIOUS="${ORIGIN_VERIFY_SECRET_PREVIOUS:-$ORIGIN_VERIFY_SECRET}"
-          case "$ORIGIN_VERIFY_SECRET_PREVIOUS" in
-            *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET_PREVIOUS must be alphanumeric" >&2; exit 1 ;;
-          esac
-        default.conf.template: |
-          server {
-            listen 8080;
-            server_tokens off;
-            access_log off;
-            default_type text/plain;
-            location = /healthz { return 200 "ok\n"; }
-            location / {
-              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
-              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET_PREVIOUS}") { return 200; }
-              return 403 "Forbidden\n";
-            }
+        05-origin-verify.sh: |
+          #!/bin/sh
+          # Writes the nginx config at startup with one exact, case-sensitive match per accepted value.
+          set -eu
+          list=$(printf %s "${ORIGIN_VERIFY_SECRETS:-}" | tr -d '\r\n')
+          printf %s "$list" | grep -Eqx '[[:space:]]*\[[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*(,[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*)*\][[:space:]]*' || {
+            echo 'ORIGIN_VERIFY_SECRETS must be a JSON array of letters-and-digits strings, e.g. ["abc123"]' >&2
+            exit 1
           }
+          {
+            echo 'server {'
+            echo '  listen 8080;'
+            echo '  server_tokens off;'
+            echo '  access_log off;'
+            echo '  default_type text/plain;'
+            echo '  location = /healthz { return 200 "ok\n"; }'
+            echo '  location / {'
+            printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | tr -d '"' | while read -r v; do
+              echo "    if (\$http_x_origin_verify = \"$v\") { return 200; }"
+            done
+            echo '    return 403 "Forbidden\n";'
+            echo '  }'
+            echo '}'
+          } > /etc/nginx/conf.d/default.conf
 
 customResources:
   - |
@@ -211,10 +203,6 @@ customResources:
 deployment:
   enabled: true
   replicas: 2
-  envVariables:
-    # Without this, envsubst would also replace nginx's own $variables if an env var shares the name.
-    - name: NGINX_ENVSUBST_FILTER
-      value: "^ORIGIN_VERIFY_"
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -243,7 +231,7 @@ deployment:
     - name: nginx
       configMap:
         name: '{{ include "app.name" . }}-nginx'
-        # Required: the entrypoint skips a non-executable guard, leaving guessable ${...} placeholders.
+        # Required: the entrypoint skips non-executable scripts, and nginx would then start with no config.
         defaultMode: 0755
     - name: confd
       emptyDir: {}
@@ -251,11 +239,8 @@ deployment:
       emptyDir: {}
   volumeMounts:
     - name: nginx
-      mountPath: /etc/nginx/templates
-      readOnly: true
-    - name: nginx
-      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.envsh
-      subPath: 05-require-origin-verify-secret.envsh
+      mountPath: /docker-entrypoint.d/05-origin-verify.sh
+      subPath: 05-origin-verify.sh
     - name: confd
       mountPath: /etc/nginx/conf.d
     - name: tmp
@@ -268,11 +253,9 @@ podDisruptionBudget:
   enabled: true
   minAvailable: 1
 
-# Expected header value. Write it to the secret store first, e.g.:
-#   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
-# Every key at this path becomes an env var in the verifier container. During a rotation, also
-# set ORIGIN_VERIFY_SECRET_PREVIOUS to the old value so both are accepted.
-# Values are read at startup: after changing them (or the nginx config below), run
+# Accepted header values, as a JSON array of letters-and-digits strings. Write it to the secret store first, e.g.:
+#   vault kv put secret/traefik-cloudfront-verifier/prod 'ORIGIN_VERIFY_SECRETS=["<openssl rand -hex 32>"]'
+# List two values during a rotation. Values are read at startup: after changing them, run
 #   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
 externalSecret:
   enabled: true
@@ -286,29 +269,30 @@ configMap:
   configs:
     nginx:
       data: |-
-        # Sourced before envsubst. An unset value would leave a literal "${...}" in the config as a guessable value,
-        # so PREVIOUS defaults to the current value when no rotation is in progress.
-        05-require-origin-verify-secret.envsh: |
-          case "$ORIGIN_VERIFY_SECRET" in
-            "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
-          esac
-          export ORIGIN_VERIFY_SECRET_PREVIOUS="${ORIGIN_VERIFY_SECRET_PREVIOUS:-$ORIGIN_VERIFY_SECRET}"
-          case "$ORIGIN_VERIFY_SECRET_PREVIOUS" in
-            *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET_PREVIOUS must be alphanumeric" >&2; exit 1 ;;
-          esac
-        default.conf.template: |
-          server {
-            listen 8080;
-            server_tokens off;
-            access_log off;
-            default_type text/plain;
-            location = /healthz { return 200 "ok\n"; }
-            location / {
-              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
-              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET_PREVIOUS}") { return 200; }
-              return 403 "Forbidden\n";
-            }
+        05-origin-verify.sh: |
+          #!/bin/sh
+          # Writes the nginx config at startup with one exact, case-sensitive match per accepted value.
+          set -eu
+          list=$(printf %s "${ORIGIN_VERIFY_SECRETS:-}" | tr -d '\r\n')
+          printf %s "$list" | grep -Eqx '[[:space:]]*\[[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*(,[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*)*\][[:space:]]*' || {
+            echo 'ORIGIN_VERIFY_SECRETS must be a JSON array of letters-and-digits strings, e.g. ["abc123"]' >&2
+            exit 1
           }
+          {
+            echo 'server {'
+            echo '  listen 8080;'
+            echo '  server_tokens off;'
+            echo '  access_log off;'
+            echo '  default_type text/plain;'
+            echo '  location = /healthz { return 200 "ok\n"; }'
+            echo '  location / {'
+            printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | tr -d '"' | while read -r v; do
+              echo "    if (\$http_x_origin_verify = \"$v\") { return 200; }"
+            done
+            echo '    return 403 "Forbidden\n";'
+            echo '  }'
+            echo '}'
+          } > /etc/nginx/conf.d/default.conf
 
 customResourcesMap:
   origin-verify: |
@@ -531,8 +515,8 @@ Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) 
 |---|---|---|
 | Deployment + Service | `traefik-cloudfront-verifier-<env>` | nginx that answers `200` or `403`; 2 replicas |
 | PodDisruptionBudget | `traefik-cloudfront-verifier-<env>` | Keeps one verifier running during node maintenance |
-| ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | nginx config template and the startup check |
-| ExternalSecret | `traefik-cloudfront-verifier-<env>-origin-verify` | Injects `ORIGIN_VERIFY_SECRET` as an environment variable |
+| ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | Startup script that checks the values and writes the nginx config |
+| ExternalSecret | `traefik-cloudfront-verifier-<env>-origin-verify` | Injects `ORIGIN_VERIFY_SECRETS` as an environment variable |
 | Middleware | `traefik-cloudfront-origin-verify` | forwardAuth to the verifier |
 | Middleware | `traefik-cloudfront-strip-header` | Removes the header before your app |
 | Middleware | `traefik-cloudfront-origin-guard` | The chain protected apps reference |
@@ -579,34 +563,28 @@ Use the response code to tell the outcomes apart:
 
 ## Rotating the secret
 
-The verifier also accepts `ORIGIN_VERIFY_SECRET_PREVIOUS`, so you can rotate without rejecting requests:
+The verifier accepts every value in the array, so you can rotate without rejecting requests:
 
-1. Generate a new value. In your secret store, set `ORIGIN_VERIFY_SECRET` to the **new** value and `ORIGIN_VERIFY_SECRET_PREVIOUS` to the **current** one, in a single write — `vault kv put` replaces every key at the path, so two separate writes drop the first. Wait a few seconds for the ExternalSecret to sync (its `LAST SYNC` refreshes every 2 seconds), then restart the verifier and wait for the rollout:
+1. Generate a new value and put it **first** in the array, keeping the old one: `["<new>", "<old>"]`. Wait a few seconds for the ExternalSecret to sync (its `LAST SYNC` refreshes every 2 seconds), restart the verifier, and confirm the new value is accepted:
 
    ```bash
-   kubectl get externalsecret traefik-cloudfront-verifier-prod-origin-verify -n CAPTAIN_NAMESPACE
    kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
-   ```
-
-2. Confirm the **new** value is accepted before any distribution starts sending it:
-
-   ```bash
    read -rs NEW   # paste the new value; keeps it out of your shell history
    curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: $NEW" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
    # 200
    ```
 
-3. Update the custom header value on **every** distribution that uses this verifier. Then list any that still send a different value or haven't finished deploying — this must print nothing before you continue:
+2. Update the custom header value on **every** distribution that uses this verifier. Then list any that still send a different value or haven't finished deploying — this must print nothing before you continue:
 
    ```bash
    aws cloudfront list-distributions --output text \
      --query "DistributionList.Items[?Origins.Items[?CustomHeaders.Items[?HeaderName=='X-Origin-Verify' && HeaderValue!='$NEW']] || Status!='Deployed'].[Id,Status]"
    ```
 
-4. Delete `ORIGIN_VERIFY_SECRET_PREVIOUS` from your secret store and restart the verifier again. The old value now gets `403`.
+3. Remove the old value, `["<new>"]`, and restart the verifier again. The old value now gets `403`.
 
-:::warning Don't skip step 4
-Until `ORIGIN_VERIFY_SECRET_PREVIOUS` is removed, the old value still opens your origin. If you're rotating because the old value leaked, the rotation hasn't helped until step 4 is done.
+:::warning Don't skip step 3
+Until the old value is removed from the array, it still opens your origin. If you're rotating because the old value leaked, the rotation hasn't helped until step 3 is done.
 :::
 
 ## Key Points
