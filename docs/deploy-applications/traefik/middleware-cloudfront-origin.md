@@ -34,7 +34,7 @@ Generate a random value:
 openssl rand -hex 32
 ```
 
-In your secret store, create the path `traefik-cloudfront-verifier/<environment>` with one key, where `<environment>` is your `envs/` folder name, e.g. `prod`. Its value is a JSON array of accepted values:
+In your secret store, under the `secret/` mount, create the path `traefik-cloudfront-verifier/<env>` with one key. `<env>` is your environment folder name under `envs/`, e.g. `prod` — not the namespace. Type the value exactly as shown, brackets and quotes included:
 
 ```
 ORIGIN_VERIFY_SECRETS   ["<output of the command above>"]
@@ -48,7 +48,7 @@ Each value must be letters and digits only, which `openssl rand -hex 32` guarant
 
 ## Step 2 — Deploy the verifier
 
-Copy [`apps/traefik-cloudfront-verifier/`](https://github.com/GlueOps/deployment-configurations-examples/tree/main/apps/traefik-cloudfront-verifier) from the examples repository into your deployment-configurations repository, next to your other apps. The only line to change is the secret path, if your environment folder isn't `prod`:
+Copy [`apps/traefik-cloudfront-verifier/`](https://github.com/GlueOps/deployment-configurations-examples/tree/main/apps/traefik-cloudfront-verifier) from the examples repository into your deployment-configurations repository, next to your other apps, and rename `envs/prod` to your `<env>` if it differs. The only line to change is the secret path, which must match Step 1:
 
 ```yaml
 # Store ORIGIN_VERIFY_SECRETS at this path first: a JSON array of letters-and-digits strings, e.g. ["<value>"].
@@ -61,45 +61,10 @@ externalSecret:
         key: secret/traefik-cloudfront-verifier/prod
 ```
 
-The rest of the folder — the nginx verifier, its probes and security settings — doesn't need changes. It also defines the three middlewares your apps use:
-
-```yaml
-customResources:
-  - |
-    apiVersion: traefik.io/v1alpha1
-    kind: Middleware
-    metadata:
-      name: traefik-cloudfront-origin-verify
-    spec:
-      forwardAuth:
-        address: 'http://{{ include "app.name" . }}.{{ include "app.namespace" . }}.svc.cluster.local:8080/'
-        authRequestHeaders:
-          - X-Origin-Verify
-  - |
-    apiVersion: traefik.io/v1alpha1
-    kind: Middleware
-    metadata:
-      name: traefik-cloudfront-strip-header
-    spec:
-      headers:
-        customRequestHeaders:
-          X-Origin-Verify: ""
-  - |
-    apiVersion: traefik.io/v1alpha1
-    kind: Middleware
-    metadata:
-      name: traefik-cloudfront-origin-guard
-    spec:
-      chain:
-        middlewares:
-          - name: traefik-cloudfront-origin-verify
-          - name: traefik-cloudfront-strip-header
-```
-
-Protected apps reference only `traefik-cloudfront-origin-guard`, which runs the check first and removes the header second.
+The rest of the folder — the nginx verifier, its probes, security settings and the three middlewares listed under [What Gets Created](#what-gets-created) — doesn't need changes. Commit it, and ArgoCD creates the `traefik-cloudfront-verifier-<env>` app. Protected apps reference only `traefik-cloudfront-origin-guard`, which runs the check first and removes the header second.
 
 :::caution The verifier reads the secret at startup
-Changing the value in your secret store doesn't affect pods that are already running. Afterwards, use the **Restart** action on the `traefik-cloudfront-verifier-prod` Deployment in ArgoCD and wait until the app shows **Healthy**. If the new value is malformed, the new pods won't start and the old pods keep serving, so do this right after every change.
+Changing the value in your secret store doesn't affect pods that are already running. Afterwards, open the `traefik-cloudfront-verifier-<env>` app in ArgoCD, choose **Restart** from the menu on its Deployment, and wait until the app shows **Healthy**. If it stays **Progressing** for more than a minute, the new value is probably malformed: open the newest pod's logs, fix the value, and restart again. The old pods keep serving meanwhile, so do this right after every change.
 :::
 
 ## Step 3 — Protect an application
@@ -112,14 +77,16 @@ import TabItem from '@theme/TabItem';
 <Tabs>
 <TabItem value="ingressroute" label="IngressRoute (CRD)">
 
-Add a `middlewares` entry to each route in your IngressRoute:
+Add the two `middlewares` lines to each route in your IngressRoute:
 
 ```yaml
       routes:
         - match: Host(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
           kind: Rule
-          middlewares:
-            - name: traefik-cloudfront-origin-guard
+          middlewares:                                # add
+            - name: traefik-cloudfront-origin-guard   # add
+          services:
+            - name: '{{ include "app.name" . }}'
 ```
 
 <details>
@@ -208,7 +175,7 @@ Protection is per route. Any other IngressRoute or Ingress that points at the sa
 
 ## Step 4 — Configure CloudFront
 
-Set these on the distribution in front of the app. Use the app's own hostname as the origin, so Traefik's `Host()` rule matches and the cluster's wildcard certificate is valid for it.
+Set these on the distribution in front of the app. Use the app's own hostname as the origin — `<app folder>-<env>.apps.CAPTAIN_DOMAIN` — so Traefik's `Host()` rule matches and the cluster's wildcard certificate is valid for it. If the distribution already exists, check its origin domain and origin request policy against this table before you change anything else.
 
 | Setting | Value |
 |---|---|
@@ -299,7 +266,7 @@ Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) 
 
 | Resource | Name | Purpose |
 |---|---|---|
-| Deployment + Service | `traefik-cloudfront-verifier-<env>` | nginx that answers `200` or `403`; 2 replicas, spread across nodes |
+| Deployment + Service | `traefik-cloudfront-verifier-<env>` | nginx that answers `200` or `403`; 2 replicas, never on the same node |
 | PodDisruptionBudget | `traefik-cloudfront-verifier-<env>` | Keeps one verifier running during node maintenance |
 | ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | Startup script that checks the values and writes the nginx config |
 | ExternalSecret | `traefik-cloudfront-verifier-<env>-origin-verify` | Injects `ORIGIN_VERIFY_SECRETS` as an environment variable |
@@ -307,11 +274,11 @@ Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) 
 | Middleware | `traefik-cloudfront-strip-header` | Removes the header before your app |
 | Middleware | `traefik-cloudfront-origin-guard` | The chain protected apps reference |
 
-The `-prod` suffix comes from the environment folder name (`envs/prod/`).
+The `-<env>` suffix is your environment folder name, e.g. `-prod` for `envs/prod/`.
 
 ## Verify
 
-In ArgoCD, the `traefik-cloudfront-verifier-prod` app and your app should be **Synced** and **Healthy**.
+In ArgoCD, the `traefik-cloudfront-verifier-<env>` app and your app should be **Synced** and **Healthy**.
 
 Through CloudFront, the app answers normally:
 
@@ -380,7 +347,7 @@ Until the old value is removed from the array, it still opens your origin. If yo
 - Failures are closed: a bad reference returns `404` and a missing verifier returns `500`. The only way to leave an app public is a route without the guard.
 - One verifier can protect any number of apps in the same namespace, and any number of distributions that send a value from its array. If it's down, every protected app returns `500`, so watch its health in ArgoCD.
 - CloudFront replaces any `X-Origin-Verify` a visitor sends with its own value, so visitors can't spoof it through CloudFront.
-- The platform's Traefik access logs drop request headers, and the verifier's own access log is off, so the secret isn't logged.
+- The platform's Traefik access logs drop request headers, and the verifier's own access log is off, so the secret isn't logged. Don't enable header logging on either.
 - Turn caching back on only for content that's safe to cache. `CachingDisabled` also keeps CloudFront from caching an error page while you're setting up.
 
 ## Related
