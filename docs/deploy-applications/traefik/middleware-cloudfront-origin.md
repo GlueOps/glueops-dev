@@ -42,7 +42,7 @@ In your secret store, create the path `traefik-cloudfront-verifier/<environment>
 ORIGIN_VERIFY_SECRET   <output of the command above>
 ```
 
-You'll paste the same value into CloudFront in Step 4.
+You'll paste the same value into CloudFront in Step 4. A second, optional key, `ORIGIN_VERIFY_SECRET_PREVIOUS`, is only used while [rotating the secret](#rotating-the-secret).
 
 :::warning
 Use letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the value is empty or contains any other character, including a trailing newline or space.
@@ -114,8 +114,8 @@ deployment:
       mountPath: /etc/nginx/templates
       readOnly: true
     - name: nginx
-      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.sh
-      subPath: 05-require-origin-verify-secret.sh
+      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.envsh
+      subPath: 05-require-origin-verify-secret.envsh
     - name: confd
       mountPath: /etc/nginx/conf.d
     - name: tmp
@@ -130,8 +130,9 @@ podDisruptionBudget:
 
 # Expected header value. Write it to the secret store first, e.g.:
 #   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
-# Every key at this path becomes an env var in the verifier container.
-# The value is read at startup: after changing it (or the nginx config below), run
+# Every key at this path becomes an env var in the verifier container. During a rotation, also
+# set ORIGIN_VERIFY_SECRET_PREVIOUS to the old value so both are accepted.
+# Values are read at startup: after changing them (or the nginx config below), run
 #   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
 externalSecret:
   enabled: true
@@ -145,11 +146,15 @@ configMap:
   configs:
     nginx:
       data: |-
-        # An unset value would leave the literal "${ORIGIN_VERIFY_SECRET}" in the config as a guessable value.
-        05-require-origin-verify-secret.sh: |
-          #!/bin/sh
+        # Sourced before envsubst. An unset value would leave a literal "${...}" in the config as a guessable value,
+        # so PREVIOUS defaults to the current value when no rotation is in progress.
+        05-require-origin-verify-secret.envsh: |
           case "$ORIGIN_VERIFY_SECRET" in
             "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
+          esac
+          export ORIGIN_VERIFY_SECRET_PREVIOUS="${ORIGIN_VERIFY_SECRET_PREVIOUS:-$ORIGIN_VERIFY_SECRET}"
+          case "$ORIGIN_VERIFY_SECRET_PREVIOUS" in
+            *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET_PREVIOUS must be alphanumeric" >&2; exit 1 ;;
           esac
         default.conf.template: |
           server {
@@ -160,6 +165,7 @@ configMap:
             location = /healthz { return 200 "ok\n"; }
             location / {
               if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
+              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET_PREVIOUS}") { return 200; }
               return 403 "Forbidden\n";
             }
           }
@@ -246,8 +252,8 @@ deployment:
       mountPath: /etc/nginx/templates
       readOnly: true
     - name: nginx
-      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.sh
-      subPath: 05-require-origin-verify-secret.sh
+      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.envsh
+      subPath: 05-require-origin-verify-secret.envsh
     - name: confd
       mountPath: /etc/nginx/conf.d
     - name: tmp
@@ -262,8 +268,9 @@ podDisruptionBudget:
 
 # Expected header value. Write it to the secret store first, e.g.:
 #   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
-# Every key at this path becomes an env var in the verifier container.
-# The value is read at startup: after changing it (or the nginx config below), run
+# Every key at this path becomes an env var in the verifier container. During a rotation, also
+# set ORIGIN_VERIFY_SECRET_PREVIOUS to the old value so both are accepted.
+# Values are read at startup: after changing them (or the nginx config below), run
 #   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
 externalSecret:
   enabled: true
@@ -277,11 +284,15 @@ configMap:
   configs:
     nginx:
       data: |-
-        # An unset value would leave the literal "${ORIGIN_VERIFY_SECRET}" in the config as a guessable value.
-        05-require-origin-verify-secret.sh: |
-          #!/bin/sh
+        # Sourced before envsubst. An unset value would leave a literal "${...}" in the config as a guessable value,
+        # so PREVIOUS defaults to the current value when no rotation is in progress.
+        05-require-origin-verify-secret.envsh: |
           case "$ORIGIN_VERIFY_SECRET" in
             "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
+          esac
+          export ORIGIN_VERIFY_SECRET_PREVIOUS="${ORIGIN_VERIFY_SECRET_PREVIOUS:-$ORIGIN_VERIFY_SECRET}"
+          case "$ORIGIN_VERIFY_SECRET_PREVIOUS" in
+            *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET_PREVIOUS must be alphanumeric" >&2; exit 1 ;;
           esac
         default.conf.template: |
           server {
@@ -292,6 +303,7 @@ configMap:
             location = /healthz { return 200 "ok\n"; }
             location / {
               if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
+              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET_PREVIOUS}") { return 200; }
               return 403 "Forbidden\n";
             }
           }
@@ -561,15 +573,26 @@ Use the response code to tell the outcomes apart:
 | Any | `404` | The middleware reference doesn't resolve, or the `Host` doesn't match the route | Check the name and namespace prefix against `kubectl get middleware -n CAPTAIN_NAMESPACE`; check the origin request policy |
 | Through CloudFront | `502` | CloudFront can't connect: the origin certificate doesn't match the hostname it sends, or the origin is unreachable | Use `AllViewerExceptHostHeader`; set the origin domain to the app's own hostname |
 | Any | `500` | The verifier has no ready pods | `kubectl get pods -n CAPTAIN_NAMESPACE`; check the ExternalSecret synced |
-| Through CloudFront | `403` | CloudFront's header value doesn't match the secret store | Compare the values; restart the verifier after changing the secret |
+| Through CloudFront | `403` | CloudFront's header value doesn't match the secret store — or a rotation's step 3 ran before every distribution was updated | Compare the values; restart the verifier after changing the secret |
 
 ## Rotating the secret
 
-The verifier accepts one value at a time, so a rotation causes a short window of `403`s while CloudFront's change rolls out to its edge locations:
+The verifier accepts two values — `ORIGIN_VERIFY_SECRET` and, during a rotation, `ORIGIN_VERIFY_SECRET_PREVIOUS` — so you can change the secret without rejecting any requests:
 
-1. Write the new value to your secret store.
-2. Update the custom header value on the CloudFront origin.
-3. Restart the verifier (Step 2) right away, and wait for the distribution to show **Deployed**.
+1. Generate a new value. In your secret store, set `ORIGIN_VERIFY_SECRET_PREVIOUS` to the **current** value and `ORIGIN_VERIFY_SECRET` to the **new** one. Restart the verifier. It now accepts both.
+2. Update the custom header value on **every** distribution that uses this verifier, and wait until each one shows **Deployed**.
+3. Delete `ORIGIN_VERIFY_SECRET_PREVIOUS` from your secret store and restart the verifier again. Only the new value is accepted from now on.
+
+Check that the old value is still accepted before step 2, and refused after step 3:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: <old value>" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
+# 200 during the rotation, 403 after step 3
+```
+
+:::caution
+Don't do step 3 until every distribution has finished deploying the new value. Any distribution still sending the old value gets `403` once it's removed.
+:::
 
 ## Key Points
 
