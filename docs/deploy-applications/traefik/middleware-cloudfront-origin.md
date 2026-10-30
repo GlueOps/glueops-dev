@@ -64,7 +64,7 @@ externalSecret:
 The rest of the folder — the nginx verifier, its probes, security settings and the three middlewares listed under [What Gets Created](#what-gets-created) — doesn't need changes. Commit it, and ArgoCD creates the `traefik-cloudfront-verifier-<env>` app. Protected apps reference only `traefik-cloudfront-origin-guard`, which runs the check first and removes the header second.
 
 :::caution The verifier reads the secret at startup
-Changing the value in your secret store doesn't affect pods that are already running. Afterwards, open the `traefik-cloudfront-verifier-<env>` app in ArgoCD, choose **Restart** from the menu on its Deployment, and wait until the app shows **Healthy**. If it stays **Progressing** for more than a minute, the new value is probably malformed: open the newest pod's logs, fix the value, and restart again. The old pods keep serving meanwhile, so do this right after every change.
+Changing the value in your secret store doesn't affect pods that are already running. Afterwards, open the `traefik-cloudfront-verifier-<env>` app in ArgoCD, choose **Restart** from the menu on its Deployment, and wait until the app shows **Healthy**. If it stays **Progressing** for more than a minute, the new value is probably malformed: open the newest pod's logs, fix the value, and restart again. One old pod keeps serving meanwhile, so do this right after every change.
 :::
 
 ## Step 3 — Protect an application
