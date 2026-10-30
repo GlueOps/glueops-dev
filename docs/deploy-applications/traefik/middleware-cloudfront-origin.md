@@ -45,7 +45,7 @@ ORIGIN_VERIFY_SECRETS   ["<output of the command above>"]
 You'll paste the same value (without the brackets and quotes) into CloudFront in Step 4. The array holds a second value only while [rotating the secret](#rotating-the-secret).
 
 :::warning
-Each value must be letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start unless the key is a JSON array of one or more such strings — an empty array, an empty string, or any other character stops it.
+Each value must be letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the array is empty or any value has another character. Line breaks are ignored, so a pretty-printed array works.
 :::
 
 ## Step 2 — Deploy the verifier
@@ -72,6 +72,9 @@ import TabItem from '@theme/TabItem';
 deployment:
   enabled: true
   replicas: 2
+  # Start each new pod before stopping an old one, so a bad value stalls the rollout instead of halving capacity.
+  # A plain 0 is ignored by the chart.
+  maxUnavailable: "0%"
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -140,28 +143,29 @@ configMap:
       data: |-
         05-origin-verify.sh: |
           #!/bin/sh
-          # Writes the nginx config at startup with one exact, case-sensitive match per accepted value.
           set -eu
+          # Line breaks are dropped so a pretty-printed array still matches as one line.
           list=$(printf %s "${ORIGIN_VERIFY_SECRETS:-}" | tr -d '\r\n')
           printf %s "$list" | grep -Eqx '[[:space:]]*\[[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*(,[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*)*\][[:space:]]*' || {
             echo 'ORIGIN_VERIFY_SECRETS must be a JSON array of letters-and-digits strings, e.g. ["abc123"]' >&2
             exit 1
           }
-          {
-            echo 'server {'
-            echo '  listen 8080;'
-            echo '  server_tokens off;'
-            echo '  access_log off;'
-            echo '  default_type text/plain;'
-            echo '  location = /healthz { return 200 "ok\n"; }'
-            echo '  location / {'
-            printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | tr -d '"' | while read -r v; do
-              echo "    if (\$http_x_origin_verify = \"$v\") { return 200; }"
-            done
-            echo '    return 403 "Forbidden\n";'
-            echo '  }'
-            echo '}'
-          } > /etc/nginx/conf.d/default.conf
+          rules=$(printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | while read -r v; do
+            echo "    if (\$http_x_origin_verify = $v) { return 200; }"
+          done)
+          cat > /etc/nginx/conf.d/default.conf <<EOF
+          server {
+            listen 8080;
+            server_tokens off;
+            access_log off;
+            default_type text/plain;
+            location = /healthz { return 200 "ok\\n"; }
+            location / {
+          $rules
+              return 403 "Forbidden\\n";
+            }
+          }
+          EOF
 
 customResources:
   - |
@@ -203,6 +207,9 @@ customResources:
 deployment:
   enabled: true
   replicas: 2
+  # Start each new pod before stopping an old one, so a bad value stalls the rollout instead of halving capacity.
+  # A plain 0 is ignored by the chart.
+  maxUnavailable: "0%"
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -271,28 +278,29 @@ configMap:
       data: |-
         05-origin-verify.sh: |
           #!/bin/sh
-          # Writes the nginx config at startup with one exact, case-sensitive match per accepted value.
           set -eu
+          # Line breaks are dropped so a pretty-printed array still matches as one line.
           list=$(printf %s "${ORIGIN_VERIFY_SECRETS:-}" | tr -d '\r\n')
           printf %s "$list" | grep -Eqx '[[:space:]]*\[[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*(,[[:space:]]*"[A-Za-z0-9]+"[[:space:]]*)*\][[:space:]]*' || {
             echo 'ORIGIN_VERIFY_SECRETS must be a JSON array of letters-and-digits strings, e.g. ["abc123"]' >&2
             exit 1
           }
-          {
-            echo 'server {'
-            echo '  listen 8080;'
-            echo '  server_tokens off;'
-            echo '  access_log off;'
-            echo '  default_type text/plain;'
-            echo '  location = /healthz { return 200 "ok\n"; }'
-            echo '  location / {'
-            printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | tr -d '"' | while read -r v; do
-              echo "    if (\$http_x_origin_verify = \"$v\") { return 200; }"
-            done
-            echo '    return 403 "Forbidden\n";'
-            echo '  }'
-            echo '}'
-          } > /etc/nginx/conf.d/default.conf
+          rules=$(printf '%s\n' "$list" | grep -Eo '"[A-Za-z0-9]+"' | while read -r v; do
+            echo "    if (\$http_x_origin_verify = $v) { return 200; }"
+          done)
+          cat > /etc/nginx/conf.d/default.conf <<EOF
+          server {
+            listen 8080;
+            server_tokens off;
+            access_log off;
+            default_type text/plain;
+            location = /healthz { return 200 "ok\\n"; }
+            location / {
+          $rules
+              return 403 "Forbidden\\n";
+            }
+          }
+          EOF
 
 customResourcesMap:
   origin-verify: |
@@ -336,11 +344,14 @@ The three middlewares are what protected apps use:
 - `traefik-cloudfront-origin-guard` chains the two, check first and strip second. Protected apps reference only this one.
 
 :::caution The verifier reads the secret at startup
-Changing the value in your secret store, or editing the nginx config, doesn't affect pods that are already running. Restart the verifier afterwards, either with the **Restart** action on the `traefik-cloudfront-verifier-prod` Deployment in ArgoCD, or with kubectl (needs the Debugger tier, see [Access tiers](../access-cluster-with-kubectl#access-tiers)):
+Changing the value in your secret store, or editing the nginx config, doesn't affect pods that are already running. Restart the verifier afterwards — either with the **Restart** action on the `traefik-cloudfront-verifier-prod` Deployment in ArgoCD, or with kubectl (needs the Debugger tier, see [Access tiers](../access-cluster-with-kubectl#access-tiers)) — and watch the rollout finish:
 
 ```bash
 kubectl rollout restart deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
+kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
 ```
+
+If the new value is malformed, the new pods won't start and the rollout stalls while the old pods keep serving. Do this right after every change, so a typo shows up while you're watching rather than at the next node restart.
 :::
 
 ## Step 3 — Protect an application
@@ -558,16 +569,17 @@ Use the response code to tell the outcomes apart:
 | Direct to origin | `200` | The route has no guard middleware. **The app is public.** | Add the middleware or annotation; confirm the sync completed |
 | Any | `404` | The middleware reference doesn't resolve, or the `Host` doesn't match the route | Check the name and namespace prefix against `kubectl get middleware -n CAPTAIN_NAMESPACE`; check the origin request policy |
 | Through CloudFront | `502` | CloudFront can't connect: the origin certificate doesn't match the hostname it sends, or the origin is unreachable | Use `AllViewerExceptHostHeader`; set the origin domain to the app's own hostname |
-| Any | `500` | The verifier has no ready pods | `kubectl get pods -n CAPTAIN_NAMESPACE`; check the ExternalSecret synced |
+| Any | `500` | The verifier has no ready pods | `kubectl logs deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE` shows why a pod won't start (for example a malformed `ORIGIN_VERIFY_SECRETS`); check the ExternalSecret synced |
 | Through CloudFront | `403` | CloudFront's header value doesn't match the secret store | Compare the values; restart the verifier after changing the secret |
 
 ## Rotating the secret
 
 The verifier accepts every value in the array, so you can rotate without rejecting requests:
 
-1. Generate a new value and put it **first** in the array, keeping the old one: `["<new>", "<old>"]`. Wait a few seconds for the ExternalSecret to sync (its `LAST SYNC` refreshes every 2 seconds), restart the verifier, and confirm the new value is accepted:
+1. Generate a new value and add it to the array, keeping the old one: `["<new>", "<old>"]`. Wait a few seconds for the ExternalSecret to sync (its `LAST SYNC` refreshes every 2 seconds), restart the verifier, and confirm the new value is accepted:
 
    ```bash
+   kubectl get externalsecret traefik-cloudfront-verifier-prod-origin-verify -n CAPTAIN_NAMESPACE
    kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
    read -rs NEW   # paste the new value; keeps it out of your shell history
    curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: $NEW" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
@@ -581,7 +593,14 @@ The verifier accepts every value in the array, so you can rotate without rejecti
      --query "DistributionList.Items[?Origins.Items[?CustomHeaders.Items[?HeaderName=='X-Origin-Verify' && HeaderValue!='$NEW']] || Status!='Deployed'].[Id,Status]"
    ```
 
-3. Remove the old value, `["<new>"]`, and restart the verifier again. The old value now gets `403`.
+3. Remove the old value, `["<new>"]`, restart the verifier, and confirm the old value is refused:
+
+   ```bash
+   kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
+   read -rs OLD   # paste the old value
+   curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: $OLD" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
+   # 403
+   ```
 
 :::warning Don't skip step 3
 Until the old value is removed from the array, it still opens your origin. If you're rotating because the old value leaked, the rotation hasn't helped until step 3 is done.
