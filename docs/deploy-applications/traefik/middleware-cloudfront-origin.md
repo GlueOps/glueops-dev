@@ -8,8 +8,6 @@ description: "Block requests that bypass your CloudFront distribution, using a s
 
 Put Amazon CloudFront in front of an application and make sure visitors can't go around it. CloudFront adds a secret header to every request it sends to your origin, and Traefik rejects any request that doesn't carry it. You deploy one small verifier, and each application you want to protect opts in with a single line.
 
-An IP allow list on CloudFront's address ranges is **not** enough: every AWS customer's distribution uses the same ranges, so anyone could point their own distribution at your origin. The secret header ties traffic to **your** distribution. See [Middleware: IP Allow List](./traefik-middleware-ip-allowlist) for the IP-based approach.
-
 ## How it works
 
 1. A visitor requests your site through CloudFront.
@@ -353,6 +351,5 @@ Until the old value is removed from the array, it still opens your origin. If yo
 ## Related
 
 - [Middleware: Login with GitHub (Forward Auth)](./traefik-middleware-forwardauth-github) — the same forwardAuth pattern, for user login
-- [Middleware: IP Allow List](./traefik-middleware-ip-allowlist) — restricting by source IP
 - [Standard Kubernetes Ingress](./traefik-standard-ingress) — middleware annotations on standard Ingress
 - [Manage Environment Secrets](../manage-environment-secrets) — storing the secret
