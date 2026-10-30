@@ -75,6 +75,11 @@ deployment:
   # Start each new pod before stopping an old one, so a bad value stalls the rollout instead of halving capacity.
   # A plain 0 is ignored by the chart.
   maxUnavailable: "0%"
+  # nginx stops accepting connections as soon as it's told to stop; keep serving until the pod is out of every endpoint list.
+  lifecycle:
+    preStop:
+      exec:
+        command: ["sleep", "5"]
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -210,6 +215,11 @@ deployment:
   # Start each new pod before stopping an old one, so a bad value stalls the rollout instead of halving capacity.
   # A plain 0 is ignored by the chart.
   maxUnavailable: "0%"
+  # nginx stops accepting connections as soon as it's told to stop; keep serving until the pod is out of every endpoint list.
+  lifecycle:
+    preStop:
+      exec:
+        command: ["sleep", "5"]
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
