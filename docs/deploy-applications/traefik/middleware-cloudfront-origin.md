@@ -78,8 +78,8 @@ deployment:
   # nginx stops accepting connections as soon as it's told to stop; keep serving until the pod is out of every endpoint list.
   lifecycle:
     preStop:
-      exec:
-        command: ["sleep", "5"]
+      sleep:
+        seconds: 10
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -218,8 +218,8 @@ deployment:
   # nginx stops accepting connections as soon as it's told to stop; keep serving until the pod is out of every endpoint list.
   lifecycle:
     preStop:
-      exec:
-        command: ["sleep", "5"]
+      sleep:
+        seconds: 10
   securityContext:
     runAsNonRoot: true
     runAsUser: 101
@@ -603,7 +603,7 @@ The verifier accepts every value in the array, so you can rotate without rejecti
      --query "DistributionList.Items[?Origins.Items[?CustomHeaders.Items[?HeaderName=='X-Origin-Verify' && HeaderValue!='$NEW']] || Status!='Deployed'].[Id,Status]"
    ```
 
-3. Remove the old value, `["<new>"]`, restart the verifier, and confirm the old value is refused:
+3. Remove the old value, `["<new>"]`, restart the verifier, and confirm the old value is refused. Old pods keep serving for about 10 seconds while they shut down, so wait that long before checking:
 
    ```bash
    kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
