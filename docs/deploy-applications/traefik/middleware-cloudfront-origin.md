@@ -104,6 +104,7 @@ deployment:
     - name: nginx
       configMap:
         name: '{{ include "app.name" . }}-nginx'
+        # Required: the entrypoint skips a non-executable guard, leaving guessable ${...} placeholders.
         defaultMode: 0755
     - name: confd
       emptyDir: {}
@@ -242,6 +243,7 @@ deployment:
     - name: nginx
       configMap:
         name: '{{ include "app.name" . }}-nginx'
+        # Required: the entrypoint skips a non-executable guard, leaving guessable ${...} placeholders.
         defaultMode: 0755
     - name: confd
       emptyDir: {}
@@ -573,25 +575,38 @@ Use the response code to tell the outcomes apart:
 | Any | `404` | The middleware reference doesn't resolve, or the `Host` doesn't match the route | Check the name and namespace prefix against `kubectl get middleware -n CAPTAIN_NAMESPACE`; check the origin request policy |
 | Through CloudFront | `502` | CloudFront can't connect: the origin certificate doesn't match the hostname it sends, or the origin is unreachable | Use `AllViewerExceptHostHeader`; set the origin domain to the app's own hostname |
 | Any | `500` | The verifier has no ready pods | `kubectl get pods -n CAPTAIN_NAMESPACE`; check the ExternalSecret synced |
-| Through CloudFront | `403` | CloudFront's header value doesn't match the secret store — or a rotation's step 3 ran before every distribution was updated | Compare the values; restart the verifier after changing the secret |
+| Through CloudFront | `403` | CloudFront's header value doesn't match the secret store | Compare the values; restart the verifier after changing the secret |
 
 ## Rotating the secret
 
-The verifier accepts two values — `ORIGIN_VERIFY_SECRET` and, during a rotation, `ORIGIN_VERIFY_SECRET_PREVIOUS` — so you can change the secret without rejecting any requests:
+The verifier also accepts `ORIGIN_VERIFY_SECRET_PREVIOUS`, so you can rotate without rejecting requests:
 
-1. Generate a new value. In your secret store, set `ORIGIN_VERIFY_SECRET_PREVIOUS` to the **current** value and `ORIGIN_VERIFY_SECRET` to the **new** one. Restart the verifier. It now accepts both.
-2. Update the custom header value on **every** distribution that uses this verifier, and wait until each one shows **Deployed**.
-3. Delete `ORIGIN_VERIFY_SECRET_PREVIOUS` from your secret store and restart the verifier again. Only the new value is accepted from now on.
+1. Generate a new value. In your secret store, set `ORIGIN_VERIFY_SECRET` to the **new** value and `ORIGIN_VERIFY_SECRET_PREVIOUS` to the **current** one, in a single write — `vault kv put` replaces every key at the path, so two separate writes drop the first. Wait a few seconds for the ExternalSecret to sync (its `LAST SYNC` refreshes every 2 seconds), then restart the verifier and wait for the rollout:
 
-Check that the old value is still accepted before step 2, and refused after step 3:
+   ```bash
+   kubectl get externalsecret traefik-cloudfront-verifier-prod-origin-verify -n CAPTAIN_NAMESPACE
+   kubectl rollout status deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
+   ```
 
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: <old value>" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
-# 200 during the rotation, 403 after step 3
-```
+2. Confirm the **new** value is accepted before any distribution starts sending it:
 
-:::caution
-Don't do step 3 until every distribution has finished deploying the new value. Any distribution still sending the old value gets `403` once it's removed.
+   ```bash
+   read -rs NEW   # paste the new value; keeps it out of your shell history
+   curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: $NEW" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
+   # 200
+   ```
+
+3. Update the custom header value on **every** distribution that uses this verifier. Then list any that still send a different value or haven't finished deploying — this must print nothing before you continue:
+
+   ```bash
+   aws cloudfront list-distributions --output text \
+     --query "DistributionList.Items[?Origins.Items[?CustomHeaders.Items[?HeaderName=='X-Origin-Verify' && HeaderValue!='$NEW']] || Status!='Deployed'].[Id,Status]"
+   ```
+
+4. Delete `ORIGIN_VERIFY_SECRET_PREVIOUS` from your secret store and restart the verifier again. The old value now gets `403`.
+
+:::warning Don't skip step 4
+Until `ORIGIN_VERIFY_SECRET_PREVIOUS` is removed, the old value still opens your origin. If you're rotating because the old value leaked, the rotation hasn't helped until step 4 is done.
 :::
 
 ## Key Points
