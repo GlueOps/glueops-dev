@@ -180,6 +180,8 @@ spec:
 - [Middleware: IP Allow List](./traefik-middleware-ip-allowlist) — Restrict access by IP/CIDR
 - [Middleware: Rate Limiting](./traefik-middleware-ratelimit) — Request rate limits
 - [Middleware: Basic Auth](./traefik-middleware-basicauth) — HTTP basic authentication
+- [Middleware: Login with GitHub (Forward Auth)](./traefik-middleware-forwardauth-github) — GitHub login in front of any app
+- [Middleware: Allow Only CloudFront (Origin Verify)](./traefik-middleware-cloudfront-origin) — Reject requests that bypass your CloudFront distribution
 - [Cookie-Based Canary Routing](./traefik-canary-cookie) — Route traffic by cookie
 - [Sticky Sessions (IngressRoute)](./traefik-sticky-ingressroute) — Cookie-based session affinity via IngressRoute CRD
 - [Canary with Sticky Sessions](./traefik-canary-sticky) — Canary routing combined with pod affinity

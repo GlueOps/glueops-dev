@@ -1,0 +1,599 @@
+---
+id: traefik-middleware-cloudfront-origin
+title: "Middleware: Allow Only CloudFront (Origin Verify)"
+description: "Make sure only your own CloudFront distribution can reach your application, using a secret origin header checked by Traefik forwardAuth."
+---
+
+# Middleware: Allow Only CloudFront (Origin Verify)
+
+Put Amazon CloudFront in front of an application and make sure visitors can't go around it. CloudFront adds a secret header to every request it sends to your origin, and Traefik rejects any request that doesn't carry it. You deploy one small verifier, and each application you want to protect opts in with a single line.
+
+An IP allow list on CloudFront's address ranges is **not** enough: every AWS customer's distribution uses the same ranges, so anyone could point their own distribution at your origin. The secret header ties traffic to **your** distribution. See [Middleware: IP Allow List](./traefik-middleware-ip-allowlist) for the IP-based approach and why it doesn't cover this case.
+
+## How it works
+
+1. A visitor requests your site through CloudFront.
+2. CloudFront forwards the request to your origin and adds `X-Origin-Verify: <secret>` as a custom origin header.
+3. Traefik's **forwardAuth** middleware sends only that header to the verifier, a small nginx service in your namespace.
+4. The verifier compares it with the value in your secret store. It returns `200` on a match and `403` otherwise.
+5. On `200`, Traefik removes `X-Origin-Verify` and forwards the request to your app, so the secret never reaches your application or its logs. On `403`, the visitor gets `403 Forbidden`.
+
+| App | Purpose | Creates |
+|---|---|---|
+| `traefik-cloudfront-verifier` | Checks the header; owns the shared middlewares | Deployment, Service, PDB, ConfigMap, ExternalSecret, 3 Middlewares |
+| `traefik-cloudfront` | Example app protected through an IngressRoute | Deployment, Service, IngressRoute |
+| `traefik-ingress-cloudfront` | Example app protected through a standard Ingress | Deployment, Service, Ingress |
+
+## Prerequisites
+
+- An application already deployed and reachable — see [Basic IngressRoute](./traefik-basic-ingressroute) or [Standard Kubernetes Ingress](./traefik-standard-ingress).
+- Write access to your environment's secret store — see [Manage Environment Secrets](../manage-environment-secrets).
+- Permission to create a CloudFront distribution in your AWS account.
+
+Domains and namespaces throughout this guide fill in from the **Captain Domain** box in the navigation bar. Your environment namespace is the first label of that domain — for `nonprod.example.onglueops.com`, the namespace is `nonprod`.
+
+## Step 1 — Generate and store the secret
+
+Generate a random value:
+
+```bash
+openssl rand -hex 32
+```
+
+In your secret store, create the path `traefik-cloudfront-verifier/<environment>` with one key:
+
+```
+ORIGIN_VERIFY_SECRET   <output of the command above>
+```
+
+You'll paste the same value into CloudFront in Step 4.
+
+:::warning
+Use letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the value is empty or contains any other character, including a trailing newline or space. That's deliberate: a malformed value would otherwise break the check in ways that are hard to spot.
+:::
+
+## Step 2 — Deploy the verifier
+
+Create a new application directory, `apps/traefik-cloudfront-verifier/`.
+
+**`base/base-values.yaml`**
+```yaml
+image:
+  registry: docker.io
+  repository: nginxinc/nginx-unprivileged
+  tag: 1.29-alpine@sha256:0c79d56aee561a1d81c63f00eee5fb5fe29279560cdc55e91425133104c7fbe6
+  port: 8080
+```
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+<TabItem value="list" label="customResources (list)">
+
+**`envs/prod/values.yaml`**
+```yaml
+deployment:
+  enabled: true
+  replicas: 2
+  envVariables:
+    # Without this, envsubst would also replace nginx's own $variables if an env var shares the name.
+    - name: NGINX_ENVSUBST_FILTER
+      value: "^ORIGIN_VERIFY_"
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: ["ALL"]
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+  volumes:
+    - name: nginx
+      configMap:
+        name: '{{ include "app.name" . }}-nginx'
+        defaultMode: 0755
+    - name: confd
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: nginx
+      mountPath: /etc/nginx/templates
+      readOnly: true
+    - name: nginx
+      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.sh
+      subPath: 05-require-origin-verify-secret.sh
+    - name: confd
+      mountPath: /etc/nginx/conf.d
+    - name: tmp
+      mountPath: /tmp
+
+service:
+  enabled: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Expected header value. Write it to the secret store first, e.g.:
+#   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
+# Every key at this path becomes an env var in the verifier container.
+# The value is read at startup: after changing it (or the nginx config below), run
+#   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
+externalSecret:
+  enabled: true
+  secrets:
+    origin-verify:
+      dataFrom:
+        key: secret/traefik-cloudfront-verifier/prod
+
+configMap:
+  enabled: true
+  configs:
+    nginx:
+      data: |-
+        # An unset value would leave the literal "${ORIGIN_VERIFY_SECRET}" in the config as a guessable value.
+        05-require-origin-verify-secret.sh: |
+          #!/bin/sh
+          case "$ORIGIN_VERIFY_SECRET" in
+            "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
+          esac
+        default.conf.template: |
+          server {
+            listen 8080;
+            server_tokens off;
+            access_log off;
+            default_type text/plain;
+            location = /healthz { return 200 "ok\n"; }
+            location / {
+              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
+              return 403 "Forbidden\n";
+            }
+          }
+
+customResources:
+  - |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-origin-verify
+    spec:
+      forwardAuth:
+        address: 'http://{{ include "app.name" . }}.{{ include "app.namespace" . }}.svc.cluster.local:8080/'
+        authRequestHeaders:
+          - X-Origin-Verify
+  - |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-strip-header
+    spec:
+      headers:
+        customRequestHeaders:
+          X-Origin-Verify: ""
+  - |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-origin-guard
+    spec:
+      chain:
+        middlewares:
+          - name: traefik-cloudfront-origin-verify
+          - name: traefik-cloudfront-strip-header
+```
+
+</TabItem>
+<TabItem value="map" label="customResourcesMap (map)">
+
+**`envs/prod/values.yaml`**
+```yaml
+deployment:
+  enabled: true
+  replicas: 2
+  envVariables:
+    # Without this, envsubst would also replace nginx's own $variables if an env var shares the name.
+    - name: NGINX_ENVSUBST_FILTER
+      value: "^ORIGIN_VERIFY_"
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: ["ALL"]
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+  volumes:
+    - name: nginx
+      configMap:
+        name: '{{ include "app.name" . }}-nginx'
+        defaultMode: 0755
+    - name: confd
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: nginx
+      mountPath: /etc/nginx/templates
+      readOnly: true
+    - name: nginx
+      mountPath: /docker-entrypoint.d/05-require-origin-verify-secret.sh
+      subPath: 05-require-origin-verify-secret.sh
+    - name: confd
+      mountPath: /etc/nginx/conf.d
+    - name: tmp
+      mountPath: /tmp
+
+service:
+  enabled: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Expected header value. Write it to the secret store first, e.g.:
+#   vault kv put secret/traefik-cloudfront-verifier/prod ORIGIN_VERIFY_SECRET=<openssl rand -hex 32>
+# Every key at this path becomes an env var in the verifier container.
+# The value is read at startup: after changing it (or the nginx config below), run
+#   kubectl rollout restart deployment/traefik-cloudfront-verifier-prod
+externalSecret:
+  enabled: true
+  secrets:
+    origin-verify:
+      dataFrom:
+        key: secret/traefik-cloudfront-verifier/prod
+
+configMap:
+  enabled: true
+  configs:
+    nginx:
+      data: |-
+        # An unset value would leave the literal "${ORIGIN_VERIFY_SECRET}" in the config as a guessable value.
+        05-require-origin-verify-secret.sh: |
+          #!/bin/sh
+          case "$ORIGIN_VERIFY_SECRET" in
+            "" | *[!A-Za-z0-9]*) echo "ORIGIN_VERIFY_SECRET must be set and alphanumeric" >&2; exit 1 ;;
+          esac
+        default.conf.template: |
+          server {
+            listen 8080;
+            server_tokens off;
+            access_log off;
+            default_type text/plain;
+            location = /healthz { return 200 "ok\n"; }
+            location / {
+              if ($http_x_origin_verify = "${ORIGIN_VERIFY_SECRET}") { return 200; }
+              return 403 "Forbidden\n";
+            }
+          }
+
+customResourcesMap:
+  origin-verify: |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-origin-verify
+    spec:
+      forwardAuth:
+        address: 'http://{{ include "app.name" . }}.{{ include "app.namespace" . }}.svc.cluster.local:8080/'
+        authRequestHeaders:
+          - X-Origin-Verify
+  strip-header: |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-strip-header
+    spec:
+      headers:
+        customRequestHeaders:
+          X-Origin-Verify: ""
+  origin-guard: |
+    apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-cloudfront-origin-guard
+    spec:
+      chain:
+        middlewares:
+          - name: traefik-cloudfront-origin-verify
+          - name: traefik-cloudfront-strip-header
+```
+
+</TabItem>
+</Tabs>
+
+The three middlewares are what protected apps use:
+
+- `traefik-cloudfront-origin-verify` calls the verifier and forwards **only** `X-Origin-Verify`, so cookies and authorization headers never reach it.
+- `traefik-cloudfront-strip-header` deletes `X-Origin-Verify` once the check has passed.
+- `traefik-cloudfront-origin-guard` chains the two, check first and strip second. Protected apps reference only this one.
+
+:::caution The verifier reads the secret at startup
+Changing the value in your secret store, or editing the nginx config, doesn't affect pods that are already running. Restart the verifier afterwards:
+
+```bash
+kubectl rollout restart deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
+```
+:::
+
+## Step 3 — Protect an application
+
+Point the application's route at the guard middleware. Nothing else about the app changes.
+
+<Tabs>
+<TabItem value="ingressroute" label="IngressRoute (CRD)">
+
+**`apps/traefik-cloudfront/envs/prod/values.yaml`**
+```yaml
+deployment:
+  enabled: true
+  replicas: 1
+
+service:
+  enabled: true
+
+# Requires the traefik-cloudfront-verifier app, which defines the traefik-cloudfront-origin-guard Middleware.
+# Point your CloudFront origin at this hostname and add the X-Origin-Verify custom origin header.
+customResources:
+  - |
+    apiVersion: traefik.io/v1alpha1
+    kind: IngressRoute
+    metadata:
+      name: traefik-cloudfront
+      annotations:
+        kubernetes.io/ingress.class: public-traefik
+        external-dns.alpha.kubernetes.io/target: public-v2.{{ .Values.captain_domain }}
+    spec:
+      entryPoints:
+        - web
+        - websecure
+      routes:
+        - match: Host(`{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}`)
+          kind: Rule
+          middlewares:
+            - name: traefik-cloudfront-origin-guard
+          services:
+            - name: '{{ include "app.name" . }}'
+              namespace: '{{ include "app.namespace" . }}'
+              port: 80
+```
+
+</TabItem>
+<TabItem value="ingress" label="Standard Ingress">
+
+**`apps/traefik-ingress-cloudfront/envs/prod/values.yaml`**
+```yaml
+deployment:
+  enabled: true
+  replicas: 1
+
+service:
+  enabled: true
+
+# Requires the traefik-cloudfront-verifier app, which defines the traefik-cloudfront-origin-guard Middleware.
+# Annotations are not tpl-rendered: replace "nonprod" with your namespace.
+ingress:
+  enabled: true
+  ingressClassName: public-traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: nonprod-traefik-cloudfront-origin-guard@kubernetescrd
+  entries:
+    - name: public
+      hosts:
+        - hostname: '{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}'
+```
+
+The annotation format is `<namespace>-<middleware name>@kubernetescrd`. Annotations are not template-rendered, so write your namespace out in full in place of `nonprod`.
+
+</TabItem>
+</Tabs>
+
+:::warning Every route to the app needs the middleware
+Protection is per route. Any other IngressRoute or Ingress that points at the same Service without the guard is a way around CloudFront. Put the middleware on every hostname the app answers on.
+:::
+
+## Step 4 — Configure CloudFront
+
+Create a distribution with these settings. Use the protected app's own hostname as the origin, so Traefik's `Host()` rule matches and the cluster's wildcard certificate is valid for it.
+
+| Setting | Value |
+|---|---|
+| Origin domain | `traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN` |
+| Protocol | **HTTPS only**, minimum TLSv1.2 |
+| Add custom header | Name `X-Origin-Verify`, value from Step 1 |
+| Cache policy | `CachingDisabled`, or your own policy (see Key Points) |
+| Origin request policy | `AllViewerExceptHostHeader` |
+| Viewer protocol policy | Redirect HTTP to HTTPS |
+
+:::warning Use HTTPS to the origin
+With HTTP only, the secret header crosses the internet in plain text, where anyone on the path can copy it. Use HTTP only for a short-lived test at most.
+:::
+
+:::caution Don't forward the viewer's Host header
+`AllViewerExceptHostHeader` makes CloudFront send the origin hostname as `Host`, which is what Traefik routes on. Policies that forward the viewer's `Host` (such as `AllViewer`) send `*.cloudfront.net` or your custom domain instead, so the route doesn't match and every request returns `404`.
+:::
+
+The same distribution in OpenTofu:
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+variable "origin_domain" {
+  type    = string
+  default = "traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN"
+}
+
+variable "origin_verify_secret" {
+  type      = string
+  sensitive = true
+}
+
+data "aws_cloudfront_cache_policy" "disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
+resource "aws_cloudfront_distribution" "app" {
+  enabled     = true
+  comment     = "traefik-cloudfront"
+  price_class = "PriceClass_100"
+
+  origin {
+    origin_id   = "traefik"
+    domain_name = var.origin_domain
+
+    custom_header {
+      name  = "X-Origin-Verify"
+      value = var.origin_verify_secret
+    }
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  default_cache_behavior {
+    target_origin_id         = "traefik"
+    viewer_protocol_policy   = "redirect-to-https"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods           = ["GET", "HEAD"]
+    cache_policy_id          = data.aws_cloudfront_cache_policy.disabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+}
+
+output "domain_name" {
+  value = aws_cloudfront_distribution.app.domain_name
+}
+```
+
+Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) rather than a file in Git. The value is still stored in the OpenTofu state, so keep the state somewhere private.
+
+## What Gets Created
+
+| Resource | Name | Purpose |
+|---|---|---|
+| Deployment + Service | `traefik-cloudfront-verifier-<env>` | nginx that answers `200` or `403`; 2 replicas |
+| PodDisruptionBudget | `traefik-cloudfront-verifier-<env>` | Keeps one verifier running during node maintenance |
+| ConfigMap | `traefik-cloudfront-verifier-<env>-nginx` | nginx config template and the startup check |
+| ExternalSecret | `traefik-cloudfront-verifier-<env>-origin-verify` | Injects `ORIGIN_VERIFY_SECRET` as an environment variable |
+| Middleware | `traefik-cloudfront-origin-verify` | forwardAuth to the verifier |
+| Middleware | `traefik-cloudfront-strip-header` | Removes the header before your app |
+| Middleware | `traefik-cloudfront-origin-guard` | The chain protected apps reference |
+
+:::note
+The `-prod` suffix comes from the environment folder name (`envs/prod/`). Use the matching name for other environments.
+:::
+
+## Verify
+
+Through CloudFront, the app answers normally:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://<distribution>.cloudfront.net/
+# 200
+```
+
+Straight to the origin, without the header, it's refused:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
+# 403
+
+curl -s -o /dev/null -w "%{http_code}\n" -H "X-Origin-Verify: guess" https://traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN/
+# 403
+```
+
+The example apps run `traefik/whoami`, which echoes the request headers it receives. Through CloudFront, `X-Origin-Verify` should **not** appear in its output.
+
+Confirm the middlewares and verifier pods exist in your namespace:
+
+```bash
+kubectl get middleware,pods -n CAPTAIN_NAMESPACE | grep cloudfront
+```
+
+Use the response code to tell the outcomes apart:
+
+| Request | Response | Meaning | Fix |
+|---|---|---|---|
+| Direct to origin | `403` | Working — the origin is protected | — |
+| Direct to origin | `200` | The route has no guard middleware. **The app is public.** | Add the middleware or annotation; confirm the sync completed |
+| Any | `404` | The middleware reference doesn't resolve, or the `Host` doesn't match the route | Check the name and namespace prefix against `kubectl get middleware -n CAPTAIN_NAMESPACE`; check the origin request policy |
+| Any | `500` | The verifier has no ready pods | `kubectl get pods -n CAPTAIN_NAMESPACE`; check the ExternalSecret synced |
+| Through CloudFront | `403` | CloudFront's header value doesn't match the secret store | Compare the values; restart the verifier after changing the secret |
+
+## Rotating the secret
+
+The verifier accepts one value at a time, so a rotation causes a short window of `403`s while CloudFront's change rolls out to its edge locations:
+
+1. Write the new value to your secret store.
+2. Update the custom header value on the CloudFront origin.
+3. Restart the verifier (Step 2) right away, and wait for the distribution to show **Deployed**.
+
+## Key Points
+
+- This blocks requests that bypass CloudFront. It's a shared secret, not user authentication — combine it with [Login with GitHub](./traefik-middleware-forwardauth-github) or your app's own login if you need to know who the visitor is.
+- Protection is per route: only routes that reference `traefik-cloudfront-origin-guard` are protected. Other hostnames on the same Traefik stay directly reachable.
+- Failures are closed: a missing verifier returns `500` and a wrong middleware reference returns `404`. The only way to leave an app public is to leave the middleware off a route.
+- One verifier can protect any number of apps in the same namespace, and any number of distributions that send the same value.
+- CloudFront replaces any `X-Origin-Verify` a visitor sends with its own value, so visitors can't spoof it through CloudFront.
+- Header values never appear in Traefik's access logs, and the verifier's own access log is off. Don't enable header logging on either.
+- Turn caching back on only for content that's safe to cache. `CachingDisabled` also keeps CloudFront from caching an error page while you're setting up.
+
+## Related
+
+- [Middleware: Login with GitHub (Forward Auth)](./traefik-middleware-forwardauth-github) — the same forwardAuth pattern, for user login
+- [Middleware: IP Allow List](./traefik-middleware-ip-allowlist) — restricting by source IP
+- [Standard Kubernetes Ingress](./traefik-standard-ingress) — middleware annotations on standard Ingress
+- [Manage Environment Secrets](../manage-environment-secrets) — storing the secret
