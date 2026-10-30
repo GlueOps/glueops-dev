@@ -18,11 +18,7 @@ An IP allow list on CloudFront's address ranges is **not** enough: every AWS cus
 4. The verifier compares it with the value in your secret store. It returns `200` on a match and `403` otherwise.
 5. On `200`, Traefik removes `X-Origin-Verify` and forwards the request to your app, so the secret never reaches your application or its logs. On `403`, the visitor gets `403 Forbidden`.
 
-| App | Purpose | Creates |
-|---|---|---|
-| `traefik-cloudfront-verifier` | Checks the header; owns the shared middlewares | Deployment, Service, PDB, ConfigMap, ExternalSecret, 3 Middlewares |
-| `traefik-cloudfront` | Example app protected through an IngressRoute | Deployment, Service, IngressRoute |
-| `traefik-ingress-cloudfront` | Example app protected through a standard Ingress | Deployment, Service, Ingress |
+The [examples repository](https://github.com/GlueOps/deployment-configurations-examples) has the verifier (`traefik-cloudfront-verifier`) plus two protected apps: `traefik-cloudfront` (IngressRoute) and `traefik-ingress-cloudfront` (standard Ingress).
 
 ## Prerequisites
 
@@ -49,7 +45,7 @@ ORIGIN_VERIFY_SECRET   <output of the command above>
 You'll paste the same value into CloudFront in Step 4.
 
 :::warning
-Use letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the value is empty or contains any other character, including a trailing newline or space. That's deliberate: a malformed value would otherwise break the check in ways that are hard to spot.
+Use letters and digits only, which `openssl rand -hex 32` guarantees. The verifier refuses to start if the value is empty or contains any other character, including a trailing newline or space.
 :::
 
 ## Step 2 — Deploy the verifier
@@ -203,6 +199,8 @@ customResources:
 </TabItem>
 <TabItem value="map" label="customResourcesMap (map)">
 
+`customResourcesMap` needs `app` chart 0.10.0 or later. Older charts ignore it without an error, so the middlewares are never created.
+
 **`envs/prod/values.yaml`**
 ```yaml
 deployment:
@@ -342,7 +340,7 @@ The three middlewares are what protected apps use:
 - `traefik-cloudfront-origin-guard` chains the two, check first and strip second. Protected apps reference only this one.
 
 :::caution The verifier reads the secret at startup
-Changing the value in your secret store, or editing the nginx config, doesn't affect pods that are already running. Restart the verifier afterwards:
+Changing the value in your secret store, or editing the nginx config, doesn't affect pods that are already running. Restart the verifier afterwards, either with the **Restart** action on the `traefik-cloudfront-verifier-prod` Deployment in ArgoCD, or with kubectl (needs the Debugger tier, see [Access tiers](../access-cluster-with-kubectl#access-tiers)):
 
 ```bash
 kubectl rollout restart deployment/traefik-cloudfront-verifier-prod -n CAPTAIN_NAMESPACE
@@ -404,19 +402,18 @@ service:
   enabled: true
 
 # Requires the traefik-cloudfront-verifier app, which defines the traefik-cloudfront-origin-guard Middleware.
-# Annotations are not tpl-rendered: replace "nonprod" with your namespace.
 ingress:
   enabled: true
   ingressClassName: public-traefik
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: nonprod-traefik-cloudfront-origin-guard@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: CAPTAIN_NAMESPACE-traefik-cloudfront-origin-guard@kubernetescrd
   entries:
     - name: public
       hosts:
         - hostname: '{{ include "app.name" . }}.apps.{{ .Values.captain_domain }}'
 ```
 
-The annotation format is `<namespace>-<middleware name>@kubernetescrd`. Annotations are not template-rendered, so write your namespace out in full in place of `nonprod`.
+The annotation format is `<namespace>-<middleware name>@kubernetescrd`. Annotations are not template-rendered, so write the namespace out in full.
 
 </TabItem>
 </Tabs>
@@ -432,21 +429,20 @@ Create a distribution with these settings. Use the protected app's own hostname 
 | Setting | Value |
 |---|---|
 | Origin domain | `traefik-cloudfront-prod.apps.CAPTAIN_DOMAIN` |
-| Protocol | **HTTPS only**, minimum TLSv1.2 |
+| Protocol | **HTTPS only**, minimum TLSv1.2 — over HTTP the secret header crosses the internet in plain text |
 | Add custom header | Name `X-Origin-Verify`, value from Step 1 |
 | Cache policy | `CachingDisabled`, or your own policy (see Key Points) |
 | Origin request policy | `AllViewerExceptHostHeader` |
 | Viewer protocol policy | Redirect HTTP to HTTPS |
 
-:::warning Use HTTPS to the origin
-With HTTP only, the secret header crosses the internet in plain text, where anyone on the path can copy it. Use HTTP only for a short-lived test at most.
-:::
+If you test with an HTTP-only origin, treat the secret as exposed and rotate it afterwards.
 
 :::caution Don't forward the viewer's Host header
-`AllViewerExceptHostHeader` makes CloudFront send the origin hostname as `Host`, which is what Traefik routes on. Policies that forward the viewer's `Host` (such as `AllViewer`) send `*.cloudfront.net` or your custom domain instead, so the route doesn't match and every request returns `404`.
+`AllViewerExceptHostHeader` makes CloudFront send the origin hostname as `Host`, which is what Traefik routes on. Policies that forward the viewer's `Host` (such as `AllViewer`) send `*.cloudfront.net` or your custom domain instead. With an HTTPS origin the certificate no longer matches and CloudFront returns `502`; with an HTTP origin the route doesn't match and Traefik returns `404`.
 :::
 
-The same distribution in OpenTofu:
+<details>
+<summary>The same distribution in OpenTofu</summary>
 
 ```hcl
 provider "aws" {
@@ -473,7 +469,6 @@ data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
 
 resource "aws_cloudfront_distribution" "app" {
   enabled     = true
-  comment     = "traefik-cloudfront"
   price_class = "PriceClass_100"
 
   origin {
@@ -512,11 +507,9 @@ resource "aws_cloudfront_distribution" "app" {
     cloudfront_default_certificate = true
   }
 }
-
-output "domain_name" {
-  value = aws_cloudfront_distribution.app.domain_name
-}
 ```
+
+</details>
 
 Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) rather than a file in Git. The value is still stored in the OpenTofu state, so keep the state somewhere private.
 
@@ -532,9 +525,7 @@ Pass the secret through an environment variable (`TF_VAR_origin_verify_secret`) 
 | Middleware | `traefik-cloudfront-strip-header` | Removes the header before your app |
 | Middleware | `traefik-cloudfront-origin-guard` | The chain protected apps reference |
 
-:::note
-The `-prod` suffix comes from the environment folder name (`envs/prod/`). Use the matching name for other environments.
-:::
+The `-prod` suffix comes from the environment folder name (`envs/prod/`).
 
 ## Verify
 
@@ -570,6 +561,7 @@ Use the response code to tell the outcomes apart:
 | Direct to origin | `403` | Working — the origin is protected | — |
 | Direct to origin | `200` | The route has no guard middleware. **The app is public.** | Add the middleware or annotation; confirm the sync completed |
 | Any | `404` | The middleware reference doesn't resolve, or the `Host` doesn't match the route | Check the name and namespace prefix against `kubectl get middleware -n CAPTAIN_NAMESPACE`; check the origin request policy |
+| Through CloudFront | `502` | CloudFront can't connect: the origin certificate doesn't match the hostname it sends, or the origin is unreachable | Use `AllViewerExceptHostHeader`; set the origin domain to the app's own hostname |
 | Any | `500` | The verifier has no ready pods | `kubectl get pods -n CAPTAIN_NAMESPACE`; check the ExternalSecret synced |
 | Through CloudFront | `403` | CloudFront's header value doesn't match the secret store | Compare the values; restart the verifier after changing the secret |
 
@@ -584,11 +576,10 @@ The verifier accepts one value at a time, so a rotation causes a short window of
 ## Key Points
 
 - This blocks requests that bypass CloudFront. It's a shared secret, not user authentication — combine it with [Login with GitHub](./traefik-middleware-forwardauth-github) or your app's own login if you need to know who the visitor is.
-- Protection is per route: only routes that reference `traefik-cloudfront-origin-guard` are protected. Other hostnames on the same Traefik stay directly reachable.
-- Failures are closed: a missing verifier returns `500` and a wrong middleware reference returns `404`. The only way to leave an app public is to leave the middleware off a route.
+- Protection is per route, and failures are closed (`404` for a bad reference, `500` for a missing verifier). The only way to leave an app public is a route without `traefik-cloudfront-origin-guard`.
 - One verifier can protect any number of apps in the same namespace, and any number of distributions that send the same value.
 - CloudFront replaces any `X-Origin-Verify` a visitor sends with its own value, so visitors can't spoof it through CloudFront.
-- Header values never appear in Traefik's access logs, and the verifier's own access log is off. Don't enable header logging on either.
+- The platform's Traefik access logs drop request headers, and the verifier's own access log is off, so the secret isn't logged. Don't enable header logging on either.
 - Turn caching back on only for content that's safe to cache. `CachingDisabled` also keeps CloudFront from caching an error page while you're setting up.
 
 ## Related
