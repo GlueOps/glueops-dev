@@ -28,6 +28,14 @@ const sidebars = {
         "deploy-applications/deploy-first-app",
         "deploy-applications/manage-environment-secrets",
         "deploy-applications/access-cluster-with-kubectl",
+        {
+          type: "category",
+          label: "Observability",
+          collapsible: true,
+          items: [
+            "deploy-applications/observability/instrument-your-app",
+          ],
+        },
         "deploy-applications/ingress/glueops-ingress-and-loadbalancer-customizations",
         {
           type: "category",

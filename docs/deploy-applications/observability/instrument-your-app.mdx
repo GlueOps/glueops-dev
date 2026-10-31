@@ -1,0 +1,294 @@
+---
+id: instrument-your-app
+title: Instrument Your App with OpenTelemetry
+description: Send traces and metrics from your app to the platform's OpenTelemetry collector, then find them in Grafana.
+type: tutorial
+---
+
+# Instrument Your App with OpenTelemetry
+
+Every GlueOps cluster runs an OpenTelemetry collector that sends traces to Tempo, metrics to Prometheus, and logs to Loki, all viewable in Grafana. This guide gets an app you have already deployed sending telemetry, in one of two ways:
+
+- **Auto-instrumentation (Node.js, Python, Java):** add one annotation. No code or image changes.
+- **OpenTelemetry SDK (PHP, Go, and any other language):** add the SDK to your app and set a few environment variables.
+
+Your pod logs are already collected from stdout, so there is nothing to set up for logs.
+
+## Prerequisites
+
+- An app deployed through your deployment-configurations repository. If you don't have one yet, start with [Deploy Your First App](../deploy-first-app).
+- Access to Grafana: <CaptainDomainLink to="https://grafana.{domain}" />
+
+The examples below use an app named `my-app` in the `prod` environment, so its Argo CD application, Deployment, and service name are all `my-app-prod`.
+
+:::caution
+Everyone with Grafana access on this cluster can see the telemetry of every app on it. Instrumentation records request URLs, including query strings, so don't put secrets or personal data in URLs, span attributes, or log lines.
+:::
+
+## Step 1: Instrument your app
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="otel-lang" queryString>
+<TabItem value="nodejs" label="Node.js">
+
+Add the annotation to `apps/my-app/base/base-values.yaml`:
+
+```yaml
+deployment:
+  annotations:
+    instrumentation.opentelemetry.io/inject-nodejs: "glueops-core-monitoring/glueops-instrumentation"
+```
+
+Requires Node.js 18.19+ or 20.6+.
+
+</TabItem>
+<TabItem value="php" label="PHP">
+
+PHP needs the `opentelemetry` extension and the SDK packages in your image.
+
+Add the extension to your `Dockerfile`, before `composer install`:
+
+```dockerfile
+# Debian-based images (php:8.4-fpm, php:8.4-apache, ...)
+RUN pecl install opentelemetry && docker-php-ext-enable opentelemetry
+
+# Alpine-based images (php:8.4-fpm-alpine, ...)
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+ && pecl install opentelemetry && docker-php-ext-enable opentelemetry \
+ && apk del .build-deps
+```
+
+Add the SDK, the OTLP exporter, and the auto-instrumentation package for your framework from the [OpenTelemetry registry](https://opentelemetry.io/ecosystem/registry/?language=php&component=instrumentation) (for example `-slim`, `-laravel`, or `-symfony`), then commit the updated `composer.json` and `composer.lock`:
+
+```bash
+composer config allow-plugins.php-http/discovery true
+composer config allow-plugins.tbachert/spi true
+# The extension check is skipped here because it only needs to be in the image.
+composer require --ignore-platform-req=ext-opentelemetry \
+  open-telemetry/sdk open-telemetry/exporter-otlp php-http/guzzle7-adapter \
+  open-telemetry/opentelemetry-auto-slim
+```
+
+If your Dockerfile runs `composer install` in a separate stage without the extension, add `--ignore-platform-req=ext-opentelemetry` there too.
+
+Then add these environment variables to `apps/my-app/envs/prod/values.yaml`. If the file already has `deployment.envVariables`, add them to that list: a list in this file replaces the one in `base-values.yaml`.
+
+```yaml
+deployment:
+  envVariables:
+    - name: OTEL_PHP_AUTOLOAD_ENABLED
+      value: "true"
+    # How your app appears in Grafana: the Deployment name, <app>-<env>.
+    - name: OTEL_SERVICE_NAME
+      value: my-app-prod
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector.glueops-core-monitoring.svc.cluster.local:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+    # Logs are already collected from stdout; this avoids sending them twice.
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    # ENV_POD_NAMESPACE and ENV_POD_NAME are set by the platform on every pod.
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=$(ENV_POD_NAMESPACE),k8s.namespace.name=$(ENV_POD_NAMESPACE),k8s.pod.name=$(ENV_POD_NAME)
+```
+
+The official `php` images pass these variables to php-fpm workers. If you install php-fpm yourself, set `clear_env = no` in your pool config, or the workers won't see them.
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+Go has no auto-instrumentation on the platform, so set up the SDK in your app. Add the modules:
+
+```bash
+go get go.opentelemetry.io/otel \
+  go.opentelemetry.io/otel/sdk \
+  go.opentelemetry.io/otel/sdk/metric \
+  go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp \
+  go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp \
+  go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+```
+
+Configure the SDK at startup and wrap your HTTP handler. The exporters read the `OTEL_*` environment variables below, so there is nothing to hardcode. `main` handles `SIGTERM` so buffered spans and metrics are flushed when Kubernetes stops the pod:
+
+```go
+package main
+
+import (
+	"context"
+	"errors"
+	"log"
+	"net/http"
+	"os/signal"
+	"syscall"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/propagation"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+)
+
+func setupOTel(ctx context.Context) (func(context.Context) error, error) {
+	traceExp, err := otlptracehttp.New(ctx)
+	if err != nil {
+		return nil, err
+	}
+	metricExp, err := otlpmetrichttp.New(ctx)
+	if err != nil {
+		return nil, err
+	}
+	tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(traceExp), sdktrace.WithResource(resource.Default()))
+	mp := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(metricExp)), sdkmetric.WithResource(resource.Default()))
+	otel.SetTracerProvider(tp)
+	otel.SetMeterProvider(mp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	return func(ctx context.Context) error { return errors.Join(tp.Shutdown(ctx), mp.Shutdown(ctx)) }, nil
+}
+
+func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	shutdown, err := setupOTel(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer shutdown(context.Background())
+
+	mux := http.NewServeMux()
+	// ... register your handlers on mux ...
+
+	srv := &http.Server{Addr: ":8080", Handler: otelhttp.NewHandler(mux, "server")}
+	go func() {
+		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal(err)
+		}
+	}()
+	<-ctx.Done()
+	srv.Shutdown(context.Background())
+}
+```
+
+To trace calls your app makes to other services, use an instrumented client: `&http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}`.
+
+Then add these environment variables to `apps/my-app/envs/prod/values.yaml`. If the file already has `deployment.envVariables`, add them to that list: a list in this file replaces the one in `base-values.yaml`.
+
+```yaml
+deployment:
+  envVariables:
+    # How your app appears in Grafana: the Deployment name, <app>-<env>.
+    - name: OTEL_SERVICE_NAME
+      value: my-app-prod
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector.glueops-core-monitoring.svc.cluster.local:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+    # Logs are already collected from stdout; this avoids sending them twice.
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    # ENV_POD_NAMESPACE and ENV_POD_NAME are set by the platform on every pod.
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=$(ENV_POD_NAMESPACE),k8s.namespace.name=$(ENV_POD_NAMESPACE),k8s.pod.name=$(ENV_POD_NAME)
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+Add the annotation to `apps/my-app/base/base-values.yaml`:
+
+```yaml
+deployment:
+  annotations:
+    instrumentation.opentelemetry.io/inject-python: "glueops-core-monitoring/glueops-instrumentation"
+```
+
+Requires Python 3.10+. On an Alpine-based image, also add `instrumentation.opentelemetry.io/otel-python-platform: "musl"` under `deployment.annotations`.
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+Add the annotation to `apps/my-app/base/base-values.yaml`:
+
+```yaml
+deployment:
+  annotations:
+    instrumentation.opentelemetry.io/inject-java: "glueops-core-monitoring/glueops-instrumentation"
+```
+
+The Java agent adds memory and startup time. If your container has a tight memory limit, raise it.
+
+</TabItem>
+<TabItem value="other" label="Other languages">
+
+Set up the OpenTelemetry SDK for your language by following its [getting started guide](https://opentelemetry.io/docs/languages/), with an OTLP exporter. Then point it at the platform collector with these environment variables in `apps/my-app/envs/prod/values.yaml`. If the file already has `deployment.envVariables`, add them to that list: a list in this file replaces the one in `base-values.yaml`.
+
+```yaml
+deployment:
+  envVariables:
+    # How your app appears in Grafana: the Deployment name, <app>-<env>.
+    - name: OTEL_SERVICE_NAME
+      value: my-app-prod
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector.glueops-core-monitoring.svc.cluster.local:4318
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+    # Logs are already collected from stdout; this avoids sending them twice.
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    # ENV_POD_NAMESPACE and ENV_POD_NAME are set by the platform on every pod.
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=$(ENV_POD_NAMESPACE),k8s.namespace.name=$(ENV_POD_NAMESPACE),k8s.pod.name=$(ENV_POD_NAME)
+```
+
+If your SDK only supports gRPC, use port `4317` in the endpoint and set `OTEL_EXPORTER_OTLP_PROTOCOL` to `grpc`.
+
+</TabItem>
+</Tabs>
+
+## Step 2: Commit and push
+
+Commit the change and push it to your deployment-configurations repository. Argo CD syncs it within a few minutes and restarts your pods with the new settings.
+
+## Step 3: Check that the agent was added
+
+For Node.js, Python, and Java, list the init containers of your pod:
+
+```bash
+kubectl get pods -n CAPTAIN_NAMESPACE -l app.kubernetes.io/name=my-app-prod \
+  -o jsonpath='{.items[*].spec.initContainers[*].name}'
+```
+
+You should see `opentelemetry-auto-instrumentation-<language>`, for example `opentelemetry-auto-instrumentation-nodejs`. If you don't have `kubectl` set up, see [Access Your Cluster with kubectl](../access-cluster-with-kubectl), or open the pod in the Argo CD UI and check its manifest.
+
+For PHP, Go, and other SDK languages, go straight to Step 4.
+
+:::caution Limitation
+A pod that starts before the platform's instrumentation is ready runs without the agent, and Argo CD still shows it as Healthy. This mostly happens on a brand-new cluster or environment. If the init container is missing, check the annotation for typos, then restart the pod: with the Debugger tier, run `kubectl rollout restart deployment/my-app-prod -n CAPTAIN_NAMESPACE`. Without it, add an annotation such as `restartedAt: "2026-01-01T00:00:00Z"` under `deployment.annotations` (change its value each time you need a restart) and push.
+:::
+
+## Step 4: Find your telemetry in Grafana
+
+Send a few requests to your app, wait about a minute, then open <CaptainDomainLink to="https://grafana.{domain}/explore">Grafana Explore</CaptainDomainLink>.
+
+| Signal | Data source | Query |
+|---|---|---|
+| Traces | Tempo | Search, and set **Service Name** to `my-app-prod` |
+| Request rate and errors | Prometheus | `sum by (span_name, status_code) (rate(span_metrics_calls_total{service_name="my-app-prod", span_kind="SPAN_KIND_SERVER"}[5m]))` |
+| Latency (p95) | Prometheus | `histogram_quantile(0.95, sum by (le, span_name) (rate(span_metrics_duration_milliseconds_bucket{service_name="my-app-prod", span_kind="SPAN_KIND_SERVER"}[5m])))` |
+| Logs | Loki | `{service_name="my-app-prod"}` |
+
+The `span_metrics_*` metrics are generated from your traces, so you get them without writing any metrics code. To find errors, filter on `status_code="STATUS_CODE_ERROR"`. The `http_status_code` label is only filled in for Node.js and Python, because Java, PHP, and Go use newer attribute names that span metrics don't read yet.
+
+## If nothing shows up
+
+| What you see | Likely cause | Fix |
+|---|---|---|
+| No `opentelemetry-auto-instrumentation-*` init container | The pod started before instrumentation was ready, or the annotation has a typo | See the limitation in Step 3 |
+| SDK app sends no traces | The SDK can't reach the collector, or isn't running | Check for export errors with `kubectl logs -n CAPTAIN_NAMESPACE -l app.kubernetes.io/name=my-app-prod --tail=-1 \| grep -iE 'export\|opentelemetry'`. No errors usually means the SDK isn't loaded: check the environment variables reached the pod, and for PHP that the extension is installed |
+| Every log line appears twice in Loki | The SDK is also exporting logs | Set `OTEL_LOGS_EXPORTER` to `none` |
