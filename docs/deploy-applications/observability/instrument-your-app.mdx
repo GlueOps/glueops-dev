@@ -271,7 +271,7 @@ For Node.js, Python, and Java, check that your pod has an init container named `
 **In the Argo CD UI** (works for everyone, no `kubectl` needed):
 
 1. Open <CaptainDomainLink to="https://argocd.{domain}">Argo CD</CaptainDomainLink> and select your application, for example `my-app-prod`.
-2. In the resource tree, click your pod.
+2. In the resource tree, click your pod. If a rollout is still in progress, pick the newest one.
 3. Open the **Live Manifest** tab and find `initContainers`. It should list `opentelemetry-auto-instrumentation-<language>`.
 
 **With `kubectl`** (if you have [cluster access](../access-cluster-with-kubectl)):
