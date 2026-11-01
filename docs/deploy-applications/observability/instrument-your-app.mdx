@@ -38,7 +38,8 @@ Add the annotation to `apps/my-app/base/base-values.yaml`:
 ```yaml
 deployment:
   annotations:
-    instrumentation.opentelemetry.io/inject-nodejs: "glueops-core-monitoring/glueops-instrumentation"
+    # Unpinned: the agent version changes on platform upgrades.
+    instrumentation.opentelemetry.io/inject-nodejs: "glueops-core-monitoring/default-unpinned"
 ```
 
 Requires Node.js 18.19+ or 20.6+.
@@ -205,7 +206,8 @@ Add the annotation to `apps/my-app/base/base-values.yaml`:
 ```yaml
 deployment:
   annotations:
-    instrumentation.opentelemetry.io/inject-python: "glueops-core-monitoring/glueops-instrumentation"
+    # Unpinned: the agent version changes on platform upgrades.
+    instrumentation.opentelemetry.io/inject-python: "glueops-core-monitoring/default-unpinned"
 ```
 
 Requires Python 3.10+. On an Alpine-based image, also add `instrumentation.opentelemetry.io/otel-python-platform: "musl"` under `deployment.annotations`.
@@ -218,7 +220,8 @@ Add the annotation to `apps/my-app/base/base-values.yaml`:
 ```yaml
 deployment:
   annotations:
-    instrumentation.opentelemetry.io/inject-java: "glueops-core-monitoring/glueops-instrumentation"
+    # Unpinned: the agent version changes on platform upgrades.
+    instrumentation.opentelemetry.io/inject-java: "glueops-core-monitoring/default-unpinned"
 ```
 
 The Java agent adds memory and startup time. If your container has a tight memory limit, raise it.
@@ -251,25 +254,37 @@ If your SDK only supports gRPC, use port `4317` in the endpoint and set `OTEL_EX
 </TabItem>
 </Tabs>
 
+:::caution Agent versions are unpinned
+For Node.js, Python, and Java, `default-unpinned` uses the agent versions the platform currently ships. They change when the platform is upgraded, and your pods pick them up on their next restart, even if you changed nothing. A new agent version can rename metrics and attributes, which can break your dashboards and alerts. It's a good way to get started; pin agent versions before you rely on them in production. A guide for pinning is coming soon.
+
+For PHP, Go, and other SDK languages, the SDK version comes from your own lock file, so the platform never changes it.
+:::
+
 ## Step 2: Commit and push
 
 Commit the change and push it to your deployment-configurations repository. Argo CD syncs it within a few minutes and restarts your pods with the new settings.
 
 ## Step 3: Check that the agent was added
 
-For Node.js, Python, and Java, list the init containers of your pod:
+For Node.js, Python, and Java, check that your pod has an init container named `opentelemetry-auto-instrumentation-<language>`, for example `opentelemetry-auto-instrumentation-nodejs`.
+
+**In the Argo CD UI** (works for everyone, no `kubectl` needed):
+
+1. Open <CaptainDomainLink to="https://argocd.{domain}">Argo CD</CaptainDomainLink> and select your application, for example `my-app-prod`.
+2. In the resource tree, click your pod.
+3. Open the **Live Manifest** tab and find `initContainers`. It should list `opentelemetry-auto-instrumentation-<language>`.
+
+**With `kubectl`** (if you have [cluster access](../access-cluster-with-kubectl)):
 
 ```bash
 kubectl get pods -n CAPTAIN_NAMESPACE -l app.kubernetes.io/name=my-app-prod \
   -o jsonpath='{.items[*].spec.initContainers[*].name}'
 ```
 
-You should see `opentelemetry-auto-instrumentation-<language>`, for example `opentelemetry-auto-instrumentation-nodejs`. If you don't have `kubectl` set up, see [Access Your Cluster with kubectl](../access-cluster-with-kubectl), or open the pod in the Argo CD UI and check its manifest.
-
 For PHP, Go, and other SDK languages, go straight to Step 4.
 
 :::caution Limitation
-A pod that starts before the platform's instrumentation is ready runs without the agent, and Argo CD still shows it as Healthy. This mostly happens on a brand-new cluster or environment. If the init container is missing, check the annotation for typos, then restart the pod: with the Debugger tier, run `kubectl rollout restart deployment/my-app-prod -n CAPTAIN_NAMESPACE`. Without it, add an annotation such as `restartedAt: "2026-01-01T00:00:00Z"` under `deployment.annotations` (change its value each time you need a restart) and push.
+A pod that starts before its instrumentation is ready runs without the agent, and Argo CD still shows it as Healthy. This mostly happens the first time you add instrumentation. If the init container is missing, check the annotation for typos, then restart the pod: with the Debugger tier, run `kubectl rollout restart deployment/my-app-prod -n CAPTAIN_NAMESPACE`. Without it, add an annotation such as `restartedAt: "2026-01-01T00:00:00Z"` under `deployment.annotations` (change its value each time you need a restart) and push.
 :::
 
 ## Step 4: Find your telemetry in Grafana
