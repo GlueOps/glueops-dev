@@ -52,12 +52,14 @@ PHP needs the `opentelemetry` extension and the SDK packages in your image.
 Add the extension to your `Dockerfile`, before `composer install`:
 
 ```dockerfile
+# Pin the version so rebuilds stay the same; bump it on purpose.
+
 # Debian-based images (php:8.4-fpm, php:8.4-apache, ...)
-RUN pecl install opentelemetry && docker-php-ext-enable opentelemetry
+RUN pecl install opentelemetry-1.4.2 && docker-php-ext-enable opentelemetry
 
 # Alpine-based images (php:8.4-fpm-alpine, ...)
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
- && pecl install opentelemetry && docker-php-ext-enable opentelemetry \
+ && pecl install opentelemetry-1.4.2 && docker-php-ext-enable opentelemetry \
  && apk del .build-deps
 ```
 
@@ -257,7 +259,7 @@ If your SDK only supports gRPC, use port `4317` in the endpoint and set `OTEL_EX
 :::caution Agent versions are unpinned
 For Node.js, Python, and Java, `default-unpinned` uses the agent versions the platform currently ships. They change when the platform is upgraded, and your pods pick them up on their next restart, even if you changed nothing. A new agent version can rename metrics and attributes, which can break your dashboards and alerts. It's a good way to get started; pin agent versions before you rely on them in production. A guide for pinning is coming soon.
 
-For PHP, Go, and other SDK languages, the SDK version comes from your own lock file, so the platform never changes it.
+For PHP, Go, and other SDK languages, the SDK version comes from your own lock file (and, for PHP, the extension version from your Dockerfile), so the platform never changes it.
 :::
 
 ## Step 2: Commit and push
