@@ -284,7 +284,7 @@ kubectl get pods -n CAPTAIN_NAMESPACE -l app.kubernetes.io/name=my-app-prod \
 For PHP, Go, and other SDK languages, go straight to Step 4.
 
 :::caution Limitation
-A pod that starts before its instrumentation is ready runs without the agent, and Argo CD still shows it as Healthy. This mostly happens the first time you add instrumentation. If the init container is missing, check the annotation for typos, then restart the pod: with the Debugger tier, run `kubectl rollout restart deployment/my-app-prod -n CAPTAIN_NAMESPACE`. Without it, add an annotation such as `restartedAt: "2026-01-01T00:00:00Z"` under `deployment.annotations` (change its value each time you need a restart) and push.
+A pod that starts before its instrumentation is ready runs without the agent, and Argo CD still shows it as Healthy. This mostly happens when the instrumentation is brand new, for example your own Instrumentation created in the same push as your app, or if a pod starts while the platform is being upgraded. If the init container is missing, check the annotation for typos, then restart the pod: with the Debugger tier, run `kubectl rollout restart deployment/my-app-prod -n CAPTAIN_NAMESPACE`. Without it, add an annotation such as `restartedAt: "2026-01-01T00:00:00Z"` under `deployment.annotations` (change its value each time you need a restart) and push.
 :::
 
 ## Step 4: Find your telemetry in Grafana
