@@ -1,8 +1,8 @@
 FROM node:24-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9
 
 WORKDIR /app
-COPY package.json yarn.lock* ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 ARG BUILD_BRANCH=local
 ARG BUILD_TAG=
@@ -15,4 +15,4 @@ ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 
 EXPOSE 80
 
-ENTRYPOINT ["yarn", "start", "--port", "80", "--host", "0.0.0.0"]
+ENTRYPOINT ["npm", "start", "--", "--port", "80"]

@@ -1,8 +1,8 @@
 FROM node:24-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9 AS build
 
 WORKDIR /app
-COPY package.json yarn.lock* ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 ARG BUILD_BRANCH=""
 ARG BUILD_TAG=""
@@ -12,7 +12,7 @@ ENV REACT_APP_BUILD_BRANCH=$BUILD_BRANCH
 ENV REACT_APP_BUILD_TAG=$BUILD_TAG
 ENV REACT_APP_BUILD_SHA=$BUILD_SHA
 ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
-RUN yarn build
+RUN npm run build
 
 FROM nginx:alpine-slim@sha256:4c734d33ee731135dc9f2349914a34551c920f4451fca8bb05bf5880eb9079e8
 
