@@ -2,6 +2,8 @@ FROM node:24-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e1
 
 WORKDIR /app
 COPY package.json package-lock.json ./
+# Install the npm that package.json pins (volta.npm), not the one bundled with the base image.
+RUN npm install -g --no-audit --no-fund "npm@$(node -p "require('./package.json').volta.npm")"
 RUN npm ci
 COPY . .
 ARG BUILD_BRANCH=local
@@ -15,4 +17,4 @@ ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 
 EXPOSE 80
 
-ENTRYPOINT ["npm", "start", "--", "--port", "80"]
+ENTRYPOINT ["npm", "start", "--", "--port", "80", "--host", "0.0.0.0"]
