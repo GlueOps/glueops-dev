@@ -1,8 +1,10 @@
 FROM node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 AS build
 
 WORKDIR /app
-COPY package.json yarn.lock* ./
-RUN yarn install
+COPY package.json package-lock.json ./
+# Install the npm that package.json pins (volta.npm), not the one bundled with the base image.
+RUN npm install -g --no-audit --no-fund "npm@$(node -p "require('./package.json').volta.npm")"
+RUN npm ci
 COPY . .
 ARG BUILD_BRANCH=""
 ARG BUILD_TAG=""
@@ -12,7 +14,7 @@ ENV REACT_APP_BUILD_BRANCH=$BUILD_BRANCH
 ENV REACT_APP_BUILD_TAG=$BUILD_TAG
 ENV REACT_APP_BUILD_SHA=$BUILD_SHA
 ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
-RUN yarn build
+RUN npm run build
 
 FROM nginx:alpine-slim@sha256:4c734d33ee731135dc9f2349914a34551c920f4451fca8bb05bf5880eb9079e8
 
