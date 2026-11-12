@@ -1,5 +1,48 @@
 # Changelog
 
+## [3.33.0](https://github.com/GlueOps/glueops-dev/compare/v3.32.0...v3.33.0) (2026-11-12)
+
+
+### Features
+
+* **deps:** update actions/create-github-app-token action to v3.3.0 ([#710](https://github.com/GlueOps/glueops-dev/issues/710)) ([1f8495f](https://github.com/GlueOps/glueops-dev/commit/1f8495f26e42d749ecb7a8ea2c0def8e57dfb407))
+* **deps:** update mcr.microsoft.com/playwright docker tag to v1.65.0 ([#684](https://github.com/GlueOps/glueops-dev/issues/684)) ([a1ae676](https://github.com/GlueOps/glueops-dev/commit/a1ae6761fb5c1d8bbea35f07c4176992f0ac8bb5))
+
+
+### Bug Fixes
+
+* build from package-lock.json with npm ci #patch ([#703](https://github.com/GlueOps/glueops-dev/issues/703)) ([40f9acf](https://github.com/GlueOps/glueops-dev/commit/40f9acf4e771bf842a346c0acc448da3e23f61fa))
+
+
+### Dependencies
+
+* lock file maintenance ([#682](https://github.com/GlueOps/glueops-dev/issues/682)) ([5b212a4](https://github.com/GlueOps/glueops-dev/commit/5b212a43a299c96b900d5b44b10dd988208cd69f))
+* lock file maintenance ([#686](https://github.com/GlueOps/glueops-dev/issues/686)) ([3372d2e](https://github.com/GlueOps/glueops-dev/commit/3372d2e62cf9609f62e781ac77304414ffe033d2))
+* lock file maintenance ([#687](https://github.com/GlueOps/glueops-dev/issues/687)) ([6aabaf0](https://github.com/GlueOps/glueops-dev/commit/6aabaf059040a9f9ef1d547b6d7f17705210ed51))
+* lock file maintenance ([#688](https://github.com/GlueOps/glueops-dev/issues/688)) ([42eefa3](https://github.com/GlueOps/glueops-dev/commit/42eefa3ebb6432332dabda126d53eb2786c19b32))
+* lock file maintenance ([#690](https://github.com/GlueOps/glueops-dev/issues/690)) ([5ec10ec](https://github.com/GlueOps/glueops-dev/commit/5ec10ec546e6b6be015a6e495d386aba4db7a742))
+* lock file maintenance ([#691](https://github.com/GlueOps/glueops-dev/issues/691)) ([7d66fe3](https://github.com/GlueOps/glueops-dev/commit/7d66fe349dde5cf77081885907013d8a55af7803))
+* lock file maintenance ([#692](https://github.com/GlueOps/glueops-dev/issues/692)) ([92509c7](https://github.com/GlueOps/glueops-dev/commit/92509c7b3a99e2e34e9e1fa8d5702052354cd10f))
+* lock file maintenance ([#693](https://github.com/GlueOps/glueops-dev/issues/693)) ([263b031](https://github.com/GlueOps/glueops-dev/commit/263b0312bc9b9bc5772bef532b3af295dcfe9bd6))
+* lock file maintenance ([#694](https://github.com/GlueOps/glueops-dev/issues/694)) ([c67d34e](https://github.com/GlueOps/glueops-dev/commit/c67d34e5c6cbed8229ad65e49e9b5b93fa65784a))
+* lock file maintenance ([#695](https://github.com/GlueOps/glueops-dev/issues/695)) ([f3b2037](https://github.com/GlueOps/glueops-dev/commit/f3b2037edc9d7db5cd1827af12d9d91945c9f9c0))
+* lock file maintenance ([#696](https://github.com/GlueOps/glueops-dev/issues/696)) ([bc04d25](https://github.com/GlueOps/glueops-dev/commit/bc04d2565664cfcc068d032e425511f5a04da57c))
+* lock file maintenance ([#697](https://github.com/GlueOps/glueops-dev/issues/697)) ([b6224de](https://github.com/GlueOps/glueops-dev/commit/b6224dee226dd429a398c1af172a07ad34a6f5df))
+* lock file maintenance ([#698](https://github.com/GlueOps/glueops-dev/issues/698)) ([f105287](https://github.com/GlueOps/glueops-dev/commit/f10528724a5a49cf8735e6044ee66ea647917b93))
+* lock file maintenance ([#699](https://github.com/GlueOps/glueops-dev/issues/699)) ([7790aea](https://github.com/GlueOps/glueops-dev/commit/7790aea5b635fa3f38dcf9543a4f98c975bc373c))
+* lock file maintenance ([#700](https://github.com/GlueOps/glueops-dev/issues/700)) ([cb57b53](https://github.com/GlueOps/glueops-dev/commit/cb57b534956427696cadd410fc1f8731f9960bac))
+* lock file maintenance ([#701](https://github.com/GlueOps/glueops-dev/issues/701)) ([699a783](https://github.com/GlueOps/glueops-dev/commit/699a783f1a2b8cd029914c54f79a577a9176c947))
+* lock file maintenance ([#704](https://github.com/GlueOps/glueops-dev/issues/704)) ([f010e76](https://github.com/GlueOps/glueops-dev/commit/f010e76371e522fa64066bd54206f04b318b2765))
+* lock file maintenance ([#705](https://github.com/GlueOps/glueops-dev/issues/705)) ([cd4ded3](https://github.com/GlueOps/glueops-dev/commit/cd4ded3c5d7b1fd56f81064f4e91eeae563c6759))
+* lock file maintenance ([#709](https://github.com/GlueOps/glueops-dev/issues/709)) ([2299444](https://github.com/GlueOps/glueops-dev/commit/229944429e29926c4bc59b9b8687166e90d6470a))
+* lock file maintenance ([#711](https://github.com/GlueOps/glueops-dev/issues/711)) ([01e2654](https://github.com/GlueOps/glueops-dev/commit/01e2654a39351e67fa10338d1bd3549ec72d9ead))
+* update mcr.microsoft.com/playwright:v1.65.0-noble docker digest to 9beb546 ([#707](https://github.com/GlueOps/glueops-dev/issues/707)) ([1f2a39e](https://github.com/GlueOps/glueops-dev/commit/1f2a39e60d8f9db49c7def6bf561821491be6452))
+* update nginx:alpine-slim docker digest to 4c734d3 ([#702](https://github.com/GlueOps/glueops-dev/issues/702)) ([a9105f9](https://github.com/GlueOps/glueops-dev/commit/a9105f923a8463e9a278c8b351a79a939998fd28))
+* update nginx:alpine-slim docker digest to 85b20e8 ([#685](https://github.com/GlueOps/glueops-dev/issues/685)) ([d0d6272](https://github.com/GlueOps/glueops-dev/commit/d0d62727b31eeaee7e964308f034359a5a2aff11))
+* update nginx:alpine-slim docker digest to 9c68ad4 ([#689](https://github.com/GlueOps/glueops-dev/issues/689)) ([4872ee3](https://github.com/GlueOps/glueops-dev/commit/4872ee3982381e0403db03f1b1dd86a89e541691))
+* update node.js to 0998f9a ([#706](https://github.com/GlueOps/glueops-dev/issues/706)) ([fe5f5a6](https://github.com/GlueOps/glueops-dev/commit/fe5f5a618b7f00f3e130886a8c0c74e9ef5be96b))
+* update node.js to dc26ae9 ([#708](https://github.com/GlueOps/glueops-dev/issues/708)) ([1ae7418](https://github.com/GlueOps/glueops-dev/commit/1ae741815bcfcfb51bc293230549f388130d4890))
+
 ## [3.32.0](https://github.com/GlueOps/glueops-dev/compare/v3.31.3...v3.32.0) (2026-11-05)
 
 
