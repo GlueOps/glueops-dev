@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.34.0](https://github.com/GlueOps/glueops-dev/compare/v3.33.0...v3.34.0) (2026-11-13)
+
+
+### Features
+
+* **deps:** update node.js to v26 ([#632](https://github.com/GlueOps/glueops-dev/issues/632)) ([b58051b](https://github.com/GlueOps/glueops-dev/commit/b58051b12265f8ff3bdd84271ecbe271725b7638))
+
+
+### Bug Fixes
+
+* pin Node 26 in volta to match the image #patch ([#719](https://github.com/GlueOps/glueops-dev/issues/719)) ([19eb156](https://github.com/GlueOps/glueops-dev/commit/19eb156c57ba2d7068a71921babaac7974890861))
+
+
+### Continuous Integration
+
+* build the image on pull requests ([#712](https://github.com/GlueOps/glueops-dev/issues/712)) ([9913514](https://github.com/GlueOps/glueops-dev/commit/99135148075a58038ff0b48eb4fbf0168c1a5ed1))
+
+
+### Dependencies
+
+* lock file maintenance ([#713](https://github.com/GlueOps/glueops-dev/issues/713)) ([0223ed1](https://github.com/GlueOps/glueops-dev/commit/0223ed15e166de4d206d5c07751daa263d6b02d4))
+* lock file maintenance ([#715](https://github.com/GlueOps/glueops-dev/issues/715)) ([1e3037d](https://github.com/GlueOps/glueops-dev/commit/1e3037d40a9a7f77896fa444c89152cbbefcc6b2))
+* lock file maintenance ([#716](https://github.com/GlueOps/glueops-dev/issues/716)) ([f204b51](https://github.com/GlueOps/glueops-dev/commit/f204b5131faa365f8fc5899e8d8fa7f74cded97b))
+* lock file maintenance ([#717](https://github.com/GlueOps/glueops-dev/issues/717)) ([ba603dd](https://github.com/GlueOps/glueops-dev/commit/ba603dd007a3856ffa2b621aaaa3d53b38a2a807))
+* lock file maintenance ([#718](https://github.com/GlueOps/glueops-dev/issues/718)) ([d034351](https://github.com/GlueOps/glueops-dev/commit/d03435180c92bf4f9d67a28886aa8e0e1c6e0afe))
+* lock file maintenance ([#720](https://github.com/GlueOps/glueops-dev/issues/720)) ([70974f0](https://github.com/GlueOps/glueops-dev/commit/70974f0bf9ff619683f3f537a043307a19e8220b))
+* lock file maintenance ([#721](https://github.com/GlueOps/glueops-dev/issues/721)) ([320ab7e](https://github.com/GlueOps/glueops-dev/commit/320ab7ef0f1299ae01f289e250dea60032ea7b55))
+
 ## [3.33.0](https://github.com/GlueOps/glueops-dev/compare/v3.32.0...v3.33.0) (2026-11-12)
 
 
