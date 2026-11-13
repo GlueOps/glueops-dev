@@ -4,15 +4,29 @@ on:
   push:
     tags:
       - 'v*'
+    # main and pull requests build without publishing, so a failing build (for
+    # example package.json out of sync with package-lock.json, which npm ci
+    # rejects) shows up before a release is tagged. Builds on main also leave a
+    # cache that pull request and tag builds can both read.
+    branches:
+      - main
+  pull_request:
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build_tag_push_to_ghcr:
+  build:
     runs-on: ubuntu-latest
+    env:
+      # Only tag builds and manual runs publish an image.
+      PUBLISH: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: read
       packages: write
@@ -23,12 +37,14 @@ jobs:
 
           
       - name: Set up QEMU
+        if: env.PUBLISH == 'true'
         uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Log into registry ${{ env.REGISTRY }}
+        if: env.PUBLISH == 'true'
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -55,14 +71,14 @@ jobs:
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ env.PUBLISH == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BUILD_BRANCH=${{ github.ref_name }}
+            BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
             BUILD_TAG=${{ github.ref_type == 'tag' && github.ref_name || '' }}
-            BUILD_SHA=${{ github.sha }}
+            BUILD_SHA=${{ github.event.pull_request.head.sha || github.sha }}
             BUILD_TIMESTAMP=${{ steps.build_meta.outputs.BUILD_TIMESTAMP }}
