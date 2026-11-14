@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.34.1](https://github.com/GlueOps/glueops-dev/compare/v3.34.0...v3.34.1) (2026-11-14)
+
+
+### Dependencies
+
+* lock file maintenance ([#723](https://github.com/GlueOps/glueops-dev/issues/723)) ([1da6afd](https://github.com/GlueOps/glueops-dev/commit/1da6afde931824e200cbec16d94693f0249e267d))
+* lock file maintenance ([#726](https://github.com/GlueOps/glueops-dev/issues/726)) ([a4b5673](https://github.com/GlueOps/glueops-dev/commit/a4b5673711038019281e38daa9fc3bc139701b58))
+* update mcr.microsoft.com/playwright docker tag to v1.65.1 ([#725](https://github.com/GlueOps/glueops-dev/issues/725)) ([8a57770](https://github.com/GlueOps/glueops-dev/commit/8a577705dd5e87cc3fe5b6908528508eb88a1737))
+
 ## [3.34.0](https://github.com/GlueOps/glueops-dev/compare/v3.33.0...v3.34.0) (2026-11-13)
 
 
