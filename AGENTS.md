@@ -31,8 +31,8 @@ There are two Dockerfiles for different purposes. Both expose port 80.
 
 | File | Purpose | Base Image | Output |
 |------|---------|------------|--------|
-| `Dockerfile` | Production | `node:24-slim` (build) → `nginx:alpine-slim` (serve) | Static HTML served by nginx |
-| `Dockerfile.dev` | Development | `node:24-slim` | Docusaurus dev server with live reload |
+| `Dockerfile` | Production | `node:26-slim` (build) → `nginx:stable-alpine-slim` (serve) | Static HTML served by nginx |
+| `Dockerfile.dev` | Development | `node:26-slim` | Docusaurus dev server with live reload |
 
 - **`Dockerfile`** — Multi-stage build. Stage 1 installs the locked dependencies with `npm ci`, which fails if `package-lock.json` is out of sync with `package.json`, then runs `npm run build` to produce static HTML. `package-lock.json` is the only lockfile: commit it with any dependency change, and don't use yarn. Stage 2 copies the output into an nginx container with `nginx.conf` for serving. This is what CI builds and deploys.
 - **`Dockerfile.dev`** — Single-stage build. Runs the Docusaurus dev server (`npm start`) for local development with hot module reloading. Mount your source code as a volume for live reload.
