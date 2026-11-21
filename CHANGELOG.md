@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.34.2](https://github.com/GlueOps/glueops-dev/compare/v3.34.1...v3.34.2) (2026-11-21)
+
+
+### Dependencies
+
+* lock file maintenance ([#753](https://github.com/GlueOps/glueops-dev/issues/753)) ([5e35e6c](https://github.com/GlueOps/glueops-dev/commit/5e35e6c4978d9dc121751247cefd8f7ffd013638))
+* lock file maintenance ([#755](https://github.com/GlueOps/glueops-dev/issues/755)) ([c02faf3](https://github.com/GlueOps/glueops-dev/commit/c02faf3fb205b9d671dbcc10eb2f5c808da7a09e))
+* lock file maintenance ([#756](https://github.com/GlueOps/glueops-dev/issues/756)) ([1b94809](https://github.com/GlueOps/glueops-dev/commit/1b94809b1751dbb7b5a60ec66286748ac86968b9))
+* lock file maintenance ([#757](https://github.com/GlueOps/glueops-dev/issues/757)) ([8c8321d](https://github.com/GlueOps/glueops-dev/commit/8c8321d7fcaa3070fa835b941404896463295c17))
+* lock file maintenance ([#758](https://github.com/GlueOps/glueops-dev/issues/758)) ([cb1c8e4](https://github.com/GlueOps/glueops-dev/commit/cb1c8e4e4bd0b36efde60b579a8958d068718715))
+* lock file maintenance ([#759](https://github.com/GlueOps/glueops-dev/issues/759)) ([041fe2d](https://github.com/GlueOps/glueops-dev/commit/041fe2d7e02cb07093f76f04dde5500b483d5142))
+* lock file maintenance ([#760](https://github.com/GlueOps/glueops-dev/issues/760)) ([08095e2](https://github.com/GlueOps/glueops-dev/commit/08095e22a0892b5f2a140ee3f4cddf3aad0355d0))
+* lock file maintenance ([#761](https://github.com/GlueOps/glueops-dev/issues/761)) ([2da989f](https://github.com/GlueOps/glueops-dev/commit/2da989f1af85dceaa1bf52d89e1f4c62020c16c5))
+* lock file maintenance ([#762](https://github.com/GlueOps/glueops-dev/issues/762)) ([57a2595](https://github.com/GlueOps/glueops-dev/commit/57a25956d193fc40925c9c7d75e05fa835a22b0a))
+* lock file maintenance ([#763](https://github.com/GlueOps/glueops-dev/issues/763)) ([3a14011](https://github.com/GlueOps/glueops-dev/commit/3a140116732762bffb31698ba3e7bbfff10b3233))
+* lock file maintenance ([#764](https://github.com/GlueOps/glueops-dev/issues/764)) ([d2e3d7d](https://github.com/GlueOps/glueops-dev/commit/d2e3d7d07945ba98c54eecd4fb53583f37c36f9c))
+* lock file maintenance ([#765](https://github.com/GlueOps/glueops-dev/issues/765)) ([0ed6370](https://github.com/GlueOps/glueops-dev/commit/0ed6370a038696c98ffae7ec3b01190e2822bd2a))
+* lock file maintenance ([#766](https://github.com/GlueOps/glueops-dev/issues/766)) ([05d13fd](https://github.com/GlueOps/glueops-dev/commit/05d13fd9712da38d3d9a79d3a6f5b27241c843a9))
+
 ## [3.34.1](https://github.com/GlueOps/glueops-dev/compare/v3.34.0...v3.34.1) (2026-11-19)
 
 
