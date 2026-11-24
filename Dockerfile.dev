@@ -1,4 +1,4 @@
-FROM node:26-slim@sha256:0c6375bcc1ee170c22bd04e11b7c1ff9afc3bb16a865a2629308ceb4b72380ff
+FROM node:26-slim@sha256:615a27817f7b9508f0de73eb1cc8fc8894ab122bee56c1a7a568b72cd1032067
 
 WORKDIR /app
 COPY package.json package-lock.json ./
