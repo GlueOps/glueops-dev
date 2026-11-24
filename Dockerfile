@@ -16,7 +16,7 @@ ENV REACT_APP_BUILD_SHA=$BUILD_SHA
 ENV REACT_APP_BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 RUN npm run build
 
-FROM nginx:stable-alpine-slim@sha256:8e907ab5bf2be45c22b6064ff1c3efa58c0269b76b578da342bb66c2cad81655
+FROM nginx:stable-alpine-slim@sha256:e9eaa7298465eab06d618c51556fdcf3fb5061f9ff40bd28ee898fbd7ee7f900
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
